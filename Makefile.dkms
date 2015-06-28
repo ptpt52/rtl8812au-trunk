@@ -1,4 +1,4 @@
-modname := 8812au
+modname := rtl8812au
 DKMS := dkms
 modver := 4.3.8_12175.20140902
 
@@ -9,18 +9,18 @@ all: install
 
 src_install:
 	mkdir -p '$(DKMS_DEST)'
-	cp -r ./* '$(DKMS_DEST)'
+	cp -r dkms.conf Kconfig Makefile.dkms Makefile platform core hal include os_dep '$(DKMS_DEST)'
 	cp Makefile '$(DKMS_DEST)/Makefile'
 	sed 's/#MODULE_VERSION#/$(modver)/' dkms.conf > '$(DKMS_DEST)/dkms.conf'
 
 build: src_install
-	$(DKMS) add -m 8812au -v $(modver) 2>/dev/null || true
-	$(DKMS) build -m 8812au -v $(modver)
+	$(DKMS) add -m $(modname) -v $(modver) 2>/dev/null || true
+	$(DKMS) build -m $(modname) -v $(modver)
 
 install: build
-	$(DKMS) install -m 8812au -v $(modver)
+	$(DKMS) install -m $(modname) -v $(modver)
 
 uninstall:
-	$(DKMS) remove -m 8812au -v $(modver) --all
+	$(DKMS) remove -m $(modname) -v $(modver) --all
 
 .PHONY: all src_install build install uninstall

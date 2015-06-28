@@ -1390,7 +1390,7 @@ endif
 
 endif
 
-USER_MODULE_NAME ?=
+USER_MODULE_NAME ?= rtl$(MODULE_NAME)
 ifneq ($(USER_MODULE_NAME),)
 MODULE_NAME := $(USER_MODULE_NAME)
 endif
