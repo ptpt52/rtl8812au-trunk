@@ -140,7 +140,7 @@ int dbg_rtw_cfg80211_vendor_cmd_reply(struct sk_buff *skb
 		dbg_rtw_cfg80211_vendor_cmd_reply(skb, MSTAT_FUNC_CFG_VENDOR|MSTAT_TYPE_SKB, __FUNCTION__, __LINE__)
 #else
 #define rtw_cfg80211_vendor_event_alloc(wiphy, len, event_id, gfp) \
-	cfg80211_vendor_event_alloc(wiphy, len, event_id, gfp)
+	cfg80211_vendor_event_alloc(wiphy, NULL, len, event_id, gfp)
 	
 #define rtw_cfg80211_vendor_event(skb, gfp) \
 	cfg80211_vendor_event(skb, gfp)
