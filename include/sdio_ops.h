@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -31,10 +31,10 @@
 #include <sdio_ops_xp.h>
 struct async_context
 {
-	PMDL pmdl;
-	PSDBUS_REQUEST_PACKET sdrp;
-	unsigned char* r_buf;
-	unsigned char* padapter;
+    PMDL pmdl;
+    PSDBUS_REQUEST_PACKET sdrp;
+    unsigned char* r_buf;
+    unsigned char* padapter;
 };
 #endif
 
@@ -46,7 +46,7 @@ struct async_context
 
 
 extern void sdio_set_intf_ops(_adapter *padapter,struct _io_ops *pops);
-	
+
 //extern void sdio_func1cmd52_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *rmem);
 //extern void sdio_func1cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *wmem);
 extern u8 SdioLocalCmd52Read1Byte(PADAPTER padapter, u32 addr);

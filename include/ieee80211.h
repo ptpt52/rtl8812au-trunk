@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -23,9 +23,9 @@
 
 #ifndef CONFIG_RTL8711FW
 
-	#if defined PLATFORM_OS_XP
-	#include <ntstrsafe.h>
-	#endif
+#if defined PLATFORM_OS_XP
+#include <ntstrsafe.h>
+#endif
 #else
 
 #endif
@@ -42,30 +42,30 @@
 
 /* RTL871X_IOCTL_HOSTAPD ioctl() cmd: */
 enum {
-	RTL871X_HOSTAPD_FLUSH = 1,
-	RTL871X_HOSTAPD_ADD_STA = 2,
-	RTL871X_HOSTAPD_REMOVE_STA = 3,
-	RTL871X_HOSTAPD_GET_INFO_STA = 4,
-	/* REMOVED: PRISM2_HOSTAPD_RESET_TXEXC_STA = 5, */
-	RTL871X_HOSTAPD_GET_WPAIE_STA = 5,
-	RTL871X_SET_ENCRYPTION = 6,
-	RTL871X_GET_ENCRYPTION = 7,
-	RTL871X_HOSTAPD_SET_FLAGS_STA = 8,
-	RTL871X_HOSTAPD_GET_RID = 9,
-	RTL871X_HOSTAPD_SET_RID = 10,
-	RTL871X_HOSTAPD_SET_ASSOC_AP_ADDR = 11,
-	RTL871X_HOSTAPD_SET_GENERIC_ELEMENT = 12,
-	RTL871X_HOSTAPD_MLME = 13,
-	RTL871X_HOSTAPD_SCAN_REQ = 14,
-	RTL871X_HOSTAPD_STA_CLEAR_STATS = 15,
-	RTL871X_HOSTAPD_SET_BEACON=16,
-	RTL871X_HOSTAPD_SET_WPS_BEACON = 17,
-	RTL871X_HOSTAPD_SET_WPS_PROBE_RESP = 18,
-	RTL871X_HOSTAPD_SET_WPS_ASSOC_RESP = 19,
-	RTL871X_HOSTAPD_SET_HIDDEN_SSID = 20,
-	RTL871X_HOSTAPD_SET_MACADDR_ACL = 21,
-	RTL871X_HOSTAPD_ACL_ADD_STA = 22,
-	RTL871X_HOSTAPD_ACL_REMOVE_STA = 23,
+    RTL871X_HOSTAPD_FLUSH = 1,
+    RTL871X_HOSTAPD_ADD_STA = 2,
+    RTL871X_HOSTAPD_REMOVE_STA = 3,
+    RTL871X_HOSTAPD_GET_INFO_STA = 4,
+    /* REMOVED: PRISM2_HOSTAPD_RESET_TXEXC_STA = 5, */
+    RTL871X_HOSTAPD_GET_WPAIE_STA = 5,
+    RTL871X_SET_ENCRYPTION = 6,
+    RTL871X_GET_ENCRYPTION = 7,
+    RTL871X_HOSTAPD_SET_FLAGS_STA = 8,
+    RTL871X_HOSTAPD_GET_RID = 9,
+    RTL871X_HOSTAPD_SET_RID = 10,
+    RTL871X_HOSTAPD_SET_ASSOC_AP_ADDR = 11,
+    RTL871X_HOSTAPD_SET_GENERIC_ELEMENT = 12,
+    RTL871X_HOSTAPD_MLME = 13,
+    RTL871X_HOSTAPD_SCAN_REQ = 14,
+    RTL871X_HOSTAPD_STA_CLEAR_STATS = 15,
+    RTL871X_HOSTAPD_SET_BEACON=16,
+    RTL871X_HOSTAPD_SET_WPS_BEACON = 17,
+    RTL871X_HOSTAPD_SET_WPS_PROBE_RESP = 18,
+    RTL871X_HOSTAPD_SET_WPS_ASSOC_RESP = 19,
+    RTL871X_HOSTAPD_SET_HIDDEN_SSID = 20,
+    RTL871X_HOSTAPD_SET_MACADDR_ACL = 21,
+    RTL871X_HOSTAPD_ACL_ADD_STA = 22,
+    RTL871X_HOSTAPD_ACL_REMOVE_STA = 23,
 };
 
 /* STA flags */
@@ -155,61 +155,61 @@ extern u8 RSN_CIPHER_SUITE_WEP104[];
 
 
 typedef enum _RATEID_IDX_ {
-	RATEID_IDX_BGN_40M_2SS = 0,
-	RATEID_IDX_BGN_40M_1SS = 1,
-	RATEID_IDX_BGN_20M_2SS_BN = 2,
-	RATEID_IDX_BGN_20M_1SS_BN = 3,
-	RATEID_IDX_GN_N2SS = 4,
-	RATEID_IDX_GN_N1SS = 5,
-	RATEID_IDX_BG = 6,
-	RATEID_IDX_G = 7,
-	RATEID_IDX_B = 8,
-	RATEID_IDX_VHT_2SS = 9,
-	RATEID_IDX_VHT_1SS = 10,
+    RATEID_IDX_BGN_40M_2SS = 0,
+    RATEID_IDX_BGN_40M_1SS = 1,
+    RATEID_IDX_BGN_20M_2SS_BN = 2,
+    RATEID_IDX_BGN_20M_1SS_BN = 3,
+    RATEID_IDX_GN_N2SS = 4,
+    RATEID_IDX_GN_N1SS = 5,
+    RATEID_IDX_BG = 6,
+    RATEID_IDX_G = 7,
+    RATEID_IDX_B = 8,
+    RATEID_IDX_VHT_2SS = 9,
+    RATEID_IDX_VHT_1SS = 10,
 } RATEID_IDX, *PRATEID_IDX;
 
-typedef enum _RATR_TABLE_MODE{
-	RATR_INX_WIRELESS_NGB = 0,	// BGN 40 Mhz 2SS 1SS
-	RATR_INX_WIRELESS_NG = 1,		// GN or N
-	RATR_INX_WIRELESS_NB = 2,		// BGN 20 Mhz 2SS 1SS  or BN
-	RATR_INX_WIRELESS_N = 3,
-	RATR_INX_WIRELESS_GB = 4,
-	RATR_INX_WIRELESS_G = 5,
-	RATR_INX_WIRELESS_B = 6,
-	RATR_INX_WIRELESS_MC = 7,
-	RATR_INX_WIRELESS_AC_N = 8,
-}RATR_TABLE_MODE, *PRATR_TABLE_MODE;
+typedef enum _RATR_TABLE_MODE {
+    RATR_INX_WIRELESS_NGB = 0,	// BGN 40 Mhz 2SS 1SS
+    RATR_INX_WIRELESS_NG = 1,		// GN or N
+    RATR_INX_WIRELESS_NB = 2,		// BGN 20 Mhz 2SS 1SS  or BN
+    RATR_INX_WIRELESS_N = 3,
+    RATR_INX_WIRELESS_GB = 4,
+    RATR_INX_WIRELESS_G = 5,
+    RATR_INX_WIRELESS_B = 6,
+    RATR_INX_WIRELESS_MC = 7,
+    RATR_INX_WIRELESS_AC_N = 8,
+} RATR_TABLE_MODE, *PRATR_TABLE_MODE;
 
 
 enum NETWORK_TYPE
 {
-	WIRELESS_INVALID = 0,
-	//Sub-Element
-	WIRELESS_11B = BIT(0), // tx: cck only , rx: cck only, hw: cck
-	WIRELESS_11G = BIT(1), // tx: ofdm only, rx: ofdm & cck, hw: cck & ofdm
-	WIRELESS_11A = BIT(2), // tx: ofdm only, rx: ofdm only, hw: ofdm only
-	WIRELESS_11_24N = BIT(3), // tx: MCS only, rx: MCS & cck, hw: MCS & cck
-	WIRELESS_11_5N = BIT(4), // tx: MCS only, rx: MCS & ofdm, hw: ofdm only
-	WIRELESS_AUTO = BIT(5), 
-	WIRELESS_11AC = BIT(6), 
+    WIRELESS_INVALID = 0,
+    //Sub-Element
+    WIRELESS_11B = BIT(0), // tx: cck only , rx: cck only, hw: cck
+    WIRELESS_11G = BIT(1), // tx: ofdm only, rx: ofdm & cck, hw: cck & ofdm
+    WIRELESS_11A = BIT(2), // tx: ofdm only, rx: ofdm only, hw: ofdm only
+    WIRELESS_11_24N = BIT(3), // tx: MCS only, rx: MCS & cck, hw: MCS & cck
+    WIRELESS_11_5N = BIT(4), // tx: MCS only, rx: MCS & ofdm, hw: ofdm only
+    WIRELESS_AUTO = BIT(5),
+    WIRELESS_11AC = BIT(6),
 
-	//Combination
-	//Type for current wireless mode
-	WIRELESS_11BG = (WIRELESS_11B|WIRELESS_11G), // tx: cck & ofdm, rx: cck & ofdm & MCS, hw: cck & ofdm
-	WIRELESS_11G_24N = (WIRELESS_11G|WIRELESS_11_24N), // tx: ofdm & MCS, rx: ofdm & cck & MCS, hw: cck & ofdm
-	WIRELESS_11A_5N = (WIRELESS_11A|WIRELESS_11_5N), // tx: ofdm & MCS, rx: ofdm & MCS, hw: ofdm only
-	WIRELESS_11B_24N = (WIRELESS_11B|WIRELESS_11_24N), // tx: ofdm & cck & MCS, rx: ofdm & cck & MCS, hw: ofdm & cck
-	WIRELESS_11BG_24N = (WIRELESS_11B|WIRELESS_11G|WIRELESS_11_24N), // tx: ofdm & cck & MCS, rx: ofdm & cck & MCS, hw: ofdm & cck
-	WIRELESS_11_24AC = (WIRELESS_11G|WIRELESS_11AC),
-	WIRELESS_11_5AC = (WIRELESS_11A|WIRELESS_11AC),
+    //Combination
+    //Type for current wireless mode
+    WIRELESS_11BG = (WIRELESS_11B|WIRELESS_11G), // tx: cck & ofdm, rx: cck & ofdm & MCS, hw: cck & ofdm
+    WIRELESS_11G_24N = (WIRELESS_11G|WIRELESS_11_24N), // tx: ofdm & MCS, rx: ofdm & cck & MCS, hw: cck & ofdm
+    WIRELESS_11A_5N = (WIRELESS_11A|WIRELESS_11_5N), // tx: ofdm & MCS, rx: ofdm & MCS, hw: ofdm only
+    WIRELESS_11B_24N = (WIRELESS_11B|WIRELESS_11_24N), // tx: ofdm & cck & MCS, rx: ofdm & cck & MCS, hw: ofdm & cck
+    WIRELESS_11BG_24N = (WIRELESS_11B|WIRELESS_11G|WIRELESS_11_24N), // tx: ofdm & cck & MCS, rx: ofdm & cck & MCS, hw: ofdm & cck
+    WIRELESS_11_24AC = (WIRELESS_11G|WIRELESS_11AC),
+    WIRELESS_11_5AC = (WIRELESS_11A|WIRELESS_11AC),
 
 
-	//Type for registry default wireless mode
-	WIRELESS_11AGN = (WIRELESS_11A|WIRELESS_11G|WIRELESS_11_24N|WIRELESS_11_5N), // tx: ofdm & MCS, rx: ofdm & MCS, hw: ofdm only
-	WIRELESS_11ABGN = (WIRELESS_11A|WIRELESS_11B|WIRELESS_11G|WIRELESS_11_24N|WIRELESS_11_5N),
-	WIRELESS_MODE_24G = (WIRELESS_11B|WIRELESS_11G|WIRELESS_11_24N|WIRELESS_11AC),
-	WIRELESS_MODE_5G = (WIRELESS_11A|WIRELESS_11_5N|WIRELESS_11AC),
-	WIRELESS_MODE_MAX = (WIRELESS_11A|WIRELESS_11B|WIRELESS_11G|WIRELESS_11_24N|WIRELESS_11_5N|WIRELESS_11AC),
+    //Type for registry default wireless mode
+    WIRELESS_11AGN = (WIRELESS_11A|WIRELESS_11G|WIRELESS_11_24N|WIRELESS_11_5N), // tx: ofdm & MCS, rx: ofdm & MCS, hw: ofdm only
+    WIRELESS_11ABGN = (WIRELESS_11A|WIRELESS_11B|WIRELESS_11G|WIRELESS_11_24N|WIRELESS_11_5N),
+    WIRELESS_MODE_24G = (WIRELESS_11B|WIRELESS_11G|WIRELESS_11_24N|WIRELESS_11AC),
+    WIRELESS_MODE_5G = (WIRELESS_11A|WIRELESS_11_5N|WIRELESS_11AC),
+    WIRELESS_MODE_MAX = (WIRELESS_11A|WIRELESS_11B|WIRELESS_11G|WIRELESS_11_24N|WIRELESS_11_5N|WIRELESS_11AC),
 };
 
 #define SUPPORTED_24G_NETTYPE_MSK (WIRELESS_11B | WIRELESS_11G | WIRELESS_11_24N)
@@ -229,75 +229,75 @@ enum NETWORK_TYPE
 
 #define IsSupportedTxCCK(NetType) ((NetType) & (WIRELESS_11B) ? _TRUE : _FALSE)
 #define IsSupportedTxOFDM(NetType) ((NetType) & (WIRELESS_11G|WIRELESS_11A) ? _TRUE : _FALSE)
-#define IsSupportedHT(NetType) ((NetType) & (WIRELESS_11_24N|WIRELESS_11_5N) ? _TRUE : _FALSE) 
+#define IsSupportedHT(NetType) ((NetType) & (WIRELESS_11_24N|WIRELESS_11_5N) ? _TRUE : _FALSE)
 
-#define IsSupportedVHT(NetType) ((NetType) & (WIRELESS_11AC) ? _TRUE : _FALSE) 
+#define IsSupportedVHT(NetType) ((NetType) & (WIRELESS_11AC) ? _TRUE : _FALSE)
 
 
 typedef struct ieee_param {
-	u32 cmd;
-	u8 sta_addr[ETH_ALEN];
-	union {
-		struct {
-			u8 name;
-			u32 value;
-		} wpa_param;
-		struct {
-			u32 len;
-			u8 reserved[32];
-			u8 data[0];
-		} wpa_ie;
-	        struct{
-			int command;
-    			int reason_code;
-		} mlme;
-		struct {
-			u8 alg[IEEE_CRYPT_ALG_NAME_LEN];
-			u8 set_tx;
-			u32 err;
-			u8 idx;
-			u8 seq[8]; /* sequence counter (set: RX, get: TX) */
-			u16 key_len;
-			u8 key[0];
-		} crypt;
+    u32 cmd;
+    u8 sta_addr[ETH_ALEN];
+    union {
+        struct {
+            u8 name;
+            u32 value;
+        } wpa_param;
+        struct {
+            u32 len;
+            u8 reserved[32];
+            u8 data[0];
+        } wpa_ie;
+        struct {
+            int command;
+            int reason_code;
+        } mlme;
+        struct {
+            u8 alg[IEEE_CRYPT_ALG_NAME_LEN];
+            u8 set_tx;
+            u32 err;
+            u8 idx;
+            u8 seq[8]; /* sequence counter (set: RX, get: TX) */
+            u16 key_len;
+            u8 key[0];
+        } crypt;
 #ifdef CONFIG_AP_MODE
-		struct {
-			u16 aid;
-			u16 capability;
-			int flags;
-			u8 tx_supp_rates[16];		
-			struct rtw_ieee80211_ht_cap ht_cap;
-		} add_sta;
-		struct {
-			u8	reserved[2];//for set max_num_sta
-			u8	buf[0];
-		} bcn_ie;
+        struct {
+            u16 aid;
+            u16 capability;
+            int flags;
+            u8 tx_supp_rates[16];
+            struct rtw_ieee80211_ht_cap ht_cap;
+        } add_sta;
+        struct {
+            u8	reserved[2];//for set max_num_sta
+            u8	buf[0];
+        } bcn_ie;
 #endif
 
-	} u;	   
-}ieee_param;
+    } u;
+} ieee_param;
 
 #ifdef CONFIG_AP_MODE
 typedef struct ieee_param_ex {
-	u32 cmd;
-	u8 sta_addr[ETH_ALEN];
-	u8 data[0];
-}ieee_param_ex;
+    u32 cmd;
+    u8 sta_addr[ETH_ALEN];
+    u8 data[0];
+} ieee_param_ex;
 
-struct sta_data{
-	u16 aid;
-	u16 capability;
-	int flags;
-	u32 sta_set;
-	u8 tx_supp_rates[16];	
-	u32 tx_supp_rates_len;
-	struct rtw_ieee80211_ht_cap ht_cap;
-	u64	rx_pkts;
-	u64	rx_bytes;
-	u64	rx_drops;
-	u64	tx_pkts;
-	u64	tx_bytes;
-	u64	tx_drops;
+struct sta_data {
+    u16 aid;
+    u16 capability;
+    int flags;
+    u32 sta_set;
+    u8 tx_supp_rates[16];
+    u32 tx_supp_rates_len;
+    struct rtw_ieee80211_ht_cap ht_cap;
+    u64	rx_pkts;
+    u64	rx_bytes;
+    u64	rx_drops;
+    u64	tx_pkts;
+    u64	tx_bytes;
+    u64	tx_drops;
 };
 #endif
 
@@ -329,62 +329,62 @@ struct sta_data{
 #define IEEE_IBSS_MAC_HASH_SIZE 31
 
 struct ieee_ibss_seq {
-	u8 mac[ETH_ALEN];
-	u16 seq_num;
-	u16 frag_num;
-	unsigned long packet_time;
-	_list	list;
+    u8 mac[ETH_ALEN];
+    u16 seq_num;
+    u16 frag_num;
+    unsigned long packet_time;
+    _list	list;
 };
 
-#if defined(PLATFORM_LINUX) || defined(CONFIG_RTL8711FW)||defined(PLATFORM_FREEBSD) 
+#if defined(PLATFORM_LINUX) || defined(CONFIG_RTL8711FW)||defined(PLATFORM_FREEBSD)
 
 struct rtw_ieee80211_hdr {
-	u16 frame_ctl;
-	u16 duration_id;
-	u8 addr1[ETH_ALEN];
-	u8 addr2[ETH_ALEN];
-	u8 addr3[ETH_ALEN];
-	u16 seq_ctl;
-	u8 addr4[ETH_ALEN];
+    u16 frame_ctl;
+    u16 duration_id;
+    u8 addr1[ETH_ALEN];
+    u8 addr2[ETH_ALEN];
+    u8 addr3[ETH_ALEN];
+    u16 seq_ctl;
+    u8 addr4[ETH_ALEN];
 } __attribute__ ((packed));
 
 struct rtw_ieee80211_hdr_3addr {
-	u16 frame_ctl;
-	u16 duration_id;
-	u8 addr1[ETH_ALEN];
-	u8 addr2[ETH_ALEN];
-	u8 addr3[ETH_ALEN];
-	u16 seq_ctl;
+    u16 frame_ctl;
+    u16 duration_id;
+    u8 addr1[ETH_ALEN];
+    u8 addr2[ETH_ALEN];
+    u8 addr3[ETH_ALEN];
+    u16 seq_ctl;
 } __attribute__ ((packed));
 
 
 struct rtw_ieee80211_hdr_qos {
-	u16 frame_ctl;
-	u16 duration_id;
-	u8 addr1[ETH_ALEN];
-	u8 addr2[ETH_ALEN];
-	u8 addr3[ETH_ALEN];
-	u16 seq_ctl;
-	u8 addr4[ETH_ALEN];
-	u16	qc;
+    u16 frame_ctl;
+    u16 duration_id;
+    u8 addr1[ETH_ALEN];
+    u8 addr2[ETH_ALEN];
+    u8 addr3[ETH_ALEN];
+    u16 seq_ctl;
+    u8 addr4[ETH_ALEN];
+    u16	qc;
 }  __attribute__ ((packed));
 
 struct rtw_ieee80211_hdr_3addr_qos {
-        u16 frame_ctl;
-	u16 duration_id;
-	u8 addr1[ETH_ALEN];
-	u8 addr2[ETH_ALEN];
-	u8 addr3[ETH_ALEN];
-	u16 seq_ctl;
-       u16     qc;
+    u16 frame_ctl;
+    u16 duration_id;
+    u8 addr1[ETH_ALEN];
+    u8 addr2[ETH_ALEN];
+    u8 addr3[ETH_ALEN];
+    u16 seq_ctl;
+    u16     qc;
 }  __attribute__ ((packed));
 
 struct eapol {
-	u8 snap[6];
-	u16 ethertype;
-	u8 version;
-	u8 type;
-	u16 length;
+    u8 snap[6];
+    u16 ethertype;
+    u8 version;
+    u8 type;
+    u16 length;
 } __attribute__ ((packed));
 
 #endif
@@ -395,41 +395,41 @@ struct eapol {
 
 #pragma pack(1)
 struct rtw_ieee80211_hdr {
-	u16 frame_ctl;
-	u16 duration_id;
-	u8 addr1[ETH_ALEN];
-	u8 addr2[ETH_ALEN];
-	u8 addr3[ETH_ALEN];
-	u16 seq_ctl;
-	u8 addr4[ETH_ALEN];
+    u16 frame_ctl;
+    u16 duration_id;
+    u8 addr1[ETH_ALEN];
+    u8 addr2[ETH_ALEN];
+    u8 addr3[ETH_ALEN];
+    u16 seq_ctl;
+    u8 addr4[ETH_ALEN];
 };
 
 struct rtw_ieee80211_hdr_3addr {
-	u16 frame_ctl;
-	u16 duration_id;
-	u8 addr1[ETH_ALEN];
-	u8 addr2[ETH_ALEN];
-	u8 addr3[ETH_ALEN];
-	u16 seq_ctl;
+    u16 frame_ctl;
+    u16 duration_id;
+    u8 addr1[ETH_ALEN];
+    u8 addr2[ETH_ALEN];
+    u8 addr3[ETH_ALEN];
+    u16 seq_ctl;
 };
 
 
 struct rtw_ieee80211_hdr_qos {
-	struct rtw_ieee80211_hdr wlan_hdr;
-	u16	qc;
+    struct rtw_ieee80211_hdr wlan_hdr;
+    u16	qc;
 };
 
 struct rtw_ieee80211_hdr_3addr_qos {
-        struct  rtw_ieee80211_hdr_3addr wlan_hdr;
-        u16     qc;
+    struct  rtw_ieee80211_hdr_3addr wlan_hdr;
+    u16     qc;
 };
 
 struct eapol {
-	u8 snap[6];
-	u16 ethertype;
-	u8 version;
-	u8 type;
-	u16 length;
+    u8 snap[6];
+    u16 ethertype;
+    u8 version;
+    u8 type;
+    u16 length;
 };
 #pragma pack()
 
@@ -438,11 +438,11 @@ struct eapol {
 
 
 enum eap_type {
-	EAP_PACKET = 0,
-	EAPOL_START,
-	EAPOL_LOGOFF,
-	EAPOL_KEY,
-	EAPOL_ENCAP_ASF_ALERT
+    EAP_PACKET = 0,
+    EAPOL_START,
+    EAPOL_LOGOFF,
+    EAPOL_KEY,
+    EAPOL_ENCAP_ASF_ALERT
 };
 
 #define IEEE80211_3ADDR_LEN 24
@@ -549,10 +549,10 @@ enum eap_type {
 
 struct ieee80211_snap_hdr {
 
-        u8    dsap;   /* always 0xAA */
-        u8    ssap;   /* always 0xAA */
-        u8    ctrl;   /* always 0x03 */
-        u8    oui[P80211_OUI_LEN];    /* organizational universal id */
+    u8    dsap;   /* always 0xAA */
+    u8    ssap;   /* always 0xAA */
+    u8    ctrl;   /* always 0x03 */
+    u8    oui[P80211_OUI_LEN];    /* organizational universal id */
 
 } __attribute__ ((packed));
 
@@ -563,10 +563,10 @@ struct ieee80211_snap_hdr {
 #pragma pack(1)
 struct ieee80211_snap_hdr {
 
-        u8    dsap;   /* always 0xAA */
-        u8    ssap;   /* always 0xAA */
-        u8    ctrl;   /* always 0x03 */
-        u8    oui[P80211_OUI_LEN];    /* organizational universal id */
+    u8    dsap;   /* always 0xAA */
+    u8    ssap;   /* always 0xAA */
+    u8    ctrl;   /* always 0x03 */
+    u8    oui[P80211_OUI_LEN];    /* organizational universal id */
 
 };
 #pragma pack()
@@ -747,93 +747,93 @@ struct ieee80211_snap_hdr {
 #define IEEE80211_OFDM_SHIFT_MASK_A         4
 
 
-enum MGN_RATE{
-	MGN_1M		= 0x02,
-	MGN_2M		= 0x04,
-	MGN_5_5M 	= 0x0B,
-	MGN_6M	 	= 0x0C,
-	MGN_9M		= 0x12,
-	MGN_11M 	= 0x16,
-	MGN_12M	= 0x18,
-	MGN_18M	= 0x24,
-	MGN_24M	= 0x30,
-	MGN_36M	= 0x48,
-	MGN_48M	= 0x60,
-	MGN_54M	= 0x6C,
-	MGN_MCS32	= 0x7F,
-	MGN_MCS0,
-	MGN_MCS1,
-	MGN_MCS2,
-	MGN_MCS3,
-	MGN_MCS4,
-	MGN_MCS5,
-	MGN_MCS6,
-	MGN_MCS7,
-	MGN_MCS8,
-	MGN_MCS9,
-	MGN_MCS10,
-	MGN_MCS11,
-	MGN_MCS12,
-	MGN_MCS13,
-	MGN_MCS14,
-	MGN_MCS15,
-	MGN_MCS16,
-	MGN_MCS17,
-	MGN_MCS18,
-	MGN_MCS19,
-	MGN_MCS20,
-	MGN_MCS21,
-	MGN_MCS22,
-	MGN_MCS23,
-	MGN_MCS24,
-	MGN_MCS25,
-	MGN_MCS26,
-	MGN_MCS27,
-	MGN_MCS28,
-	MGN_MCS29,
-	MGN_MCS30,
-	MGN_MCS31,
-	MGN_VHT1SS_MCS0,
-	MGN_VHT1SS_MCS1,
-	MGN_VHT1SS_MCS2,
-	MGN_VHT1SS_MCS3,
-	MGN_VHT1SS_MCS4,
-	MGN_VHT1SS_MCS5,
-	MGN_VHT1SS_MCS6,
-	MGN_VHT1SS_MCS7,
-	MGN_VHT1SS_MCS8,
-	MGN_VHT1SS_MCS9,
-	MGN_VHT2SS_MCS0,
-	MGN_VHT2SS_MCS1,
-	MGN_VHT2SS_MCS2,
-	MGN_VHT2SS_MCS3,
-	MGN_VHT2SS_MCS4,
-	MGN_VHT2SS_MCS5,
-	MGN_VHT2SS_MCS6,
-	MGN_VHT2SS_MCS7,
-	MGN_VHT2SS_MCS8,
-	MGN_VHT2SS_MCS9,
-	MGN_VHT3SS_MCS0,
-	MGN_VHT3SS_MCS1,
-	MGN_VHT3SS_MCS2,
-	MGN_VHT3SS_MCS3,
-	MGN_VHT3SS_MCS4,
-	MGN_VHT3SS_MCS5,
-	MGN_VHT3SS_MCS6,
-	MGN_VHT3SS_MCS7,
-	MGN_VHT3SS_MCS8,
-	MGN_VHT3SS_MCS9,
-	MGN_VHT4SS_MCS0,
-	MGN_VHT4SS_MCS1,
-	MGN_VHT4SS_MCS2,
-	MGN_VHT4SS_MCS3,
-	MGN_VHT4SS_MCS4,
-	MGN_VHT4SS_MCS5,
-	MGN_VHT4SS_MCS6,
-	MGN_VHT4SS_MCS7,
-	MGN_VHT4SS_MCS8,
-	MGN_VHT4SS_MCS9,
-	MGN_UNKNOWN
+enum MGN_RATE {
+    MGN_1M		= 0x02,
+    MGN_2M		= 0x04,
+    MGN_5_5M 	= 0x0B,
+    MGN_6M	 	= 0x0C,
+    MGN_9M		= 0x12,
+    MGN_11M 	= 0x16,
+    MGN_12M	= 0x18,
+    MGN_18M	= 0x24,
+    MGN_24M	= 0x30,
+    MGN_36M	= 0x48,
+    MGN_48M	= 0x60,
+    MGN_54M	= 0x6C,
+    MGN_MCS32	= 0x7F,
+    MGN_MCS0,
+    MGN_MCS1,
+    MGN_MCS2,
+    MGN_MCS3,
+    MGN_MCS4,
+    MGN_MCS5,
+    MGN_MCS6,
+    MGN_MCS7,
+    MGN_MCS8,
+    MGN_MCS9,
+    MGN_MCS10,
+    MGN_MCS11,
+    MGN_MCS12,
+    MGN_MCS13,
+    MGN_MCS14,
+    MGN_MCS15,
+    MGN_MCS16,
+    MGN_MCS17,
+    MGN_MCS18,
+    MGN_MCS19,
+    MGN_MCS20,
+    MGN_MCS21,
+    MGN_MCS22,
+    MGN_MCS23,
+    MGN_MCS24,
+    MGN_MCS25,
+    MGN_MCS26,
+    MGN_MCS27,
+    MGN_MCS28,
+    MGN_MCS29,
+    MGN_MCS30,
+    MGN_MCS31,
+    MGN_VHT1SS_MCS0,
+    MGN_VHT1SS_MCS1,
+    MGN_VHT1SS_MCS2,
+    MGN_VHT1SS_MCS3,
+    MGN_VHT1SS_MCS4,
+    MGN_VHT1SS_MCS5,
+    MGN_VHT1SS_MCS6,
+    MGN_VHT1SS_MCS7,
+    MGN_VHT1SS_MCS8,
+    MGN_VHT1SS_MCS9,
+    MGN_VHT2SS_MCS0,
+    MGN_VHT2SS_MCS1,
+    MGN_VHT2SS_MCS2,
+    MGN_VHT2SS_MCS3,
+    MGN_VHT2SS_MCS4,
+    MGN_VHT2SS_MCS5,
+    MGN_VHT2SS_MCS6,
+    MGN_VHT2SS_MCS7,
+    MGN_VHT2SS_MCS8,
+    MGN_VHT2SS_MCS9,
+    MGN_VHT3SS_MCS0,
+    MGN_VHT3SS_MCS1,
+    MGN_VHT3SS_MCS2,
+    MGN_VHT3SS_MCS3,
+    MGN_VHT3SS_MCS4,
+    MGN_VHT3SS_MCS5,
+    MGN_VHT3SS_MCS6,
+    MGN_VHT3SS_MCS7,
+    MGN_VHT3SS_MCS8,
+    MGN_VHT3SS_MCS9,
+    MGN_VHT4SS_MCS0,
+    MGN_VHT4SS_MCS1,
+    MGN_VHT4SS_MCS2,
+    MGN_VHT4SS_MCS3,
+    MGN_VHT4SS_MCS4,
+    MGN_VHT4SS_MCS5,
+    MGN_VHT4SS_MCS6,
+    MGN_VHT4SS_MCS7,
+    MGN_VHT4SS_MCS8,
+    MGN_VHT4SS_MCS9,
+    MGN_UNKNOWN
 };
 
 #define IS_HT_RATE(_rate)				(_rate >= MGN_MCS0 && _rate <= MGN_MCS31)
@@ -846,16 +846,16 @@ enum MGN_RATE{
  *       information for frames received.  Not setting these will not cause
  *       any adverse affects. */
 struct ieee80211_rx_stats {
-	//u32 mac_time[2];
-	s8 rssi;
-	u8 signal;
-	u8 noise;
-	u8 received_channel;
-	u16 rate; /* in 100 kbps */
-	//u8 control;
-	u8 mask;
-	u8 freq;
-	u16 len;
+    //u32 mac_time[2];
+    s8 rssi;
+    u8 signal;
+    u8 noise;
+    u8 received_channel;
+    u16 rate; /* in 100 kbps */
+    //u8 control;
+    u8 mask;
+    u8 freq;
+    u16 len;
 };
 
 /* IEEE 802.11 requires that STA supports concurrent reception of at least
@@ -865,59 +865,59 @@ struct ieee80211_rx_stats {
 #define IEEE80211_FRAG_CACHE_LEN 4
 
 struct ieee80211_frag_entry {
-	u32 first_frag_time;
-	uint seq;
-	uint last_frag;
-	uint qos;   //jackson
-	uint tid;	//jackson
-	struct sk_buff *skb;
-	u8 src_addr[ETH_ALEN];
-	u8 dst_addr[ETH_ALEN];
+    u32 first_frag_time;
+    uint seq;
+    uint last_frag;
+    uint qos;   //jackson
+    uint tid;	//jackson
+    struct sk_buff *skb;
+    u8 src_addr[ETH_ALEN];
+    u8 dst_addr[ETH_ALEN];
 };
 
 #ifndef PLATFORM_FREEBSD //Baron BSD has already defined
 struct ieee80211_stats {
-	uint tx_unicast_frames;
-	uint tx_multicast_frames;
-	uint tx_fragments;
-	uint tx_unicast_octets;
-	uint tx_multicast_octets;
-	uint tx_deferred_transmissions;
-	uint tx_single_retry_frames;
-	uint tx_multiple_retry_frames;
-	uint tx_retry_limit_exceeded;
-	uint tx_discards;
-	uint rx_unicast_frames;
-	uint rx_multicast_frames;
-	uint rx_fragments;
-	uint rx_unicast_octets;
-	uint rx_multicast_octets;
-	uint rx_fcs_errors;
-	uint rx_discards_no_buffer;
-	uint tx_discards_wrong_sa;
-	uint rx_discards_undecryptable;
-	uint rx_message_in_msg_fragments;
-	uint rx_message_in_bad_msg_fragments;
+    uint tx_unicast_frames;
+    uint tx_multicast_frames;
+    uint tx_fragments;
+    uint tx_unicast_octets;
+    uint tx_multicast_octets;
+    uint tx_deferred_transmissions;
+    uint tx_single_retry_frames;
+    uint tx_multiple_retry_frames;
+    uint tx_retry_limit_exceeded;
+    uint tx_discards;
+    uint rx_unicast_frames;
+    uint rx_multicast_frames;
+    uint rx_fragments;
+    uint rx_unicast_octets;
+    uint rx_multicast_octets;
+    uint rx_fcs_errors;
+    uint rx_discards_no_buffer;
+    uint tx_discards_wrong_sa;
+    uint rx_discards_undecryptable;
+    uint rx_message_in_msg_fragments;
+    uint rx_message_in_bad_msg_fragments;
 };
 #endif //PLATFORM_FREEBSD
-struct ieee80211_softmac_stats{
-	uint rx_ass_ok;
-	uint rx_ass_err;
-	uint rx_probe_rq;
-	uint tx_probe_rs;
-	uint tx_beacons;
-	uint rx_auth_rq;
-	uint rx_auth_rs_ok;
-	uint rx_auth_rs_err;
-	uint tx_auth_rq;
-	uint no_auth_rs;
-	uint no_ass_rs;
-	uint tx_ass_rq;
-	uint rx_ass_rq;
-	uint tx_probe_rq;
-	uint reassoc;
-	uint swtxstop;
-	uint swtxawake;
+struct ieee80211_softmac_stats {
+    uint rx_ass_ok;
+    uint rx_ass_err;
+    uint rx_probe_rq;
+    uint tx_probe_rs;
+    uint tx_beacons;
+    uint rx_auth_rq;
+    uint rx_auth_rs_ok;
+    uint rx_auth_rs_err;
+    uint tx_auth_rq;
+    uint no_auth_rs;
+    uint no_ass_rs;
+    uint tx_ass_rq;
+    uint rx_ass_rq;
+    uint tx_probe_rq;
+    uint reassoc;
+    uint swtxstop;
+    uint swtxawake;
 };
 
 #define SEC_KEY_1         (1<<0)
@@ -947,15 +947,15 @@ struct ieee80211_softmac_stats{
 #if defined(PLATFORM_LINUX) || defined(CONFIG_RTL8711FW)
 
 struct ieee80211_security {
-	u16 active_key:2,
-            enabled:1,
-	    auth_mode:2,
-            auth_algo:4,
-            unicast_uses_group:1;
-	u8 key_sizes[WEP_KEYS];
-	u8 keys[WEP_KEYS][WEP_KEY_LEN];
-	u8 level;
-	u16 flags;
+    u16 active_key:2,
+        enabled:1,
+        auth_mode:2,
+        auth_algo:4,
+        unicast_uses_group:1;
+    u8 key_sizes[WEP_KEYS];
+    u8 keys[WEP_KEYS][WEP_KEY_LEN];
+    u8 level;
+    u16 flags;
 } __attribute__ ((packed));
 
 #endif
@@ -964,15 +964,15 @@ struct ieee80211_security {
 
 #pragma pack(1)
 struct ieee80211_security {
-	u16 active_key:2,
-            enabled:1,
-	    auth_mode:2,
-            auth_algo:4,
-            unicast_uses_group:1;
-	u8 key_sizes[WEP_KEYS];
-	u8 keys[WEP_KEYS][WEP_KEY_LEN];
-	u8 level;
-	u16 flags;
+    u16 active_key:2,
+        enabled:1,
+        auth_mode:2,
+        auth_algo:4,
+        unicast_uses_group:1;
+    u8 key_sizes[WEP_KEYS];
+    u8 keys[WEP_KEYS][WEP_KEY_LEN];
+    u8 level;
+    u16 flags;
 } ;
 #pragma pack()
 
@@ -994,12 +994,12 @@ Total: 28-2340 bytes
 */
 
 struct ieee80211_header_data {
-	u16 frame_ctl;
-	u16 duration_id;
-	u8 addr1[6];
-	u8 addr2[6];
-	u8 addr3[6];
-	u16 seq_ctrl;
+    u16 frame_ctl;
+    u16 duration_id;
+    u8 addr1[6];
+    u8 addr2[6];
+    u8 addr3[6];
+    u16 seq_ctrl;
 };
 
 #define BEACON_PROBE_SSID_ID_POSITION 12
@@ -1021,14 +1021,14 @@ struct ieee80211_header_data {
 #if defined(PLATFORM_LINUX) || defined(CONFIG_RTL8711FW)
 
 struct ieee80211_info_element_hdr {
-	u8 id;
-	u8 len;
+    u8 id;
+    u8 len;
 } __attribute__ ((packed));
 
 struct ieee80211_info_element {
-	u8 id;
-	u8 len;
-	u8 data[0];
+    u8 id;
+    u8 len;
+    u8 data[0];
 } __attribute__ ((packed));
 #endif
 
@@ -1036,14 +1036,14 @@ struct ieee80211_info_element {
 
 #pragma pack(1)
 struct ieee80211_info_element_hdr {
-	u8 id;
-	u8 len;
+    u8 id;
+    u8 len;
 } ;
 
 struct ieee80211_info_element {
-	u8 id;
-	u8 len;
-	u8 data[0];
+    u8 id;
+    u8 len;
+    u8 data[0];
 } ;
 #pragma pack()
 
@@ -1075,40 +1075,40 @@ struct ieee80211_info_element {
 
 
 struct ieee80211_authentication {
-	struct ieee80211_header_data header;
-	u16 algorithm;
-	u16 transaction;
-	u16 status;
-	//struct ieee80211_info_element_hdr info_element;
+    struct ieee80211_header_data header;
+    u16 algorithm;
+    u16 transaction;
+    u16 status;
+    //struct ieee80211_info_element_hdr info_element;
 } __attribute__ ((packed));
 
 
 struct ieee80211_probe_response {
-	struct ieee80211_header_data header;
-	u32 time_stamp[2];
-	u16 beacon_interval;
-	u16 capability;
-	struct ieee80211_info_element info_element;
+    struct ieee80211_header_data header;
+    u32 time_stamp[2];
+    u16 beacon_interval;
+    u16 capability;
+    struct ieee80211_info_element info_element;
 } __attribute__ ((packed));
 
 struct ieee80211_probe_request {
-	struct ieee80211_header_data header;
-	/*struct ieee80211_info_element info_element;*/
+    struct ieee80211_header_data header;
+    /*struct ieee80211_info_element info_element;*/
 } __attribute__ ((packed));
 
 struct ieee80211_assoc_request_frame {
-	struct rtw_ieee80211_hdr_3addr header;
-	u16 capability;
-	u16 listen_interval;
-	//u8 current_ap[ETH_ALEN];
-	struct ieee80211_info_element_hdr info_element;
+    struct rtw_ieee80211_hdr_3addr header;
+    u16 capability;
+    u16 listen_interval;
+    //u8 current_ap[ETH_ALEN];
+    struct ieee80211_info_element_hdr info_element;
 } __attribute__ ((packed));
 
 struct ieee80211_assoc_response_frame {
-	struct rtw_ieee80211_hdr_3addr header;
-	u16 capability;
-	u16 status;
-	u16 aid;
+    struct rtw_ieee80211_hdr_3addr header;
+    u16 capability;
+    u16 status;
+    u16 aid;
 //	struct ieee80211_info_element info_element; /* supported rates */
 } __attribute__ ((packed));
 #endif
@@ -1120,40 +1120,40 @@ struct ieee80211_assoc_response_frame {
 #pragma pack(1)
 
 struct ieee80211_authentication {
-	struct ieee80211_header_data header;
-	u16 algorithm;
-	u16 transaction;
-	u16 status;
-	//struct ieee80211_info_element_hdr info_element;
+    struct ieee80211_header_data header;
+    u16 algorithm;
+    u16 transaction;
+    u16 status;
+    //struct ieee80211_info_element_hdr info_element;
 } ;
 
 
 struct ieee80211_probe_response {
-	struct ieee80211_header_data header;
-	u32 time_stamp[2];
-	u16 beacon_interval;
-	u16 capability;
-	struct ieee80211_info_element info_element;
+    struct ieee80211_header_data header;
+    u32 time_stamp[2];
+    u16 beacon_interval;
+    u16 capability;
+    struct ieee80211_info_element info_element;
 } ;
 
 struct ieee80211_probe_request {
-	struct ieee80211_header_data header;
-	/*struct ieee80211_info_element info_element;*/
+    struct ieee80211_header_data header;
+    /*struct ieee80211_info_element info_element;*/
 } ;
 
 struct ieee80211_assoc_request_frame {
-	struct rtw_ieee80211_hdr_3addr header;
-	u16 capability;
-	u16 listen_interval;
-	//u8 current_ap[ETH_ALEN];
-	struct ieee80211_info_element_hdr info_element;
+    struct rtw_ieee80211_hdr_3addr header;
+    u16 capability;
+    u16 listen_interval;
+    //u8 current_ap[ETH_ALEN];
+    struct ieee80211_info_element_hdr info_element;
 } ;
 
 struct ieee80211_assoc_response_frame {
-	struct rtw_ieee80211_hdr_3addr header;
-	u16 capability;
-	u16 status;
-	u16 aid;
+    struct rtw_ieee80211_hdr_3addr header;
+    u16 capability;
+    u16 status;
+    u16 aid;
 //	struct ieee80211_info_element info_element; /* supported rates */
 };
 
@@ -1165,12 +1165,12 @@ struct ieee80211_assoc_response_frame {
 
 
 struct ieee80211_txb {
-	u8 nr_frags;
-	u8 encrypted;
-	u16 reserved;
-	u16 frag_size;
-	u16 payload_size;
-	struct sk_buff *fragments[0];
+    u8 nr_frags;
+    u8 encrypted;
+    u16 reserved;
+    u16 frag_size;
+    u16 payload_size;
+    struct sk_buff *fragments[0];
 };
 
 
@@ -1211,45 +1211,45 @@ struct ieee80211_txb {
 #define IW_ESSID_MAX_SIZE 32
 #if 0
 struct ieee80211_network {
-	/* These entries are used to identify a unique network */
-	u8 bssid[ETH_ALEN];
-	u8 channel;
-	/* Ensure null-terminated for any debug msgs */
-	u8 ssid[IW_ESSID_MAX_SIZE + 1];
-	u8 ssid_len;
-	u8	rssi;	//relative signal strength
-	u8	sq;		//signal quality
+    /* These entries are used to identify a unique network */
+    u8 bssid[ETH_ALEN];
+    u8 channel;
+    /* Ensure null-terminated for any debug msgs */
+    u8 ssid[IW_ESSID_MAX_SIZE + 1];
+    u8 ssid_len;
+    u8	rssi;	//relative signal strength
+    u8	sq;		//signal quality
 
-	/* These are network statistics */
-	//struct ieee80211_rx_stats stats;
-	u16 capability;
-	u16	aid;
-	u8 rates[MAX_RATES_LENGTH];
-	u8 rates_len;
-	u8 rates_ex[MAX_RATES_EX_LENGTH];
-	u8 rates_ex_len;
-	
-	u8 edca_parmsets[18];
-		
-	u8 mode;
-	u8 flags;
-	u8 time_stamp[8];
-	u16 beacon_interval;
-	u16 listen_interval;
-	u16 atim_window;
-	u8 wpa_ie[MAX_WPA_IE_LEN];
-	size_t wpa_ie_len;
-	u8 rsn_ie[MAX_WPA_IE_LEN];
-	size_t rsn_ie_len;
-	u8 country[6];
-	u8 dtim_period;
-	u8 dtim_data;
-	u8 power_constraint;
-	u8 qosinfo;
-	u8 qbssload[5];
-	u8 network_type;
-	int join_res;
-	unsigned long	last_scanned;	
+    /* These are network statistics */
+    //struct ieee80211_rx_stats stats;
+    u16 capability;
+    u16	aid;
+    u8 rates[MAX_RATES_LENGTH];
+    u8 rates_len;
+    u8 rates_ex[MAX_RATES_EX_LENGTH];
+    u8 rates_ex_len;
+
+    u8 edca_parmsets[18];
+
+    u8 mode;
+    u8 flags;
+    u8 time_stamp[8];
+    u16 beacon_interval;
+    u16 listen_interval;
+    u16 atim_window;
+    u8 wpa_ie[MAX_WPA_IE_LEN];
+    size_t wpa_ie_len;
+    u8 rsn_ie[MAX_WPA_IE_LEN];
+    size_t rsn_ie_len;
+    u8 country[6];
+    u8 dtim_period;
+    u8 dtim_data;
+    u8 power_constraint;
+    u8 qosinfo;
+    u8 qbssload[5];
+    u8 network_type;
+    int join_res;
+    unsigned long	last_scanned;
 };
 #endif
 /*
@@ -1263,41 +1263,41 @@ join_res:
 
 enum ieee80211_state {
 
-	/* the card is not linked at all */
-	IEEE80211_NOLINK = 0,
-	
-	/* IEEE80211_ASSOCIATING* are for BSS client mode
-	 * the driver shall not perform RX filtering unless
-	 * the state is LINKED.
-	 * The driver shall just check for the state LINKED and
-	 * defaults to NOLINK for ALL the other states (including
-	 * LINKED_SCANNING)
-	 */
-	
-	/* the association procedure will start (wq scheduling)*/
-	IEEE80211_ASSOCIATING,
-	IEEE80211_ASSOCIATING_RETRY,
-	
-	/* the association procedure is sending AUTH request*/
-	IEEE80211_ASSOCIATING_AUTHENTICATING,
-	
-	/* the association procedure has successfully authentcated
-	 * and is sending association request
-	 */
-	IEEE80211_ASSOCIATING_AUTHENTICATED,
-	
-	/* the link is ok. the card associated to a BSS or linked
-	 * to a ibss cell or acting as an AP and creating the bss
-	 */
-	IEEE80211_LINKED,
-	
-	/* same as LINKED, but the driver shall apply RX filter
-	 * rules as we are in NO_LINK mode. As the card is still
-	 * logically linked, but it is doing a syncro site survey
-	 * then it will be back to LINKED state.
-	 */
-	IEEE80211_LINKED_SCANNING,
-	
+    /* the card is not linked at all */
+    IEEE80211_NOLINK = 0,
+
+    /* IEEE80211_ASSOCIATING* are for BSS client mode
+     * the driver shall not perform RX filtering unless
+     * the state is LINKED.
+     * The driver shall just check for the state LINKED and
+     * defaults to NOLINK for ALL the other states (including
+     * LINKED_SCANNING)
+     */
+
+    /* the association procedure will start (wq scheduling)*/
+    IEEE80211_ASSOCIATING,
+    IEEE80211_ASSOCIATING_RETRY,
+
+    /* the association procedure is sending AUTH request*/
+    IEEE80211_ASSOCIATING_AUTHENTICATING,
+
+    /* the association procedure has successfully authentcated
+     * and is sending association request
+     */
+    IEEE80211_ASSOCIATING_AUTHENTICATED,
+
+    /* the link is ok. the card associated to a BSS or linked
+     * to a ibss cell or acting as an AP and creating the bss
+     */
+    IEEE80211_LINKED,
+
+    /* same as LINKED, but the driver shall apply RX filter
+     * rules as we are in NO_LINK mode. As the card is still
+     * logically linked, but it is doing a syncro site survey
+     * then it will be back to LINKED state.
+     */
+    IEEE80211_LINKED_SCANNING,
+
 };
 #endif //PLATFORM_FREEBSD
 
@@ -1316,29 +1316,29 @@ enum ieee80211_state {
 #else
 extern __inline int is_multicast_mac_addr(const u8 *addr)
 {
-        return ((addr[0] != 0xff) && (0x01 & addr[0]));
+    return ((addr[0] != 0xff) && (0x01 & addr[0]));
 }
 
 extern __inline int is_broadcast_mac_addr(const u8 *addr)
 {
-	return ((addr[0] == 0xff) && (addr[1] == 0xff) && (addr[2] == 0xff) &&   \
-		(addr[3] == 0xff) && (addr[4] == 0xff) && (addr[5] == 0xff));
+    return ((addr[0] == 0xff) && (addr[1] == 0xff) && (addr[2] == 0xff) &&   \
+            (addr[3] == 0xff) && (addr[4] == 0xff) && (addr[5] == 0xff));
 }
 
 extern __inline int is_zero_mac_addr(const u8 *addr)
 {
-	return ((addr[0] == 0x00) && (addr[1] == 0x00) && (addr[2] == 0x00) &&   \
-		(addr[3] == 0x00) && (addr[4] == 0x00) && (addr[5] == 0x00));
+    return ((addr[0] == 0x00) && (addr[1] == 0x00) && (addr[2] == 0x00) &&   \
+            (addr[3] == 0x00) && (addr[4] == 0x00) && (addr[5] == 0x00));
 }
 #endif //PLATFORM_FREEBSD
 
 #define CFG_IEEE80211_RESERVE_FCS (1<<0)
 #define CFG_IEEE80211_COMPUTE_FCS (1<<1)
 
-typedef struct tx_pending_t{
-	int frag;
-	struct ieee80211_txb *txb;
-}tx_pending_t;
+typedef struct tx_pending_t {
+    int frag;
+    struct ieee80211_txb *txb;
+} tx_pending_t;
 
 
 
@@ -1368,67 +1368,67 @@ int ieee80211_get_hdrlen(u16 fc);
 
 /* Action category code */
 enum rtw_ieee80211_category {
-	RTW_WLAN_CATEGORY_SPECTRUM_MGMT = 0,
-	RTW_WLAN_CATEGORY_QOS = 1,
-	RTW_WLAN_CATEGORY_DLS = 2,
-	RTW_WLAN_CATEGORY_BACK = 3,
-	RTW_WLAN_CATEGORY_PUBLIC = 4, //IEEE 802.11 public action frames
-	RTW_WLAN_CATEGORY_RADIO_MEASUREMENT  = 5,
-	RTW_WLAN_CATEGORY_FT = 6,
-	RTW_WLAN_CATEGORY_HT = 7,
-	RTW_WLAN_CATEGORY_SA_QUERY = 8,
-	RTW_WLAN_CATEGORY_UNPROTECTED_WNM = 11, // add for CONFIG_IEEE80211W, none 11w also can use
-	RTW_WLAN_CATEGORY_TDLS = 12,
-	RTW_WLAN_CATEGORY_SELF_PROTECTED = 15, // add for CONFIG_IEEE80211W, none 11w also can use
-	RTW_WLAN_CATEGORY_WMM = 17,
-	RTW_WLAN_CATEGORY_VHT = 21,
-	RTW_WLAN_CATEGORY_P2P = 0x7f,//P2P action frames
+    RTW_WLAN_CATEGORY_SPECTRUM_MGMT = 0,
+    RTW_WLAN_CATEGORY_QOS = 1,
+    RTW_WLAN_CATEGORY_DLS = 2,
+    RTW_WLAN_CATEGORY_BACK = 3,
+    RTW_WLAN_CATEGORY_PUBLIC = 4, //IEEE 802.11 public action frames
+    RTW_WLAN_CATEGORY_RADIO_MEASUREMENT  = 5,
+    RTW_WLAN_CATEGORY_FT = 6,
+    RTW_WLAN_CATEGORY_HT = 7,
+    RTW_WLAN_CATEGORY_SA_QUERY = 8,
+    RTW_WLAN_CATEGORY_UNPROTECTED_WNM = 11, // add for CONFIG_IEEE80211W, none 11w also can use
+    RTW_WLAN_CATEGORY_TDLS = 12,
+    RTW_WLAN_CATEGORY_SELF_PROTECTED = 15, // add for CONFIG_IEEE80211W, none 11w also can use
+    RTW_WLAN_CATEGORY_WMM = 17,
+    RTW_WLAN_CATEGORY_VHT = 21,
+    RTW_WLAN_CATEGORY_P2P = 0x7f,//P2P action frames
 };
 
 /* SPECTRUM_MGMT action code */
 enum rtw_ieee80211_spectrum_mgmt_actioncode {
-	RTW_WLAN_ACTION_SPCT_MSR_REQ = 0,
-	RTW_WLAN_ACTION_SPCT_MSR_RPRT = 1,
-	RTW_WLAN_ACTION_SPCT_TPC_REQ = 2,
-	RTW_WLAN_ACTION_SPCT_TPC_RPRT = 3,
-	RTW_WLAN_ACTION_SPCT_CHL_SWITCH = 4,
-	RTW_WLAN_ACTION_SPCT_EXT_CHL_SWITCH = 5,
+    RTW_WLAN_ACTION_SPCT_MSR_REQ = 0,
+    RTW_WLAN_ACTION_SPCT_MSR_RPRT = 1,
+    RTW_WLAN_ACTION_SPCT_TPC_REQ = 2,
+    RTW_WLAN_ACTION_SPCT_TPC_RPRT = 3,
+    RTW_WLAN_ACTION_SPCT_CHL_SWITCH = 4,
+    RTW_WLAN_ACTION_SPCT_EXT_CHL_SWITCH = 5,
 };
 
-enum _PUBLIC_ACTION{
-	ACT_PUBLIC_BSSCOEXIST = 0, // 20/40 BSS Coexistence
-	ACT_PUBLIC_DSE_ENABLE = 1,
-	ACT_PUBLIC_DSE_DEENABLE = 2,
-	ACT_PUBLIC_DSE_REG_LOCATION = 3,
-	ACT_PUBLIC_EXT_CHL_SWITCH = 4,
-	ACT_PUBLIC_DSE_MSR_REQ = 5,
-	ACT_PUBLIC_DSE_MSR_RPRT = 6,
-	ACT_PUBLIC_MP = 7, // Measurement Pilot
-	ACT_PUBLIC_DSE_PWR_CONSTRAINT = 8,
-	ACT_PUBLIC_VENDOR = 9, // for WIFI_DIRECT
-	ACT_PUBLIC_GAS_INITIAL_REQ = 10,
-	ACT_PUBLIC_GAS_INITIAL_RSP = 11,
-	ACT_PUBLIC_GAS_COMEBACK_REQ = 12,
-	ACT_PUBLIC_GAS_COMEBACK_RSP = 13,
-	ACT_PUBLIC_TDLS_DISCOVERY_RSP = 14,
-	ACT_PUBLIC_LOCATION_TRACK = 15,
-	ACT_PUBLIC_MAX
+enum _PUBLIC_ACTION {
+    ACT_PUBLIC_BSSCOEXIST = 0, // 20/40 BSS Coexistence
+    ACT_PUBLIC_DSE_ENABLE = 1,
+    ACT_PUBLIC_DSE_DEENABLE = 2,
+    ACT_PUBLIC_DSE_REG_LOCATION = 3,
+    ACT_PUBLIC_EXT_CHL_SWITCH = 4,
+    ACT_PUBLIC_DSE_MSR_REQ = 5,
+    ACT_PUBLIC_DSE_MSR_RPRT = 6,
+    ACT_PUBLIC_MP = 7, // Measurement Pilot
+    ACT_PUBLIC_DSE_PWR_CONSTRAINT = 8,
+    ACT_PUBLIC_VENDOR = 9, // for WIFI_DIRECT
+    ACT_PUBLIC_GAS_INITIAL_REQ = 10,
+    ACT_PUBLIC_GAS_INITIAL_RSP = 11,
+    ACT_PUBLIC_GAS_COMEBACK_REQ = 12,
+    ACT_PUBLIC_GAS_COMEBACK_RSP = 13,
+    ACT_PUBLIC_TDLS_DISCOVERY_RSP = 14,
+    ACT_PUBLIC_LOCATION_TRACK = 15,
+    ACT_PUBLIC_MAX
 };
 
 #ifdef CONFIG_TDLS
-enum TDLS_ACTION_FIELD{
-	TDLS_SETUP_REQUEST = 0,
-	TDLS_SETUP_RESPONSE = 1,
-	TDLS_SETUP_CONFIRM = 2,
-	TDLS_TEARDOWN = 3,
-	TDLS_PEER_TRAFFIC_INDICATION = 4,
-	TDLS_CHANNEL_SWITCH_REQUEST = 5,
-	TDLS_CHANNEL_SWITCH_RESPONSE = 6,
-	TDLS_PEER_PSM_REQUEST = 7,
-	TDLS_PEER_PSM_RESPONSE = 8,
-	TDLS_PEER_TRAFFIC_RESPONSE = 9,
-	TDLS_DISCOVERY_REQUEST = 10,
-	TDLS_DISCOVERY_RESPONSE = 14,	//it's used in public action frame
+enum TDLS_ACTION_FIELD {
+    TDLS_SETUP_REQUEST = 0,
+    TDLS_SETUP_RESPONSE = 1,
+    TDLS_SETUP_CONFIRM = 2,
+    TDLS_TEARDOWN = 3,
+    TDLS_PEER_TRAFFIC_INDICATION = 4,
+    TDLS_CHANNEL_SWITCH_REQUEST = 5,
+    TDLS_CHANNEL_SWITCH_RESPONSE = 6,
+    TDLS_PEER_PSM_REQUEST = 7,
+    TDLS_PEER_PSM_RESPONSE = 8,
+    TDLS_PEER_TRAFFIC_RESPONSE = 9,
+    TDLS_DISCOVERY_REQUEST = 10,
+    TDLS_DISCOVERY_RESPONSE = 14,	//it's used in public action frame
 };
 
 #define	TUNNELED_PROBE_REQ	15
@@ -1437,35 +1437,35 @@ enum TDLS_ACTION_FIELD{
 
 /* BACK action code */
 enum rtw_ieee80211_back_actioncode {
-	RTW_WLAN_ACTION_ADDBA_REQ = 0,
-	RTW_WLAN_ACTION_ADDBA_RESP = 1,
-	RTW_WLAN_ACTION_DELBA = 2,
+    RTW_WLAN_ACTION_ADDBA_REQ = 0,
+    RTW_WLAN_ACTION_ADDBA_RESP = 1,
+    RTW_WLAN_ACTION_DELBA = 2,
 };
 
 /* HT features action code */
 enum rtw_ieee80211_ht_actioncode {
-	RTW_WLAN_ACTION_HT_NOTI_CHNL_WIDTH = 0,
-       RTW_WLAN_ACTION_HT_SM_PS = 1,
-       RTW_WLAN_ACTION_HT_PSMP = 2,
-       RTW_WLAN_ACTION_HT_SET_PCO_PHASE = 3,
-       RTW_WLAN_ACTION_HT_CSI = 4,
-       RTW_WLAN_ACTION_HT_NON_COMPRESS_BEAMFORMING = 5,
-       RTW_WLAN_ACTION_HT_COMPRESS_BEAMFORMING = 6,
-       RTW_WLAN_ACTION_HT_ASEL_FEEDBACK = 7,
+    RTW_WLAN_ACTION_HT_NOTI_CHNL_WIDTH = 0,
+    RTW_WLAN_ACTION_HT_SM_PS = 1,
+    RTW_WLAN_ACTION_HT_PSMP = 2,
+    RTW_WLAN_ACTION_HT_SET_PCO_PHASE = 3,
+    RTW_WLAN_ACTION_HT_CSI = 4,
+    RTW_WLAN_ACTION_HT_NON_COMPRESS_BEAMFORMING = 5,
+    RTW_WLAN_ACTION_HT_COMPRESS_BEAMFORMING = 6,
+    RTW_WLAN_ACTION_HT_ASEL_FEEDBACK = 7,
 };
 
 /* BACK (block-ack) parties */
 enum rtw_ieee80211_back_parties {
-	RTW_WLAN_BACK_RECIPIENT = 0,
-	RTW_WLAN_BACK_INITIATOR = 1,
-	RTW_WLAN_BACK_TIMER = 2,
+    RTW_WLAN_BACK_RECIPIENT = 0,
+    RTW_WLAN_BACK_INITIATOR = 1,
+    RTW_WLAN_BACK_TIMER = 2,
 };
 
 /* VHT features action code */
-enum rtw_ieee80211_vht_actioncode{
-	RTW_WLAN_ACTION_VHT_COMPRESSED_BEAMFORMING = 0,
-       RTW_WLAN_ACTION_VHT_GROUPID_MANAGEMENT = 1,
-       RTW_WLAN_ACTION_VHT_OPMODE_NOTIFICATION = 2,
+enum rtw_ieee80211_vht_actioncode {
+    RTW_WLAN_ACTION_VHT_COMPRESSED_BEAMFORMING = 0,
+    RTW_WLAN_ACTION_VHT_GROUPID_MANAGEMENT = 1,
+    RTW_WLAN_ACTION_VHT_OPMODE_NOTIFICATION = 2,
 };
 
 
@@ -1511,32 +1511,32 @@ enum rtw_ieee80211_vht_actioncode{
  * @RTW_IEEE80211_CHAN_NO_HT40MINUS: extension channel below this channel
  *      is not permitted.
  */
-  enum rtw_ieee80211_channel_flags {
-          RTW_IEEE80211_CHAN_DISABLED         = 1<<0,
-          RTW_IEEE80211_CHAN_PASSIVE_SCAN     = 1<<1,
-          RTW_IEEE80211_CHAN_NO_IBSS          = 1<<2,
-          RTW_IEEE80211_CHAN_RADAR            = 1<<3,
-          RTW_IEEE80211_CHAN_NO_HT40PLUS      = 1<<4,
-          RTW_IEEE80211_CHAN_NO_HT40MINUS     = 1<<5,
-  };
-  
-  #define RTW_IEEE80211_CHAN_NO_HT40 \
+enum rtw_ieee80211_channel_flags {
+    RTW_IEEE80211_CHAN_DISABLED         = 1<<0,
+    RTW_IEEE80211_CHAN_PASSIVE_SCAN     = 1<<1,
+    RTW_IEEE80211_CHAN_NO_IBSS          = 1<<2,
+    RTW_IEEE80211_CHAN_RADAR            = 1<<3,
+    RTW_IEEE80211_CHAN_NO_HT40PLUS      = 1<<4,
+    RTW_IEEE80211_CHAN_NO_HT40MINUS     = 1<<5,
+};
+
+#define RTW_IEEE80211_CHAN_NO_HT40 \
           (RTW_IEEE80211_CHAN_NO_HT40PLUS | RTW_IEEE80211_CHAN_NO_HT40MINUS)
 
 /* Represent channel details, subset of ieee80211_channel */
 struct rtw_ieee80211_channel {
-	//enum ieee80211_band band;
-	//u16 center_freq;
-	u16 hw_value;
-	u32 flags;
-	//int max_antenna_gain;
-	//int max_power;
-	//int max_reg_power;
-	//bool beacon_found;
-	//u32 orig_flags;
-	//int orig_mag;
-	//int orig_mpwr;
-}; 
+    //enum ieee80211_band band;
+    //u16 center_freq;
+    u16 hw_value;
+    u32 flags;
+    //int max_antenna_gain;
+    //int max_power;
+    //int max_reg_power;
+    //bool beacon_found;
+    //u32 orig_flags;
+    //int orig_mag;
+    //int orig_mpwr;
+};
 
 #define CHAN_FMT \
 	/*"band:%d, "*/ \
@@ -1549,7 +1549,7 @@ struct rtw_ieee80211_channel {
 	/*"beacon_found:%u\n"*/ \
 	/*"orig_flags:0x%08x\n"*/ \
 	/*"orig_mag:%d\n"*/ \
-	/*"orig_mpwr:%d\n"*/ 
+	/*"orig_mpwr:%d\n"*/
 
 #define CHAN_ARG(channel) \
 	/*(channel)->band*/ \
@@ -1563,76 +1563,76 @@ struct rtw_ieee80211_channel {
 	/*, (channel)->orig_flags*/ \
 	/*, (channel)->orig_mag*/ \
 	/*, (channel)->orig_mpwr*/ \
-
+ 
 /* Parsed Information Elements */
 struct rtw_ieee802_11_elems {
-	u8 *ssid;
-	u8 ssid_len;
-	u8 *supp_rates;
-	u8 supp_rates_len;
-	u8 *fh_params;
-	u8 fh_params_len;
-	u8 *ds_params;
-	u8 ds_params_len;
-	u8 *cf_params;
-	u8 cf_params_len;
-	u8 *tim;
-	u8 tim_len;
-	u8 *ibss_params;
-	u8 ibss_params_len;
-	u8 *challenge;
-	u8 challenge_len;
-	u8 *erp_info;
-	u8 erp_info_len;
-	u8 *ext_supp_rates;
-	u8 ext_supp_rates_len;
-	u8 *wpa_ie;
-	u8 wpa_ie_len;
-	u8 *rsn_ie;
-	u8 rsn_ie_len;
-	u8 *wme;
-	u8 wme_len;
-	u8 *wme_tspec;
-	u8 wme_tspec_len;
-	u8 *wps_ie;
-	u8 wps_ie_len;
-	u8 *power_cap;
-	u8 power_cap_len;
-	u8 *supp_channels;
-	u8 supp_channels_len;
-	u8 *mdie;
-	u8 mdie_len;
-	u8 *ftie;
-	u8 ftie_len;
-	u8 *timeout_int;
-	u8 timeout_int_len;
-	u8 *ht_capabilities;
-	u8 ht_capabilities_len;
-	u8 *ht_operation;
-	u8 ht_operation_len;
-	u8 *vendor_ht_cap;
-	u8 vendor_ht_cap_len;
-	u8 *vht_capabilities;
-	u8 vht_capabilities_len;
-	u8 *vht_operation;
-	u8 vht_operation_len;
-	u8 *vht_op_mode_notify;
-	u8 vht_op_mode_notify_len;
+    u8 *ssid;
+    u8 ssid_len;
+    u8 *supp_rates;
+    u8 supp_rates_len;
+    u8 *fh_params;
+    u8 fh_params_len;
+    u8 *ds_params;
+    u8 ds_params_len;
+    u8 *cf_params;
+    u8 cf_params_len;
+    u8 *tim;
+    u8 tim_len;
+    u8 *ibss_params;
+    u8 ibss_params_len;
+    u8 *challenge;
+    u8 challenge_len;
+    u8 *erp_info;
+    u8 erp_info_len;
+    u8 *ext_supp_rates;
+    u8 ext_supp_rates_len;
+    u8 *wpa_ie;
+    u8 wpa_ie_len;
+    u8 *rsn_ie;
+    u8 rsn_ie_len;
+    u8 *wme;
+    u8 wme_len;
+    u8 *wme_tspec;
+    u8 wme_tspec_len;
+    u8 *wps_ie;
+    u8 wps_ie_len;
+    u8 *power_cap;
+    u8 power_cap_len;
+    u8 *supp_channels;
+    u8 supp_channels_len;
+    u8 *mdie;
+    u8 mdie_len;
+    u8 *ftie;
+    u8 ftie_len;
+    u8 *timeout_int;
+    u8 timeout_int_len;
+    u8 *ht_capabilities;
+    u8 ht_capabilities_len;
+    u8 *ht_operation;
+    u8 ht_operation_len;
+    u8 *vendor_ht_cap;
+    u8 vendor_ht_cap_len;
+    u8 *vht_capabilities;
+    u8 vht_capabilities_len;
+    u8 *vht_operation;
+    u8 vht_operation_len;
+    u8 *vht_op_mode_notify;
+    u8 vht_op_mode_notify_len;
 };
 
 typedef enum { ParseOK = 0, ParseUnknown = 1, ParseFailed = -1 } ParseRes;
 
 ParseRes rtw_ieee802_11_parse_elems(u8 *start, uint len,
-				struct rtw_ieee802_11_elems *elems,
-				int show_errors);
+                                    struct rtw_ieee802_11_elems *elems,
+                                    int show_errors);
 
 u8 *rtw_set_fixed_ie(unsigned char *pbuf, unsigned int len, unsigned char *source, unsigned int *frlen);
 u8 *rtw_set_ie(u8 *pbuf, sint index, uint len, u8 *source, uint *frlen);
 
 enum secondary_ch_offset {
-	SCN = 0, /* no secondary channel */
-	SCA = 1, /* secondary channel above */
-	SCB = 3,  /* secondary channel below */
+    SCN = 0, /* no secondary channel */
+    SCA = 1, /* secondary channel above */
+    SCB = 3,  /* secondary channel below */
 };
 u8 secondary_ch_offset_to_hal_ch_offset(u8 ch_offset);
 u8 hal_ch_offset_to_secondary_ch_offset(u8 ch_offset);
@@ -1672,7 +1672,7 @@ u8 *rtw_get_wps_attr_content(u8 *wps_ie, uint wps_ielen, u16 target_attr_id ,u8 
 	for (ie = (void*)buf; (((u8*)ie) - ((u8*)buf) + 1) < buf_len; ie = (void*)(((u8*)ie) + *(((u8*)ie)+1) + 2))
 
 void dump_ies(void *sel, u8 *buf, u32 buf_len);
-	
+
 #ifdef CONFIG_80211N_HT
 void dump_ht_cap_ie_content(void *sel, u8 *buf, u32 buf_len);
 #endif

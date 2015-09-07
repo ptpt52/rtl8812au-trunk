@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -44,8 +44,8 @@
 
 #define 	PCI_CAPABILITY_ID_PCI_EXPRESS	0x10
 
-#define	U1DONTCARE 					0xFF	
-#define	U2DONTCARE 					0xFFFF	
+#define	U1DONTCARE 					0xFF
+#define	U2DONTCARE 					0xFFFF
 #define	U4DONTCARE 					0xFFFFFFFF
 
 #define PCI_VENDER_ID_REALTEK		0x10ec
@@ -90,116 +90,116 @@
 #define HAL_MEMORY_MAPPED_IO_RANGE_8192DE		0x4000	//8192 support 16 pages of IO registers
 
 enum pci_bridge_vendor {
-	PCI_BRIDGE_VENDOR_INTEL = 0x0,//0b'0000,0001
-	PCI_BRIDGE_VENDOR_ATI, //= 0x02,//0b'0000,0010
-	PCI_BRIDGE_VENDOR_AMD, //= 0x04,//0b'0000,0100
-	PCI_BRIDGE_VENDOR_SIS ,//= 0x08,//0b'0000,1000
-	PCI_BRIDGE_VENDOR_UNKNOWN, //= 0x40,//0b'0100,0000
-	PCI_BRIDGE_VENDOR_MAX ,//= 0x80
+    PCI_BRIDGE_VENDOR_INTEL = 0x0,//0b'0000,0001
+    PCI_BRIDGE_VENDOR_ATI, //= 0x02,//0b'0000,0010
+    PCI_BRIDGE_VENDOR_AMD, //= 0x04,//0b'0000,0100
+    PCI_BRIDGE_VENDOR_SIS ,//= 0x08,//0b'0000,1000
+    PCI_BRIDGE_VENDOR_UNKNOWN, //= 0x40,//0b'0100,0000
+    PCI_BRIDGE_VENDOR_MAX ,//= 0x80
 } ;
 
 // copy this data structor defination from MSDN SDK
 typedef struct _PCI_COMMON_CONFIG {
-	u16	VendorID;
-	u16	DeviceID;
-	u16	Command;
-	u16	Status;
-	u8	RevisionID;
-	u8	ProgIf;
-	u8	SubClass;
-	u8	BaseClass;
-	u8	CacheLineSize;
-	u8	LatencyTimer;
-	u8	HeaderType;
-	u8	BIST;
+    u16	VendorID;
+    u16	DeviceID;
+    u16	Command;
+    u16	Status;
+    u8	RevisionID;
+    u8	ProgIf;
+    u8	SubClass;
+    u8	BaseClass;
+    u8	CacheLineSize;
+    u8	LatencyTimer;
+    u8	HeaderType;
+    u8	BIST;
 
-	union {
-	struct _PCI_HEADER_TYPE_0 {
-		u32	BaseAddresses[6];
-		u32	CIS;
-		u16	SubVendorID;
-		u16	SubSystemID;
-		u32	ROMBaseAddress;
-		u8	CapabilitiesPtr;
-		u8	Reserved1[3];
-		u32	Reserved2;
+    union {
+        struct _PCI_HEADER_TYPE_0 {
+            u32	BaseAddresses[6];
+            u32	CIS;
+            u16	SubVendorID;
+            u16	SubSystemID;
+            u32	ROMBaseAddress;
+            u8	CapabilitiesPtr;
+            u8	Reserved1[3];
+            u32	Reserved2;
 
-		u8	InterruptLine;
-		u8	InterruptPin;
-		u8	MinimumGrant;
-		u8	MaximumLatency;
-	} type0;
+            u8	InterruptLine;
+            u8	InterruptPin;
+            u8	MinimumGrant;
+            u8	MaximumLatency;
+        } type0;
 #if 0
-	struct _PCI_HEADER_TYPE_1 {
-		ULONG BaseAddresses[PCI_TYPE1_ADDRESSES];
-		UCHAR PrimaryBusNumber;
-		UCHAR SecondaryBusNumber;
-		UCHAR SubordinateBusNumber;
-		UCHAR SecondaryLatencyTimer;
-		UCHAR IOBase;
-		UCHAR IOLimit;
-		USHORT SecondaryStatus;
-		USHORT MemoryBase;
-		USHORT MemoryLimit;
-		USHORT PrefetchableMemoryBase;
-		USHORT PrefetchableMemoryLimit;
-		ULONG PrefetchableMemoryBaseUpper32;
-		ULONG PrefetchableMemoryLimitUpper32;
-		USHORT IOBaseUpper;
-		USHORT IOLimitUpper;
-		ULONG Reserved2;
-		ULONG ExpansionROMBase;
-		UCHAR InterruptLine;
-		UCHAR InterruptPin;
-		USHORT BridgeControl;
-	} type1;
+        struct _PCI_HEADER_TYPE_1 {
+            ULONG BaseAddresses[PCI_TYPE1_ADDRESSES];
+            UCHAR PrimaryBusNumber;
+            UCHAR SecondaryBusNumber;
+            UCHAR SubordinateBusNumber;
+            UCHAR SecondaryLatencyTimer;
+            UCHAR IOBase;
+            UCHAR IOLimit;
+            USHORT SecondaryStatus;
+            USHORT MemoryBase;
+            USHORT MemoryLimit;
+            USHORT PrefetchableMemoryBase;
+            USHORT PrefetchableMemoryLimit;
+            ULONG PrefetchableMemoryBaseUpper32;
+            ULONG PrefetchableMemoryLimitUpper32;
+            USHORT IOBaseUpper;
+            USHORT IOLimitUpper;
+            ULONG Reserved2;
+            ULONG ExpansionROMBase;
+            UCHAR InterruptLine;
+            UCHAR InterruptPin;
+            USHORT BridgeControl;
+        } type1;
 
-	struct _PCI_HEADER_TYPE_2 {
-		ULONG BaseAddress;
-		UCHAR CapabilitiesPtr;
-		UCHAR Reserved2;
-		USHORT SecondaryStatus;
-		UCHAR PrimaryBusNumber;
-		UCHAR CardbusBusNumber;
-		UCHAR SubordinateBusNumber;
-		UCHAR CardbusLatencyTimer;
-		ULONG MemoryBase0;
-		ULONG MemoryLimit0;
-		ULONG MemoryBase1;
-		ULONG MemoryLimit1;
-		USHORT IOBase0_LO;
-		USHORT IOBase0_HI;
-		USHORT IOLimit0_LO;
-		USHORT IOLimit0_HI;
-		USHORT IOBase1_LO;
-		USHORT IOBase1_HI;
-		USHORT IOLimit1_LO;
-		USHORT IOLimit1_HI;
-		UCHAR InterruptLine;
-		UCHAR InterruptPin;
-		USHORT BridgeControl;
-		USHORT SubVendorID;
-		USHORT SubSystemID;
-		ULONG LegacyBaseAddress;
-		UCHAR Reserved3[56];
-		ULONG SystemControl;
-		UCHAR MultiMediaControl;
-		UCHAR GeneralStatus;
-		UCHAR Reserved4[2];
-		UCHAR GPIO0Control;
-		UCHAR GPIO1Control;
-		UCHAR GPIO2Control;
-		UCHAR GPIO3Control;
-		ULONG IRQMuxRouting;
-		UCHAR RetryStatus;
-		UCHAR CardControl;
-		UCHAR DeviceControl;
-		UCHAR Diagnostic;
-	} type2;
+        struct _PCI_HEADER_TYPE_2 {
+            ULONG BaseAddress;
+            UCHAR CapabilitiesPtr;
+            UCHAR Reserved2;
+            USHORT SecondaryStatus;
+            UCHAR PrimaryBusNumber;
+            UCHAR CardbusBusNumber;
+            UCHAR SubordinateBusNumber;
+            UCHAR CardbusLatencyTimer;
+            ULONG MemoryBase0;
+            ULONG MemoryLimit0;
+            ULONG MemoryBase1;
+            ULONG MemoryLimit1;
+            USHORT IOBase0_LO;
+            USHORT IOBase0_HI;
+            USHORT IOLimit0_LO;
+            USHORT IOLimit0_HI;
+            USHORT IOBase1_LO;
+            USHORT IOBase1_HI;
+            USHORT IOLimit1_LO;
+            USHORT IOLimit1_HI;
+            UCHAR InterruptLine;
+            UCHAR InterruptPin;
+            USHORT BridgeControl;
+            USHORT SubVendorID;
+            USHORT SubSystemID;
+            ULONG LegacyBaseAddress;
+            UCHAR Reserved3[56];
+            ULONG SystemControl;
+            UCHAR MultiMediaControl;
+            UCHAR GeneralStatus;
+            UCHAR Reserved4[2];
+            UCHAR GPIO0Control;
+            UCHAR GPIO1Control;
+            UCHAR GPIO2Control;
+            UCHAR GPIO3Control;
+            ULONG IRQMuxRouting;
+            UCHAR RetryStatus;
+            UCHAR CardControl;
+            UCHAR DeviceControl;
+            UCHAR Diagnostic;
+        } type2;
 #endif
-	} u;
+    } u;
 
-	u8	DeviceSpecific[108];
+    u8	DeviceSpecific[108];
 } PCI_COMMON_CONFIG , *PPCI_COMMON_CONFIG;
 
 typedef struct _RT_PCI_CAPABILITIES_HEADER {
@@ -207,72 +207,72 @@ typedef struct _RT_PCI_CAPABILITIES_HEADER {
     u8   Next;
 } RT_PCI_CAPABILITIES_HEADER, *PRT_PCI_CAPABILITIES_HEADER;
 
-struct pci_priv{
-	BOOLEAN		pci_clk_req;
-	
-	u8	pciehdr_offset;
-	//  PCIeCap is only differece between B-cut and C-cut.
-	//  Configuration Space offset 72[7:4] 
-	//  0: A/B cut 
-	//  1: C cut and later.
-	u8	pcie_cap;
-	u8	linkctrl_reg;
-	
-	u8	busnumber;
-	u8	devnumber;	
-	u8	funcnumber;	
+struct pci_priv {
+    BOOLEAN		pci_clk_req;
 
-	u8	pcibridge_busnum;
-	u8	pcibridge_devnum;
-	u8	pcibridge_funcnum;
-	u8	pcibridge_vendor;
-	u16	pcibridge_vendorid;
-	u16	pcibridge_deviceid;
-	u8	pcibridge_pciehdr_offset;
-	u8	pcibridge_linkctrlreg;	
+    u8	pciehdr_offset;
+    //  PCIeCap is only differece between B-cut and C-cut.
+    //  Configuration Space offset 72[7:4]
+    //  0: A/B cut
+    //  1: C cut and later.
+    u8	pcie_cap;
+    u8	linkctrl_reg;
 
-	u8	amd_l1_patch;
+    u8	busnumber;
+    u8	devnumber;
+    u8	funcnumber;
+
+    u8	pcibridge_busnum;
+    u8	pcibridge_devnum;
+    u8	pcibridge_funcnum;
+    u8	pcibridge_vendor;
+    u16	pcibridge_vendorid;
+    u16	pcibridge_deviceid;
+    u8	pcibridge_pciehdr_offset;
+    u8	pcibridge_linkctrlreg;
+
+    u8	amd_l1_patch;
 };
 
 typedef struct _RT_ISR_CONTENT
 {
-	union{
-		u32			IntArray[2];
-		u32			IntReg4Byte;
-		u16			IntReg2Byte;
-	};
-}RT_ISR_CONTENT, *PRT_ISR_CONTENT;
+    union {
+        u32			IntArray[2];
+        u32			IntReg4Byte;
+        u16			IntReg2Byte;
+    };
+} RT_ISR_CONTENT, *PRT_ISR_CONTENT;
 
 //#define RegAddr(addr)           (addr + 0xB2000000UL)
 //some platform macros will def here
-static inline void NdisRawWritePortUlong(u32 port,  u32 val) 		
+static inline void NdisRawWritePortUlong(u32 port,  u32 val)
 {
-	outl(val, port);
-	//writel(val, (u8 *)RegAddr(port));	
+    outl(val, port);
+    //writel(val, (u8 *)RegAddr(port));
 }
 
 static inline void NdisRawWritePortUchar(u32 port,  u8 val)
 {
-	outb(val, port);
-	//writeb(val, (u8 *)RegAddr(port));
+    outb(val, port);
+    //writeb(val, (u8 *)RegAddr(port));
 }
 
 static inline void NdisRawReadPortUchar(u32 port, u8 *pval)
 {
-	*pval = inb(port);
-	//*pval = readb((u8 *)RegAddr(port));
+    *pval = inb(port);
+    //*pval = readb((u8 *)RegAddr(port));
 }
 
 static inline void NdisRawReadPortUshort(u32 port, u16 *pval)
 {
-	*pval = inw(port);
-	//*pval = readw((u8 *)RegAddr(port));
+    *pval = inw(port);
+    //*pval = readw((u8 *)RegAddr(port));
 }
 
 static inline void NdisRawReadPortUlong(u32 port, u32 *pval)
 {
-	*pval = inl(port);
-	//*pval = readl((u8 *)RegAddr(port));
+    *pval = inl(port);
+    //*pval = readl((u8 *)RegAddr(port));
 }
 
 

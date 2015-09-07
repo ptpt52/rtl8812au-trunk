@@ -54,7 +54,7 @@
 #define rTxPath_Jaguar			0x80c	// Tx antenna
 #define bTxPath_Jaguar			0x0fffffff
 #define rCCK_RX_Jaguar			0xa04	// for cck rx path selection
-#define bCCK_RX_Jaguar			0x0c000000 
+#define bCCK_RX_Jaguar			0x0c000000
 #define rVhtlen_Use_Lsig_Jaguar	0x8c3	// Use LSIG for VHT length
 
 // RF read/write-related
@@ -73,7 +73,7 @@
 
 
 
-// YN: mask the following register definition temporarily 
+// YN: mask the following register definition temporarily
 #define rFPGA0_XA_RFInterfaceOE			0x860	// RF Channel switch
 #define rFPGA0_XB_RFInterfaceOE			0x864
 
@@ -105,7 +105,7 @@
 
 
 // YN: mask the following register definition temporarily
-//#define rPdp_AntA      					0xb00  
+//#define rPdp_AntA      					0xb00
 //#define rPdp_AntA_4    				0xb04
 //#define rConfig_Pmpd_AntA 			0xb28
 //#define rConfig_AntA 					0xb68
@@ -141,7 +141,7 @@
 #define rB_TxPwrTraing_Jaguar		0xe54
 
 // Report-related
-#define rOFDM_ShortCFOAB_Jaguar	0xf60  
+#define rOFDM_ShortCFOAB_Jaguar	0xf60
 #define rOFDM_LongCFOAB_Jaguar		0xf64
 #define rOFDM_EndCFOAB_Jaguar		0xf70
 #define rOFDM_AGCReport_Jaguar		0xf84
@@ -171,7 +171,7 @@
 #define bMask_RFEInv_Jaguar		0x3ff00000
 #define bMask_AntselPathFollow_Jaguar 0x00030000
 
-// TX AGC 
+// TX AGC
 #define rTxAGC_A_CCK11_CCK1_JAguar				0xc20
 #define rTxAGC_A_Ofdm18_Ofdm6_JAguar				0xc24
 #define rTxAGC_A_Ofdm54_Ofdm24_JAguar			0xc28
@@ -263,15 +263,15 @@
 // RSSI Dump
 #define rA_RSSIDump_Jaguar 			0xBF0
 #define rB_RSSIDump_Jaguar 			0xBF1
-#define rS1_RXevmDump_Jaguar		0xBF4 
+#define rS1_RXevmDump_Jaguar		0xBF4
 #define rS2_RXevmDump_Jaguar 		0xBF5
 #define rA_RXsnrDump_Jaguar		0xBF6
 #define rB_RXsnrDump_Jaguar		0xBF7
-#define rA_CfoShortDump_Jaguar		0xBF8 
+#define rA_CfoShortDump_Jaguar		0xBF8
 #define rB_CfoShortDump_Jaguar		0xBFA
 #define rA_CfoLongDump_Jaguar		0xBEC
 #define rB_CfoLongDump_Jaguar		0xBEE
- 
+
 
 // RF Register
 //
@@ -445,7 +445,7 @@
 //
 // PageB(0xB00)
 //
-#define rPdp_AntA      				0xb00  
+#define rPdp_AntA      				0xb00
 #define rPdp_AntA_4    				0xb04
 #define rConfig_Pmpd_AntA 			0xb28
 #define rConfig_AntA 					0xb68
@@ -678,9 +678,9 @@
 #define bCCKRxFACounterLower      	0xff
 #define bCCKRxFACounterUpper      	0xff000000
 #define bCCKRxHPAGCStart          		0xe000
-#define bCCKRxHPAGCFinal          		0x1c00       		
+#define bCCKRxHPAGCFinal          		0x1c00
 #define bCCKRxFalseAlarmEnable    	0x8000
-#define bCCKFACounterFreeze       		0x4000       		
+#define bCCKFACounterFreeze       		0x4000
 #define bCCKTxPathSel             		0x10000000
 #define bCCKDefaultRxPath         		0xc000000
 #define bCCKOptionRxPath          		0x3000000
@@ -722,8 +722,8 @@
 #define bMaskLWord                		0x0000ffff
 #define bMaskDWord                	0xffffffff
 #define bMaskH3Bytes				0xffffff00
-#define bMask12Bits				0xfff	
-#define bMaskH4Bits				0xf0000000	
+#define bMask12Bits				0xfff
+#define bMaskH4Bits				0xf0000000
 #define bMaskOFDM_D			0xffc00000
 #define bMaskCCK				0x3f3f3f3f
 

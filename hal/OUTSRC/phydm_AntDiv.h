@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -17,7 +17,7 @@
  *
  *
  ******************************************************************************/
- 
+
 #ifndef	__PHYDMANTDIV_H__
 #define    __PHYDMANTDIV_H__
 
@@ -58,13 +58,13 @@
 
 VOID
 ODM_StopAntennaSwitchDm(
-	IN	PDM_ODM_T	pDM_Odm
-	);
+    IN	PDM_ODM_T	pDM_Odm
+);
 VOID
 ODM_SetAntConfig(
-	IN	PDM_ODM_T	pDM_Odm,
-	IN	u1Byte		antSetting	// 0=A, 1=B, 2=C, ....
-	);
+    IN	PDM_ODM_T	pDM_Odm,
+    IN	u1Byte		antSetting	// 0=A, 1=B, 2=C, ....
+);
 
 
 
@@ -75,29 +75,29 @@ VOID ODM_SwAntDivRestAfterLink(	IN	PDM_ODM_T	pDM_Odm);
 
 VOID
 ODM_UpdateRxIdleAnt(
-	IN	 	PDM_ODM_T 		pDM_Odm, 
-	IN		 u1Byte			Ant
+    IN	 	PDM_ODM_T 		pDM_Odm,
+    IN		 u1Byte			Ant
 );
 
 VOID
 odm_AntselStatistics(
-	IN		PDM_ODM_T		pDM_Odm,
-	IN		u1Byte			antsel_tr_mux,
-	IN		u4Byte			MacId,
-	IN		u4Byte			RxPWDBAll
+    IN		PDM_ODM_T		pDM_Odm,
+    IN		u1Byte			antsel_tr_mux,
+    IN		u4Byte			MacId,
+    IN		u4Byte			RxPWDBAll
 );
 
 #if (RTL8723B_SUPPORT == 1)||(RTL8821A_SUPPORT == 1)
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 VOID
 ODM_SW_AntDiv_Callback(
-	IN 	PRT_TIMER			pTimer
+    IN 	PRT_TIMER			pTimer
 );
 
 VOID
 ODM_SW_AntDiv_WorkitemCallback(
     IN PVOID            pContext
-    );
+);
 
 
 #elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
@@ -110,23 +110,23 @@ ODM_SW_AntDiv_Callback(void *FunctionContext);
 #if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
 VOID
 odm_S0S1_SwAntDivByCtrlFrame(
-	IN		PDM_ODM_T		pDM_Odm,
-	IN		u1Byte			Step
-	);
+    IN		PDM_ODM_T		pDM_Odm,
+    IN		u1Byte			Step
+);
 
 VOID
 odm_AntselStatisticsOfCtrlFrame(
-	IN		PDM_ODM_T		pDM_Odm,
-	IN		u1Byte			antsel_tr_mux,
-	IN		u4Byte			RxPWDBAll
+    IN		PDM_ODM_T		pDM_Odm,
+    IN		u1Byte			antsel_tr_mux,
+    IN		u4Byte			RxPWDBAll
 );
 
 VOID
 odm_S0S1_SwAntDivByCtrlFrame_ProcessRSSI(
-	IN		PDM_ODM_T				pDM_Odm,
-	IN		PODM_PHY_INFO_T		pPhyInfo,
-	IN		PODM_PACKET_INFO_T		pPktinfo
-	);
+    IN		PDM_ODM_T				pDM_Odm,
+    IN		PODM_PHY_INFO_T		pPhyInfo,
+    IN		PODM_PACKET_INFO_T		pPktinfo
+);
 
 #endif  //#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 #endif
@@ -135,59 +135,59 @@ odm_S0S1_SwAntDivByCtrlFrame_ProcessRSSI(
 #if ( !(DM_ODM_SUPPORT_TYPE == ODM_CE))
 VOID
 odm_FastAntTraining(
-	IN		PDM_ODM_T		pDM_Odm
+    IN		PDM_ODM_T		pDM_Odm
 );
 
 VOID
 odm_FastAntTrainingCallback(
-	IN		PDM_ODM_T		pDM_Odm
+    IN		PDM_ODM_T		pDM_Odm
 );
 
 VOID
 odm_FastAntTrainingWorkItemCallback(
-	IN		PDM_ODM_T		pDM_Odm
+    IN		PDM_ODM_T		pDM_Odm
 );
 #endif
 #endif
 
 VOID
 ODM_AntDivInit(
-	IN		 PDM_ODM_T		pDM_Odm 
+    IN		 PDM_ODM_T		pDM_Odm
 );
 
 VOID
 ODM_AntDivReset(
-	IN		PDM_ODM_T		pDM_Odm 
+    IN		PDM_ODM_T		pDM_Odm
 );
 
 VOID
 ODM_AntDiv(
-	IN		PDM_ODM_T		pDM_Odm
+    IN		PDM_ODM_T		pDM_Odm
 );
 
 VOID
-ODM_Process_RSSIForAntDiv(	
-	IN OUT	PDM_ODM_T					pDM_Odm,
-	IN		PODM_PHY_INFO_T				pPhyInfo,
-	IN		PODM_PACKET_INFO_T			pPktinfo
+ODM_Process_RSSIForAntDiv(
+    IN OUT	PDM_ODM_T					pDM_Odm,
+    IN		PODM_PHY_INFO_T				pPhyInfo,
+    IN		PODM_PACKET_INFO_T			pPktinfo
 );
 
 #if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
 VOID
 ODM_SetTxAntByTxInfo(
-	IN		PDM_ODM_T		pDM_Odm,
-	IN		pu1Byte			pDesc,
-	IN		u1Byte			macId	
+    IN		PDM_ODM_T		pDM_Odm,
+    IN		pu1Byte			pDesc,
+    IN		u1Byte			macId
 );
 
 #else// (DM_ODM_SUPPORT_TYPE == ODM_AP)
 VOID
 ODM_SetTxAntByTxInfo(
-	//IN		PDM_ODM_T		pDM_Odm,
-	struct	rtl8192cd_priv		*priv,
-	struct 	tx_desc			*pdesc,
-	struct	tx_insn			*txcfg,
-	unsigned short			aid	
+    //IN		PDM_ODM_T		pDM_Odm,
+    struct	rtl8192cd_priv		*priv,
+    struct 	tx_desc			*pdesc,
+    struct	tx_insn			*txcfg,
+    unsigned short			aid
 );
 
 #endif
@@ -195,22 +195,22 @@ ODM_SetTxAntByTxInfo(
 
 VOID
 ODM_AntDiv_Config(
-	IN		PDM_ODM_T		pDM_Odm
+    IN		PDM_ODM_T		pDM_Odm
 );
 
 
 VOID
 ODM_UpdateRxIdleAnt_8723B(
-	IN		PDM_ODM_T		pDM_Odm,
-	IN		u1Byte			Ant,
-	IN		u4Byte			DefaultAnt, 
-	IN		u4Byte			OptionalAnt
+    IN		PDM_ODM_T		pDM_Odm,
+    IN		u1Byte			Ant,
+    IN		u4Byte			DefaultAnt,
+    IN		u4Byte			OptionalAnt
 );
 
 VOID
 ODM_AntDivTimers(
-	IN PDM_ODM_T	pDM_Odm,
-	IN u1Byte			state
+    IN PDM_ODM_T	pDM_Odm,
+    IN u1Byte			state
 );
 
 #endif //#if (defined(CONFIG_HW_ANTENNA_DIVERSITY))

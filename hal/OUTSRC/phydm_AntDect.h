@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -17,7 +17,7 @@
  *
  *
  ******************************************************************************/
- 
+
 #ifndef	__PHYDMANTDECT_H__
 #define    __PHYDMANTDECT_H__
 
@@ -30,29 +30,29 @@
 
 VOID
 ODM_SingleDualAntennaDefaultSetting(
-	IN		PDM_ODM_T		pDM_Odm
-	);
+    IN		PDM_ODM_T		pDM_Odm
+);
 
 BOOLEAN
 ODM_SingleDualAntennaDetection(
-	IN		PDM_ODM_T		pDM_Odm,
-	IN		u1Byte			mode
-	);
+    IN		PDM_ODM_T		pDM_Odm,
+    IN		u1Byte			mode
+);
 
 //1 [2. Scan AP RSSI Method] ==================================================
 
 VOID
 odm_SwAntDetectInit(
-	IN 		PDM_ODM_T 		pDM_Odm
-	);
+    IN 		PDM_ODM_T 		pDM_Odm
+);
 
 
 #define SwAntDivCheckBeforeLink	ODM_SwAntDivCheckBeforeLink
 
-BOOLEAN 
+BOOLEAN
 ODM_SwAntDivCheckBeforeLink(
-	IN		PDM_ODM_T		pDM_Odm
-	);
+    IN		PDM_ODM_T		pDM_Odm
+);
 
 
 
@@ -62,7 +62,7 @@ ODM_SwAntDivCheckBeforeLink(
 
 VOID
 ODM_SingleDualAntennaDetection_PSD(
-	IN	 PDM_ODM_T 	pDM_Odm
+    IN	 PDM_ODM_T 	pDM_Odm
 );
 
 

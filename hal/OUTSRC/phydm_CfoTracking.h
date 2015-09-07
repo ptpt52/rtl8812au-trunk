@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -29,40 +29,40 @@
 
 typedef struct _CFO_TRACKING_
 {
-	BOOLEAN			bATCStatus;
-	BOOLEAN			largeCFOHit;
-	BOOLEAN			bAdjust;
-	u1Byte			CrystalCap;
-	u1Byte			DefXCap;
-	int				CFO_tail[2];
-	int				CFO_ave_pre;
-	u4Byte			packetCount;
-	u4Byte			packetCount_pre;
+    BOOLEAN			bATCStatus;
+    BOOLEAN			largeCFOHit;
+    BOOLEAN			bAdjust;
+    u1Byte			CrystalCap;
+    u1Byte			DefXCap;
+    int				CFO_tail[2];
+    int				CFO_ave_pre;
+    u4Byte			packetCount;
+    u4Byte			packetCount_pre;
 
-	BOOLEAN			bForceXtalCap;
-	BOOLEAN			bReset;
-}CFO_TRACKING, *PCFO_TRACKING;
+    BOOLEAN			bForceXtalCap;
+    BOOLEAN			bReset;
+} CFO_TRACKING, *PCFO_TRACKING;
 
 VOID
 ODM_CfoTrackingReset(
-	IN		PVOID					pDM_VOID
+    IN		PVOID					pDM_VOID
 );
 
 VOID
 ODM_CfoTrackingInit(
-	IN		PVOID					pDM_VOID
+    IN		PVOID					pDM_VOID
 );
 
 VOID
 ODM_CfoTracking(
-	IN		PVOID					pDM_VOID
+    IN		PVOID					pDM_VOID
 );
 
 VOID
 ODM_ParsingCFO(
-	IN		PVOID					pDM_VOID,
-	IN		PVOID					pPktinfo_VOID,
-	IN     	s1Byte* 					pcfotail
+    IN		PVOID					pDM_VOID,
+    IN		PVOID					pPktinfo_VOID,
+    IN     	s1Byte* 					pcfotail
 );
 
 #endif

@@ -20,74 +20,74 @@
 #ifndef __RTL8812A_CMD_H__
 #define __RTL8812A_CMD_H__
 
-typedef enum _RTL8812_H2C_CMD 
+typedef enum _RTL8812_H2C_CMD
 {
-	H2C_8812_RSVDPAGE = 0,
-	H2C_8812_MSRRPT = 1,
-	H2C_8812_SCAN = 2,
-	H2C_8812_KEEP_ALIVE_CTRL = 3,
-	H2C_8812_DISCONNECT_DECISION = 4,
+    H2C_8812_RSVDPAGE = 0,
+    H2C_8812_MSRRPT = 1,
+    H2C_8812_SCAN = 2,
+    H2C_8812_KEEP_ALIVE_CTRL = 3,
+    H2C_8812_DISCONNECT_DECISION = 4,
 
-	H2C_8812_INIT_OFFLOAD = 6,		
-	H2C_8812_AP_OFFLOAD = 8,
-	H2C_8812_BCN_RSVDPAGE = 9,
-	H2C_8812_PROBERSP_RSVDPAGE = 10,
-	
-	H2C_8812_SETPWRMODE = 0x20,		
-	H2C_8812_PS_TUNING_PARA = 0x21,
-	H2C_8812_PS_TUNING_PARA2 = 0x22,
-	H2C_8812_PS_LPS_PARA = 0x23,
-	H2C_8812_P2P_PS_OFFLOAD = 0x24,
-	H2C_8812_RA_MASK = 0x40,
-	H2C_8812_TxBF = 0x41,
-	H2C_8812_RSSI_REPORT = 0x42,
-	H2C_8812_IQ_CALIBRATION = 0x45,
+    H2C_8812_INIT_OFFLOAD = 6,
+    H2C_8812_AP_OFFLOAD = 8,
+    H2C_8812_BCN_RSVDPAGE = 9,
+    H2C_8812_PROBERSP_RSVDPAGE = 10,
 
-	H2C_8812_BT_FW_PATCH = 0x6a,
+    H2C_8812_SETPWRMODE = 0x20,
+    H2C_8812_PS_TUNING_PARA = 0x21,
+    H2C_8812_PS_TUNING_PARA2 = 0x22,
+    H2C_8812_PS_LPS_PARA = 0x23,
+    H2C_8812_P2P_PS_OFFLOAD = 0x24,
+    H2C_8812_RA_MASK = 0x40,
+    H2C_8812_TxBF = 0x41,
+    H2C_8812_RSSI_REPORT = 0x42,
+    H2C_8812_IQ_CALIBRATION = 0x45,
 
-	H2C_8812_WO_WLAN = 0x80,
-	H2C_8812_REMOTE_WAKE_CTRL = 0x81,
-	H2C_8812_AOAC_GLOBAL_INFO = 0x82,
-	H2C_8812_AOAC_RSVDPAGE = 0x83,
-	H2C_8812_FW_SWCHANNL = 0x87,
+    H2C_8812_BT_FW_PATCH = 0x6a,
 
-	H2C_8812_TSF_RESET = 0xC0,
+    H2C_8812_WO_WLAN = 0x80,
+    H2C_8812_REMOTE_WAKE_CTRL = 0x81,
+    H2C_8812_AOAC_GLOBAL_INFO = 0x82,
+    H2C_8812_AOAC_RSVDPAGE = 0x83,
+    H2C_8812_FW_SWCHANNL = 0x87,
 
-	MAX_8812_H2CCMD
-}RTL8812_H2C_CMD;
+    H2C_8812_TSF_RESET = 0xC0,
+
+    MAX_8812_H2CCMD
+} RTL8812_H2C_CMD;
 
 
 typedef enum _RTL8812_C2H_EVT
 {
-	C2H_8812_DBG = 0,
-	C2H_8812_LB = 1,
-	C2H_8812_TXBF = 2,
-	C2H_8812_TX_REPORT = 3,
-	C2H_8812_BT_INFO = 9,
-	C2H_8812_BT_MP = 11,
-	C2H_8812_RA_RPT=12,
+    C2H_8812_DBG = 0,
+    C2H_8812_LB = 1,
+    C2H_8812_TXBF = 2,
+    C2H_8812_TX_REPORT = 3,
+    C2H_8812_BT_INFO = 9,
+    C2H_8812_BT_MP = 11,
+    C2H_8812_RA_RPT=12,
 
-	C2H_8812_FW_SWCHNL = 0x10,
-	C2H_8812_IQK_FINISH = 0x11,
-	C2H_8812_MAILBOX_STATUS = 0x15,
-	MAX_8812_C2HEVENT
-}RTL8812_C2H_EVT;
+    C2H_8812_FW_SWCHNL = 0x10,
+    C2H_8812_IQK_FINISH = 0x11,
+    C2H_8812_MAILBOX_STATUS = 0x15,
+    MAX_8812_C2HEVENT
+} RTL8812_C2H_EVT;
 
 
 struct cmd_msg_parm {
-	u8 eid; //element id
-	u8 sz; // sz
-	u8 buf[6];
+    u8 eid; //element id
+    u8 sz; // sz
+    u8 buf[6];
 };
 
-enum{
-	PWRS
+enum {
+    PWRS
 };
 
-struct H2C_SS_RFOFF_PARAM{
-	u8 ROFOn; // 1: on, 0:off
-	u16 gpio_period; // unit: 1024 us
-}__attribute__ ((packed));
+struct H2C_SS_RFOFF_PARAM {
+    u8 ROFOn; // 1: on, 0:off
+    u16 gpio_period; // unit: 1024 us
+} __attribute__ ((packed));
 
 
 
@@ -149,13 +149,13 @@ int reset_tsf(PADAPTER Adapter, u8 reset_port );
 #endif	// CONFIG_TSF_RESET_OFFLOAD
 
 #ifdef CONFIG_WOWLAN
-typedef struct _SETWOWLAN_PARM{
-	u8		mode;
-	u8		gpio_index;
-	u8		gpio_duration;
-	u8		second_mode;
-	u8		reserve;
-}SETWOWLAN_PARM, *PSETWOWLAN_PARM;
+typedef struct _SETWOWLAN_PARM {
+    u8		mode;
+    u8		gpio_index;
+    u8		gpio_duration;
+    u8		second_mode;
+    u8		reserve;
+} SETWOWLAN_PARM, *PSETWOWLAN_PARM;
 
 #define FW_WOWLAN_FUN_EN				BIT(0)
 #define FW_WOWLAN_PATTERN_MATCH			BIT(1)
@@ -209,10 +209,10 @@ void	rtl8812_iqk_done(_adapter* padapter);
 
 s32
 _C2HContentParsing8812(
-	IN	PADAPTER	Adapter,
-	IN	u8			c2hCmdId, 
-	IN	u8			c2hCmdLen,
-	IN	u8 			*tmpBuf
+    IN	PADAPTER	Adapter,
+    IN	u8			c2hCmdId,
+    IN	u8			c2hCmdLen,
+    IN	u8 			*tmpBuf
 );
 void	C2HPacketHandler_8812(PADAPTER Adapter, u8 *Buffer, u8 Length);
 

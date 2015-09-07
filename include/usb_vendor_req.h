@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -35,19 +35,19 @@
 
 
 typedef enum _RT_USB_BREQUEST {
-	RT_USB_SET_REGISTER		= 1,
-	RT_USB_SET_SYSCLK		= 2,
-	RT_USB_GET_SYSCLK		= 3,
-	RT_USB_GET_REGISTER		= 4
+    RT_USB_SET_REGISTER		= 1,
+    RT_USB_SET_SYSCLK		= 2,
+    RT_USB_GET_SYSCLK		= 3,
+    RT_USB_GET_REGISTER		= 4
 } RT_USB_BREQUEST;
 
 
 typedef enum _RT_USB_WVALUE {
-	RT_USB_RESET_MASK	=	1,
-	RT_USB_SLEEP_MASK	=	2,
-	RT_USB_USB_HRCPWM	=	3,
-	RT_USB_LDO			=	4,
-	RT_USB_BOOT_TYPE	=	5
+    RT_USB_RESET_MASK	=	1,
+    RT_USB_SLEEP_MASK	=	2,
+    RT_USB_USB_HRCPWM	=	3,
+    RT_USB_LDO			=	4,
+    RT_USB_BOOT_TYPE	=	5
 } RT_USB_WVALUE;
 
 

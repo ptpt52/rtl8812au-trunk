@@ -25,10 +25,10 @@
  */
 int platform_wifi_power_on(void)
 {
-	int ret = 0;
+    int ret = 0;
 
 
-	return ret;
+    return ret;
 }
 
 void platform_wifi_power_off(void)

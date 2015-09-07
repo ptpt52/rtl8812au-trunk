@@ -24,9 +24,9 @@
 #include <linux/seq_file.h>
 
 struct rtw_proc_hdl {
-	char *name;
-	int (*show)(struct seq_file *, void *);
-	ssize_t (*write)(struct file *file, const char __user *buffer, size_t count, loff_t *pos, void *data);
+    char *name;
+    int (*show)(struct seq_file *, void *);
+    ssize_t (*write)(struct file *file, const char __user *buffer, size_t count, loff_t *pos, void *data);
 };
 
 #ifdef CONFIG_PROC_DEBUG

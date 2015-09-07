@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -18,22 +18,22 @@
  *
  ******************************************************************************/
 #ifndef __IOCTL_CFG80211_H__
-#define __IOCTL_CFG80211_H__ 
+#define __IOCTL_CFG80211_H__
 
 
 #if defined(RTW_USE_CFG80211_STA_EVENT)
-	#undef CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER
+#undef CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER
 #endif
 
 struct rtw_wdev_invit_info {
-	u8 state; /* 0: req, 1:rep */
-	u8 peer_mac[ETH_ALEN];
-	u8 active;
-	u8 token;
-	u8 flags;
-	u8 status;
-	u8 req_op_ch;
-	u8 rsp_op_ch;
+    u8 state; /* 0: req, 1:rep */
+    u8 peer_mac[ETH_ALEN];
+    u8 active;
+    u8 token;
+    u8 flags;
+    u8 status;
+    u8 req_op_ch;
+    u8 rsp_op_ch;
 };
 
 #define rtw_wdev_invit_info_init(invit_info) \
@@ -49,17 +49,17 @@ struct rtw_wdev_invit_info {
 	} while (0)
 
 struct rtw_wdev_nego_info {
-	u8 state; /* 0: req, 1:rep, 2:conf */
-	u8 peer_mac[ETH_ALEN];
-	u8 active;
-	u8 token;
-	u8 status;
-	u8 req_intent;
-	u8 req_op_ch;
-	u8 req_listen_ch;
-	u8 rsp_intent;
-	u8 rsp_op_ch;
-	u8 conf_op_ch;
+    u8 state; /* 0: req, 1:rep, 2:conf */
+    u8 peer_mac[ETH_ALEN];
+    u8 active;
+    u8 token;
+    u8 status;
+    u8 req_intent;
+    u8 req_op_ch;
+    u8 req_listen_ch;
+    u8 rsp_intent;
+    u8 rsp_op_ch;
+    u8 conf_op_ch;
 };
 
 #define rtw_wdev_nego_info_init(nego_info) \
@@ -78,33 +78,33 @@ struct rtw_wdev_nego_info {
 	} while (0)
 
 struct rtw_wdev_priv
-{	
-	struct wireless_dev *rtw_wdev;
-	
-	_adapter *padapter;
+{
+    struct wireless_dev *rtw_wdev;
 
-	struct cfg80211_scan_request *scan_request;
-	_lock scan_req_lock;
+    _adapter *padapter;
 
-	struct net_device *pmon_ndev;//for monitor interface
-	char ifname_mon[IFNAMSIZ + 1]; //interface name for monitor interface
+    struct cfg80211_scan_request *scan_request;
+    _lock scan_req_lock;
 
-	u8 p2p_enabled;
+    struct net_device *pmon_ndev;//for monitor interface
+    char ifname_mon[IFNAMSIZ + 1]; //interface name for monitor interface
 
-	u8 provdisc_req_issued;
+    u8 p2p_enabled;
 
-	struct rtw_wdev_invit_info invit_info;
-	struct rtw_wdev_nego_info nego_info;
+    u8 provdisc_req_issued;
 
-	u8 bandroid_scan;
-	bool block;
-	bool power_mgmt;
+    struct rtw_wdev_invit_info invit_info;
+    struct rtw_wdev_nego_info nego_info;
+
+    u8 bandroid_scan;
+    bool block;
+    bool power_mgmt;
 
 #ifdef CONFIG_CONCURRENT_MODE
-	ATOMIC_T ro_ch_to;
-	ATOMIC_T switch_ch_to;	
-#endif	
-	
+    ATOMIC_T ro_ch_to;
+    ATOMIC_T switch_ch_to;
+#endif
+
 };
 
 #define wiphy_to_adapter(x) (*((_adapter**)wiphy_priv(x)))

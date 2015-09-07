@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -55,34 +55,34 @@
 #define TDLS_TIMEOUT_LEN 4
 
 struct wpa_tdls_ftie {
-	u8 ie_type; /* FTIE */
-	u8 ie_len;
-	u8 mic_ctrl[2];
-	u8 mic[TDLS_MIC_LEN];
-	u8 Anonce[WPA_NONCE_LEN]; /* Responder Nonce in TDLS */
-	u8 Snonce[WPA_NONCE_LEN]; /* Initiator Nonce in TDLS */
-	/* followed by optional elements */
+    u8 ie_type; /* FTIE */
+    u8 ie_len;
+    u8 mic_ctrl[2];
+    u8 mic[TDLS_MIC_LEN];
+    u8 Anonce[WPA_NONCE_LEN]; /* Responder Nonce in TDLS */
+    u8 Snonce[WPA_NONCE_LEN]; /* Initiator Nonce in TDLS */
+    /* followed by optional elements */
 } ;
 
 struct wpa_tdls_lnkid {
-	u8 ie_type; /* Link Identifier IE */
-	u8 ie_len;
-	u8 bssid[ETH_ALEN];
-	u8 init_sta[ETH_ALEN];
-	u8 resp_sta[ETH_ALEN];
+    u8 ie_type; /* Link Identifier IE */
+    u8 ie_len;
+    u8 bssid[ETH_ALEN];
+    u8 init_sta[ETH_ALEN];
+    u8 resp_sta[ETH_ALEN];
 } ;
 
-static u8 TDLS_RSNIE[]={	0x01, 0x00,	//version shall be set to 1
-						0x00, 0x0f, 0xac, 0x07,	//group sipher suite
-						0x01, 0x00,	//pairwise cipher suite count
-						0x00, 0x0f, 0xac, 0x04,	//pairwise cipher suite list; CCMP only
-						0x01, 0x00,	//AKM suite count
-						0x00, 0x0f, 0xac, 0x07,	//TPK Handshake
-						0x0c, 0x02,
-						//PMKID shall not be present
-						};
+static u8 TDLS_RSNIE[]= {	0x01, 0x00,	//version shall be set to 1
+                            0x00, 0x0f, 0xac, 0x07,	//group sipher suite
+                            0x01, 0x00,	//pairwise cipher suite count
+                            0x00, 0x0f, 0xac, 0x04,	//pairwise cipher suite list; CCMP only
+                            0x01, 0x00,	//AKM suite count
+                            0x00, 0x0f, 0xac, 0x07,	//TPK Handshake
+                            0x0c, 0x02,
+                            //PMKID shall not be present
+                        };
 
-static u8 TDLS_WMMIE[]={0x00, 0x50, 0xf2, 0x02, 0x00, 0x01, 0x00};	//Qos info all set zero
+static u8 TDLS_WMMIE[]= {0x00, 0x50, 0xf2, 0x02, 0x00, 0x01, 0x00};	//Qos info all set zero
 
 static u8 TDLS_EXT_CAPIE[] = {0x00, 0x00, 0x00, 0x50, 0x20, 0x00, 0x00, 0x00};	//bit(28), bit(30), bit(37)
 

@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -43,15 +43,15 @@
  */
 struct	iw_point
 {
-  void __user	*pointer;	/* Pointer to the data  (in user space) */
-  __u16		length;		/* number of fields or size in bytes */
-  __u16		flags;		/* Optional params */
+    void __user	*pointer;	/* Pointer to the data  (in user space) */
+    __u16		length;		/* number of fields or size in bytes */
+    __u16		flags;		/* Optional params */
 };
 
 
 /* ------------------------ IOCTL REQUEST ------------------------ */
 /*
- * This structure defines the payload of an ioctl, and is used 
+ * This structure defines the payload of an ioctl, and is used
  * below.
  *
  * Note that this structure should fit on the memory footprint
@@ -62,12 +62,12 @@ struct	iw_point
  */
 union	iwreq_data
 {
-	/* Config - generic */
-	char		name[IFNAMSIZ];
-	/* Name : used to verify the presence of  wireless extensions.
-	 * Name of the protocol/provider... */
+    /* Config - generic */
+    char		name[IFNAMSIZ];
+    /* Name : used to verify the presence of  wireless extensions.
+     * Name of the protocol/provider... */
 
-	struct iw_point	data;		/* Other large parameters */
+    struct iw_point	data;		/* Other large parameters */
 };
 
 /*
@@ -76,15 +76,15 @@ union	iwreq_data
  * convenience...
  * Do I need to remind you about structure size (32 octets) ?
  */
-struct	iwreq 
+struct	iwreq
 {
-	union
-	{
-		char	ifrn_name[IFNAMSIZ];	/* if name, e.g. "eth0" */
-	} ifr_ifrn;
+    union
+    {
+        char	ifrn_name[IFNAMSIZ];	/* if name, e.g. "eth0" */
+    } ifr_ifrn;
 
-	/* Data part (defined just above) */
-	union	iwreq_data	u;
+    /* Data part (defined just above) */
+    union	iwreq_data	u;
 };
 
 #endif	/* _LINUX_WIRELESS_H */

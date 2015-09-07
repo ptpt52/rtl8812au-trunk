@@ -21,13 +21,13 @@
 #define __RTW_PWRCTRL_H_
 
 
-#define FW_PWR0	0	
+#define FW_PWR0	0
 #define FW_PWR1 	1
 #define FW_PWR2 	2
 #define FW_PWR3 	3
 
 
-#define HW_PWR0	7	
+#define HW_PWR0	7
 #define HW_PWR1 	6
 #define HW_PWR2 	2
 #define HW_PWR3	0
@@ -47,18 +47,18 @@
 
 enum Power_Mgnt
 {
-	PS_MODE_ACTIVE	= 0	,
-	PS_MODE_MIN			,
-	PS_MODE_MAX			,
-	PS_MODE_DTIM			,	//PS_MODE_SELF_DEFINED
-	PS_MODE_VOIP			,
-	PS_MODE_UAPSD_WMM	,
-	PS_MODE_UAPSD			,
-	PS_MODE_IBSS			,
-	PS_MODE_WWLAN		,
-	PM_Radio_Off			,
-	PM_Card_Disable		,
-	PS_MODE_NUM,
+    PS_MODE_ACTIVE	= 0	,
+    PS_MODE_MIN			,
+    PS_MODE_MAX			,
+    PS_MODE_DTIM			,	//PS_MODE_SELF_DEFINED
+    PS_MODE_VOIP			,
+    PS_MODE_UAPSD_WMM	,
+    PS_MODE_UAPSD			,
+    PS_MODE_IBSS			,
+    PS_MODE_WWLAN		,
+    PM_Radio_Off			,
+    PM_Card_Disable		,
+    PS_MODE_NUM,
 };
 
 #ifdef CONFIG_PNO_SUPPORT
@@ -105,10 +105,10 @@ enum Power_Mgnt
 
 
 struct reportpwrstate_parm {
-	unsigned char mode;
-	unsigned char state; //the CPWM value
-	unsigned short rsvd;
-}; 
+    unsigned char mode;
+    unsigned char state; //the CPWM value
+    unsigned short rsvd;
+};
 
 
 typedef _sema _pwrlock;
@@ -116,24 +116,24 @@ typedef _sema _pwrlock;
 
 __inline static void _init_pwrlock(_pwrlock *plock)
 {
-	_rtw_init_sema(plock, 1);
+    _rtw_init_sema(plock, 1);
 }
 
 __inline static void _free_pwrlock(_pwrlock *plock)
 {
-	_rtw_free_sema(plock);
+    _rtw_free_sema(plock);
 }
 
 
 __inline static void _enter_pwrlock(_pwrlock *plock)
 {
-	_rtw_down_sema(plock);
+    _rtw_down_sema(plock);
 }
 
 
 __inline static void _exit_pwrlock(_pwrlock *plock)
 {
-	_rtw_up_sema(plock);
+    _rtw_up_sema(plock);
 }
 
 #define LPS_DELAY_TIME	1*HZ // 1 sec
@@ -145,12 +145,12 @@ __inline static void _exit_pwrlock(_pwrlock *plock)
 // RF state.
 typedef enum _rt_rf_power_state
 {
-	rf_on,		// RF is on after RFSleep or RFOff
-	rf_sleep,	// 802.11 Power Save mode
-	rf_off,		// HW/SW Radio OFF or Inactive Power Save
-	//=====Add the new RF state above this line=====//
-	rf_max
-}rt_rf_power_state;
+    rf_on,		// RF is on after RFSleep or RFOff
+    rf_sleep,	// 802.11 Power Save mode
+    rf_off,		// HW/SW Radio OFF or Inactive Power Save
+    //=====Add the new RF state above this line=====//
+    rf_max
+} rt_rf_power_state;
 
 // RF Off Level for IPS or HW/SW radio off
 #define	RT_RF_OFF_LEVL_ASPM			BIT(0)	// PCI ASPM
@@ -174,202 +174,202 @@ typedef enum _rt_rf_power_state
 
 
 enum _PS_BBRegBackup_ {
-	PSBBREG_RF0 = 0,
-	PSBBREG_RF1,
-	PSBBREG_RF2,
-	PSBBREG_AFE0,
-	PSBBREG_TOTALCNT
+    PSBBREG_RF0 = 0,
+    PSBBREG_RF1,
+    PSBBREG_RF2,
+    PSBBREG_AFE0,
+    PSBBREG_TOTALCNT
 };
 
 enum { // for ips_mode
-	IPS_NONE=0,
-	IPS_NORMAL,
-	IPS_LEVEL_2,	
-	IPS_NUM
+    IPS_NONE=0,
+    IPS_NORMAL,
+    IPS_LEVEL_2,
+    IPS_NUM
 };
 
 // Design for pwrctrl_priv.ips_deny, 32 bits for 32 reasons at most
 typedef enum _PS_DENY_REASON
 {
-	PS_DENY_DRV_INITIAL = 0,
-	PS_DENY_SCAN,
-	PS_DENY_JOIN,
-	PS_DENY_DISCONNECT,
-	PS_DENY_SUSPEND,
-	PS_DENY_IOCTL,
-	PS_DENY_MGNT_TX,
-	PS_DENY_DRV_REMOVE = 30,
-	PS_DENY_OTHERS = 31
+    PS_DENY_DRV_INITIAL = 0,
+    PS_DENY_SCAN,
+    PS_DENY_JOIN,
+    PS_DENY_DISCONNECT,
+    PS_DENY_SUSPEND,
+    PS_DENY_IOCTL,
+    PS_DENY_MGNT_TX,
+    PS_DENY_DRV_REMOVE = 30,
+    PS_DENY_OTHERS = 31
 } PS_DENY_REASON;
 
 #ifdef CONFIG_PNO_SUPPORT
 typedef struct pno_nlo_info
 {
-	u32 fast_scan_period;				//Fast scan period
-	u8	ssid_num;				//number of entry
-	u8	hidden_ssid_num;
-	u32	slow_scan_period;			//slow scan period
-	u32	fast_scan_iterations;			//Fast scan iterations
-	u8	ssid_length[MAX_PNO_LIST_COUNT];	//SSID Length Array
-	u8	ssid_cipher_info[MAX_PNO_LIST_COUNT];	//Cipher information for security
-	u8	ssid_channel_info[MAX_PNO_LIST_COUNT];	//channel information
-	u8	loc_probe_req[MAX_HIDDEN_AP];		//loc_probeReq
-}pno_nlo_info_t;
+    u32 fast_scan_period;				//Fast scan period
+    u8	ssid_num;				//number of entry
+    u8	hidden_ssid_num;
+    u32	slow_scan_period;			//slow scan period
+    u32	fast_scan_iterations;			//Fast scan iterations
+    u8	ssid_length[MAX_PNO_LIST_COUNT];	//SSID Length Array
+    u8	ssid_cipher_info[MAX_PNO_LIST_COUNT];	//Cipher information for security
+    u8	ssid_channel_info[MAX_PNO_LIST_COUNT];	//channel information
+    u8	loc_probe_req[MAX_HIDDEN_AP];		//loc_probeReq
+} pno_nlo_info_t;
 
 typedef struct pno_ssid {
-	u32		SSID_len;
-	u8		SSID[32];
+    u32		SSID_len;
+    u8		SSID[32];
 } pno_ssid_t;
 
 typedef struct pno_ssid_list {
-	pno_ssid_t	node[MAX_PNO_LIST_COUNT];
-}pno_ssid_list_t;
+    pno_ssid_t	node[MAX_PNO_LIST_COUNT];
+} pno_ssid_list_t;
 
 typedef struct pno_scan_channel_info
 {
-	u8	channel;
-	u8	tx_power;
-	u8	timeout;
-	u8	active;				//set 1 means active scan, or pasivite scan.
-}pno_scan_channel_info_t;
+    u8	channel;
+    u8	tx_power;
+    u8	timeout;
+    u8	active;				//set 1 means active scan, or pasivite scan.
+} pno_scan_channel_info_t;
 
 typedef struct pno_scan_info
 {
-	u8	enableRFE;			//Enable RFE
-	u8	period_scan_time;		//exclusive with fast_scan_period and slow_scan_period
-	u8	periodScan;			//exclusive with fast_scan_period and slow_scan_period
-	u8	orig_80_offset;			//original channel 80 offset
-	u8	orig_40_offset;			//original channel 40 offset
-	u8	orig_bw;			//original bandwidth
-	u8	orig_ch;			//original channel
-	u8	channel_num;			//number of channel
-	u64	rfe_type;			//rfe_type && 0x00000000000000ff
-	pno_scan_channel_info_t ssid_channel_info[MAX_SCAN_LIST_COUNT];
-}pno_scan_info_t;
+    u8	enableRFE;			//Enable RFE
+    u8	period_scan_time;		//exclusive with fast_scan_period and slow_scan_period
+    u8	periodScan;			//exclusive with fast_scan_period and slow_scan_period
+    u8	orig_80_offset;			//original channel 80 offset
+    u8	orig_40_offset;			//original channel 40 offset
+    u8	orig_bw;			//original bandwidth
+    u8	orig_ch;			//original channel
+    u8	channel_num;			//number of channel
+    u64	rfe_type;			//rfe_type && 0x00000000000000ff
+    pno_scan_channel_info_t ssid_channel_info[MAX_SCAN_LIST_COUNT];
+} pno_scan_info_t;
 #endif //CONFIG_PNO_SUPPORT
 
 struct pwrctrl_priv
 {
-	_pwrlock	lock;
-	_pwrlock	check_32k_lock;
-	volatile u8 rpwm; // requested power state for fw
-	volatile u8 cpwm; // fw current power state. updated when 1. read from HCPWM 2. driver lowers power level
-	volatile u8 tog; // toggling
-	volatile u8 cpwm_tog; // toggling
+    _pwrlock	lock;
+    _pwrlock	check_32k_lock;
+    volatile u8 rpwm; // requested power state for fw
+    volatile u8 cpwm; // fw current power state. updated when 1. read from HCPWM 2. driver lowers power level
+    volatile u8 tog; // toggling
+    volatile u8 cpwm_tog; // toggling
 
-	u8	pwr_mode;
-	u8	smart_ps;
-	u8	bcn_ant_mode;
-	u8 	dtim;
+    u8	pwr_mode;
+    u8	smart_ps;
+    u8	bcn_ant_mode;
+    u8 	dtim;
 
-	u32	alives;
-	_workitem cpwm_event;
+    u32	alives;
+    _workitem cpwm_event;
 #ifdef CONFIG_LPS_RPWM_TIMER
-	u8 brpwmtimeout;
-	_workitem rpwmtimeoutwi;
-	_timer pwr_rpwm_timer;
+    u8 brpwmtimeout;
+    _workitem rpwmtimeoutwi;
+    _timer pwr_rpwm_timer;
 #endif // CONFIG_LPS_RPWM_TIMER
-	u8	bpower_saving; //for LPS/IPS
+    u8	bpower_saving; //for LPS/IPS
 
-	u8	b_hw_radio_off;
-	u8	reg_rfoff;
-	u8	reg_pdnmode; //powerdown mode
-	u32	rfoff_reason;
+    u8	b_hw_radio_off;
+    u8	reg_rfoff;
+    u8	reg_pdnmode; //powerdown mode
+    u32	rfoff_reason;
 
-	//RF OFF Level
-	u32	cur_ps_level;
-	u32	reg_rfps_level;
+    //RF OFF Level
+    u32	cur_ps_level;
+    u32	reg_rfps_level;
 
-	uint 	ips_enter_cnts;
-	uint 	ips_leave_cnts;
+    uint 	ips_enter_cnts;
+    uint 	ips_leave_cnts;
 
-	u8	ips_mode; 
-	u8	ips_org_mode; 
-	u8	ips_mode_req; // used to accept the mode setting request, will update to ipsmode later
-	uint bips_processing;
-	u32 ips_deny_time; /* will deny IPS when system time is smaller than this */
-	u8 pre_ips_type;// 0: default flow, 1: carddisbale flow
+    u8	ips_mode;
+    u8	ips_org_mode;
+    u8	ips_mode_req; // used to accept the mode setting request, will update to ipsmode later
+    uint bips_processing;
+    u32 ips_deny_time; /* will deny IPS when system time is smaller than this */
+    u8 pre_ips_type;// 0: default flow, 1: carddisbale flow
 
-	// ps_deny: if 0, power save is free to go; otherwise deny all kinds of power save.
-	// Use PS_DENY_REASON to decide reason.
-	// Don't access this variable directly without control function,
-	// and this variable should be protected by lock.
-	u32 ps_deny;
+    // ps_deny: if 0, power save is free to go; otherwise deny all kinds of power save.
+    // Use PS_DENY_REASON to decide reason.
+    // Don't access this variable directly without control function,
+    // and this variable should be protected by lock.
+    u32 ps_deny;
 
-	u8 ps_processing; /* temporarily used to mark whether in rtw_ps_processor */
+    u8 ps_processing; /* temporarily used to mark whether in rtw_ps_processor */
 
-	u8 fw_psmode_iface_id;
-	u8	bLeisurePs;
-	u8	LpsIdleCount;
-	u8	power_mgnt;
-	u8	org_power_mgnt;
-	u8	bFwCurrentInPSMode;
-	u32	DelayLPSLastTimeStamp;
-	s32		pnp_current_pwr_state;
-	u8		pnp_bstop_trx;
+    u8 fw_psmode_iface_id;
+    u8	bLeisurePs;
+    u8	LpsIdleCount;
+    u8	power_mgnt;
+    u8	org_power_mgnt;
+    u8	bFwCurrentInPSMode;
+    u32	DelayLPSLastTimeStamp;
+    s32		pnp_current_pwr_state;
+    u8		pnp_bstop_trx;
 
 
-	u8		bInternalAutoSuspend;
-	u8		bInSuspend;
+    u8		bInternalAutoSuspend;
+    u8		bInSuspend;
 #ifdef	CONFIG_BT_COEXIST
-	u8		bAutoResume;
-	u8		autopm_cnt;
+    u8		bAutoResume;
+    u8		autopm_cnt;
 #endif
-	u8		bSupportRemoteWakeup;	
-	u8		wowlan_wake_reason;
-	u8		wowlan_ap_mode;
-	u8		wowlan_mode;
+    u8		bSupportRemoteWakeup;
+    u8		wowlan_wake_reason;
+    u8		wowlan_ap_mode;
+    u8		wowlan_mode;
 #ifdef CONFIG_WOWLAN
-	u8		wowlan_pattern;
-	u8		wowlan_magic;
-	u8		wowlan_unicast;
-	u8		wowlan_pattern_idx;
-	u8		wowlan_pno_enable;
-	u8		wowlan_from_cmd;
+    u8		wowlan_pattern;
+    u8		wowlan_magic;
+    u8		wowlan_unicast;
+    u8		wowlan_pattern_idx;
+    u8		wowlan_pno_enable;
+    u8		wowlan_from_cmd;
 #ifdef CONFIG_PNO_SUPPORT
-	u8		pno_in_resume;
-	u8		pno_inited;
-	pno_nlo_info_t	*pnlo_info;
-	pno_scan_info_t	*pscan_info;
-	pno_ssid_list_t	*pno_ssid_list;
+    u8		pno_in_resume;
+    u8		pno_inited;
+    pno_nlo_info_t	*pnlo_info;
+    pno_scan_info_t	*pscan_info;
+    pno_ssid_list_t	*pno_ssid_list;
 #endif
-	u32		wowlan_pattern_context[8][5];
-	u64		wowlan_fw_iv;
+    u32		wowlan_pattern_context[8][5];
+    u64		wowlan_fw_iv;
 #endif // CONFIG_WOWLAN
-	_timer 	pwr_state_check_timer;
-	int		pwr_state_check_interval;
-	u8		pwr_state_check_cnts;
+    _timer 	pwr_state_check_timer;
+    int		pwr_state_check_interval;
+    u8		pwr_state_check_cnts;
 
-	int 		ps_flag; /* used by autosuspend */
-	
-	rt_rf_power_state	rf_pwrstate;//cur power state, only for IPS
-	//rt_rf_power_state 	current_rfpwrstate;
-	rt_rf_power_state	change_rfpwrstate;
+    int 		ps_flag; /* used by autosuspend */
 
-	u8		bHWPowerdown; /* power down mode selection. 0:radio off, 1:power down */
-	u8		bHWPwrPindetect; /* come from registrypriv.hwpwrp_detect. enable power down function. 0:disable, 1:enable */
-	u8		bkeepfwalive;
-	u8		brfoffbyhw;
-	unsigned long PS_BBRegBackup[PSBBREG_TOTALCNT];
+    rt_rf_power_state	rf_pwrstate;//cur power state, only for IPS
+    //rt_rf_power_state 	current_rfpwrstate;
+    rt_rf_power_state	change_rfpwrstate;
 
-	#ifdef CONFIG_RESUME_IN_WORKQUEUE
-	struct workqueue_struct *rtw_workqueue;
-	_workitem resume_work;
-	#endif
+    u8		bHWPowerdown; /* power down mode selection. 0:radio off, 1:power down */
+    u8		bHWPwrPindetect; /* come from registrypriv.hwpwrp_detect. enable power down function. 0:disable, 1:enable */
+    u8		bkeepfwalive;
+    u8		brfoffbyhw;
+    unsigned long PS_BBRegBackup[PSBBREG_TOTALCNT];
 
-	#ifdef CONFIG_HAS_EARLYSUSPEND
-	struct early_suspend early_suspend;
-	u8 do_late_resume;
-	#endif //CONFIG_HAS_EARLYSUSPEND
-	
-	#ifdef CONFIG_ANDROID_POWER
-	android_early_suspend_t early_suspend;
-	u8 do_late_resume;
-	#endif
+#ifdef CONFIG_RESUME_IN_WORKQUEUE
+    struct workqueue_struct *rtw_workqueue;
+    _workitem resume_work;
+#endif
 
-	#ifdef CONFIG_INTEL_PROXIM
-	u8	stored_power_mgnt;
-	#endif
+#ifdef CONFIG_HAS_EARLYSUSPEND
+    struct early_suspend early_suspend;
+    u8 do_late_resume;
+#endif //CONFIG_HAS_EARLYSUSPEND
+
+#ifdef CONFIG_ANDROID_POWER
+    android_early_suspend_t early_suspend;
+    u8 do_late_resume;
+#endif
+
+#ifdef CONFIG_INTEL_PROXIM
+    u8	stored_power_mgnt;
+#endif
 };
 
 #define rtw_get_ips_mode_req(pwrctl) \
@@ -385,7 +385,7 @@ struct pwrctrl_priv
 		/*DBG_871X("%s _rtw_set_pwr_state_check_timer(%p, %d)\n", __FUNCTION__, (pwrctl), (ms));*/ \
 		_set_timer(&(pwrctl)->pwr_state_check_timer, (ms)); \
 	} while(0)
-	
+
 #define rtw_set_pwr_state_check_timer(pwrctl) \
 	_rtw_set_pwr_state_check_timer((pwrctl), (pwrctl)->pwr_state_check_interval)
 

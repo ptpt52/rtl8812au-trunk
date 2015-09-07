@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -75,51 +75,51 @@ int rtw_p2p_enable(_adapter *padapter, enum P2P_ROLE role);
 
 static inline void _rtw_p2p_set_state(struct wifidirect_info *wdinfo, enum P2P_STATE state)
 {
-	if(wdinfo->p2p_state != state) {
-		//wdinfo->pre_p2p_state = wdinfo->p2p_state;
-		wdinfo->p2p_state = state;
-	}
+    if(wdinfo->p2p_state != state) {
+        //wdinfo->pre_p2p_state = wdinfo->p2p_state;
+        wdinfo->p2p_state = state;
+    }
 }
 static inline void _rtw_p2p_set_pre_state(struct wifidirect_info *wdinfo, enum P2P_STATE state)
 {
-	if(wdinfo->pre_p2p_state != state) {
-		wdinfo->pre_p2p_state = state;
-	}
+    if(wdinfo->pre_p2p_state != state) {
+        wdinfo->pre_p2p_state = state;
+    }
 }
 #if 0
 static inline void _rtw_p2p_restore_state(struct wifidirect_info *wdinfo)
 {
-	if(wdinfo->pre_p2p_state != -1) {
-		wdinfo->p2p_state = wdinfo->pre_p2p_state;
-		wdinfo->pre_p2p_state = -1;
-	}
+    if(wdinfo->pre_p2p_state != -1) {
+        wdinfo->p2p_state = wdinfo->pre_p2p_state;
+        wdinfo->pre_p2p_state = -1;
+    }
 }
 #endif
 static inline void _rtw_p2p_set_role(struct wifidirect_info *wdinfo, enum P2P_ROLE role)
 {
-	if(wdinfo->role != role) {
-		wdinfo->role = role;
-	}
+    if(wdinfo->role != role) {
+        wdinfo->role = role;
+    }
 }
 static inline int _rtw_p2p_state(struct wifidirect_info *wdinfo)
 {
-	return wdinfo->p2p_state;
+    return wdinfo->p2p_state;
 }
 static inline int _rtw_p2p_pre_state(struct wifidirect_info *wdinfo)
 {
-	return wdinfo->pre_p2p_state;
+    return wdinfo->pre_p2p_state;
 }
 static inline int _rtw_p2p_role(struct wifidirect_info *wdinfo)
 {
-	return wdinfo->role;
+    return wdinfo->role;
 }
 static inline bool _rtw_p2p_chk_state(struct wifidirect_info *wdinfo, enum P2P_STATE state)
 {
-	return wdinfo->p2p_state == state;
+    return wdinfo->p2p_state == state;
 }
 static inline bool _rtw_p2p_chk_role(struct wifidirect_info *wdinfo, enum P2P_ROLE role)
 {
-	return wdinfo->role == role;
+    return wdinfo->role == role;
 }
 
 #ifdef CONFIG_DBG_P2P

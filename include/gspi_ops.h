@@ -142,8 +142,8 @@
 
 
 struct spi_more_data {
-	unsigned long more_data;
-	unsigned long len;
+    unsigned long more_data;
+    unsigned long len;
 };
 
 #ifdef CONFIG_RTL8723A

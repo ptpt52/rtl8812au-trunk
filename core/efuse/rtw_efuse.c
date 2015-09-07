@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -26,19 +26,19 @@
 /*------------------------Define local variable------------------------------*/
 u8	fakeEfuseBank=0;
 u32	fakeEfuseUsedBytes=0;
-u8	fakeEfuseContent[EFUSE_MAX_HW_SIZE]={0};
-u8	fakeEfuseInitMap[EFUSE_MAX_MAP_LEN]={0};
-u8	fakeEfuseModifiedMap[EFUSE_MAX_MAP_LEN]={0};
+u8	fakeEfuseContent[EFUSE_MAX_HW_SIZE]= {0};
+u8	fakeEfuseInitMap[EFUSE_MAX_MAP_LEN]= {0};
+u8	fakeEfuseModifiedMap[EFUSE_MAX_MAP_LEN]= {0};
 
 u32	BTEfuseUsedBytes=0;
 u8	BTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
-u8	BTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN]={0};
-u8	BTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN]={0};
+u8	BTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN]= {0};
+u8	BTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN]= {0};
 
 u32	fakeBTEfuseUsedBytes=0;
 u8	fakeBTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
-u8	fakeBTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN]={0};
-u8	fakeBTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN]={0};
+u8	fakeBTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN]= {0};
+u8	fakeBTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN]= {0};
 /*------------------------Define local variable------------------------------*/
 
 //------------------------------------------------------------------------------
@@ -48,55 +48,55 @@ u8	fakeBTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN]={0};
 
 BOOLEAN
 Efuse_Read1ByteFromFakeContent(
-	IN		PADAPTER	pAdapter,
-	IN		u16		Offset,
-	IN OUT	u8		*Value	);
+    IN		PADAPTER	pAdapter,
+    IN		u16		Offset,
+    IN OUT	u8		*Value	);
 BOOLEAN
 Efuse_Read1ByteFromFakeContent(
-	IN		PADAPTER	pAdapter,
-	IN		u16		Offset,
-	IN OUT	u8		*Value	)
+    IN		PADAPTER	pAdapter,
+    IN		u16		Offset,
+    IN OUT	u8		*Value	)
 {
-	if(Offset >= EFUSE_MAX_HW_SIZE)
-	{
-		return _FALSE;
-	}
-	//DbgPrint("Read fake content, offset = %d\n", Offset);
-	if(fakeEfuseBank == 0)
-		*Value = fakeEfuseContent[Offset];
-	else
-		*Value = fakeBTEfuseContent[fakeEfuseBank-1][Offset];
-	return _TRUE;
+    if(Offset >= EFUSE_MAX_HW_SIZE)
+    {
+        return _FALSE;
+    }
+    //DbgPrint("Read fake content, offset = %d\n", Offset);
+    if(fakeEfuseBank == 0)
+        *Value = fakeEfuseContent[Offset];
+    else
+        *Value = fakeBTEfuseContent[fakeEfuseBank-1][Offset];
+    return _TRUE;
 }
 
 BOOLEAN
 Efuse_Write1ByteToFakeContent(
-	IN		PADAPTER	pAdapter,
-	IN		u16		Offset,
-	IN 		u8		Value	);
+    IN		PADAPTER	pAdapter,
+    IN		u16		Offset,
+    IN 		u8		Value	);
 BOOLEAN
 Efuse_Write1ByteToFakeContent(
-	IN		PADAPTER	pAdapter,
-	IN		u16		Offset,
-	IN 		u8		Value	)
+    IN		PADAPTER	pAdapter,
+    IN		u16		Offset,
+    IN 		u8		Value	)
 {
-	if(Offset >= EFUSE_MAX_HW_SIZE)
-	{
-		return _FALSE;
-	}
-	if(fakeEfuseBank == 0)
-		fakeEfuseContent[Offset] = Value;
-	else
-	{
-		fakeBTEfuseContent[fakeEfuseBank-1][Offset] = Value;
-	}
-	return _TRUE;
+    if(Offset >= EFUSE_MAX_HW_SIZE)
+    {
+        return _FALSE;
+    }
+    if(fakeEfuseBank == 0)
+        fakeEfuseContent[Offset] = Value;
+    else
+    {
+        fakeBTEfuseContent[fakeEfuseBank-1][Offset] = Value;
+    }
+    return _TRUE;
 }
 
 /*-----------------------------------------------------------------------------
  * Function:	Efuse_PowerSwitch
  *
- * Overview:	When we want to enable write operation, we should change to 
+ * Overview:	When we want to enable write operation, we should change to
  *				pwr on state. When we stop write, we should switch to 500k mode
  *				and disable LDO 2.5V.
  *
@@ -113,21 +113,21 @@ Efuse_Write1ByteToFakeContent(
  *---------------------------------------------------------------------------*/
 VOID
 Efuse_PowerSwitch(
-	IN	PADAPTER	pAdapter,
-	IN	u8		bWrite,
-	IN	u8		PwrState)
+    IN	PADAPTER	pAdapter,
+    IN	u8		bWrite,
+    IN	u8		PwrState)
 {
-	pAdapter->HalFunc.EfusePowerSwitch(pAdapter, bWrite, PwrState);
+    pAdapter->HalFunc.EfusePowerSwitch(pAdapter, bWrite, PwrState);
 }
 
 VOID
 BTEfuse_PowerSwitch(
-	IN	PADAPTER	pAdapter,
-	IN	u8		bWrite,
-	IN	u8		PwrState)
+    IN	PADAPTER	pAdapter,
+    IN	u8		bWrite,
+    IN	u8		PwrState)
 {
-	if(pAdapter->HalFunc.BTEfusePowerSwitch)
-		pAdapter->HalFunc.BTEfusePowerSwitch(pAdapter, bWrite, PwrState);
+    if(pAdapter->HalFunc.BTEfusePowerSwitch)
+        pAdapter->HalFunc.BTEfusePowerSwitch(pAdapter, bWrite, PwrState);
 }
 
 /*-----------------------------------------------------------------------------
@@ -148,27 +148,27 @@ BTEfuse_PowerSwitch(
  *---------------------------------------------------------------------------*/
 u16
 Efuse_GetCurrentSize(
-	IN PADAPTER		pAdapter,
-	IN u8			efuseType,
-	IN BOOLEAN		bPseudoTest)
+    IN PADAPTER		pAdapter,
+    IN u8			efuseType,
+    IN BOOLEAN		bPseudoTest)
 {
-	u16 ret=0;
+    u16 ret=0;
 
-	ret = pAdapter->HalFunc.EfuseGetCurrentSize(pAdapter, efuseType, bPseudoTest);
+    ret = pAdapter->HalFunc.EfuseGetCurrentSize(pAdapter, efuseType, bPseudoTest);
 
-	return ret;
+    return ret;
 }
 
 /*  11/16/2008 MH Add description. Get current efuse area enabled word!!. */
 u8
 Efuse_CalculateWordCnts(IN u8	word_en)
 {
-	u8 word_cnts = 0;
-	if(!(word_en & BIT(0)))	word_cnts++; // 0 : write enable
-	if(!(word_en & BIT(1)))	word_cnts++;
-	if(!(word_en & BIT(2)))	word_cnts++;
-	if(!(word_en & BIT(3)))	word_cnts++;
-	return word_cnts;
+    u8 word_cnts = 0;
+    if(!(word_en & BIT(0)))	word_cnts++; // 0 : write enable
+    if(!(word_en & BIT(1)))	word_cnts++;
+    if(!(word_en & BIT(2)))	word_cnts++;
+    if(!(word_en & BIT(3)))	word_cnts++;
+    return word_cnts;
 }
 
 //
@@ -184,61 +184,61 @@ Efuse_CalculateWordCnts(IN u8	word_en)
 //
 VOID
 ReadEFuseByte(
-		PADAPTER	Adapter,
-		u16 			_offset, 
-		u8 			*pbuf, 
-		IN BOOLEAN	bPseudoTest) 
+    PADAPTER	Adapter,
+    u16 			_offset,
+    u8 			*pbuf,
+    IN BOOLEAN	bPseudoTest)
 {
-	u32	value32;
-	u8	readbyte;
-	u16	retry;
-	//u32 start=rtw_get_current_time();
+    u32	value32;
+    u8	readbyte;
+    u16	retry;
+    //u32 start=rtw_get_current_time();
 
-	if(bPseudoTest)
-	{
-		Efuse_Read1ByteFromFakeContent(Adapter, _offset, pbuf);
-		return;
-	}
-	if (IS_HARDWARE_TYPE_8723B(Adapter))
-	{
-		// <20130121, Kordan> For SMIC S55 EFUSE specificatoin.
-		//0x34[11]: SW force PGMEN input of efuse to high. (for the bank selected by 0x34[9:8])
-		PHY_SetMacReg(Adapter, EFUSE_TEST, BIT11, 0);
-	}
-	//Write Address
-	rtw_write8(Adapter, EFUSE_CTRL+1, (_offset & 0xff));  		
-	readbyte = rtw_read8(Adapter, EFUSE_CTRL+2);
-	rtw_write8(Adapter, EFUSE_CTRL+2, ((_offset >> 8) & 0x03) | (readbyte & 0xfc));  		
+    if(bPseudoTest)
+    {
+        Efuse_Read1ByteFromFakeContent(Adapter, _offset, pbuf);
+        return;
+    }
+    if (IS_HARDWARE_TYPE_8723B(Adapter))
+    {
+        // <20130121, Kordan> For SMIC S55 EFUSE specificatoin.
+        //0x34[11]: SW force PGMEN input of efuse to high. (for the bank selected by 0x34[9:8])
+        PHY_SetMacReg(Adapter, EFUSE_TEST, BIT11, 0);
+    }
+    //Write Address
+    rtw_write8(Adapter, EFUSE_CTRL+1, (_offset & 0xff));
+    readbyte = rtw_read8(Adapter, EFUSE_CTRL+2);
+    rtw_write8(Adapter, EFUSE_CTRL+2, ((_offset >> 8) & 0x03) | (readbyte & 0xfc));
 
-	//Write bit 32 0
-	readbyte = rtw_read8(Adapter, EFUSE_CTRL+3);		
-	rtw_write8(Adapter, EFUSE_CTRL+3, (readbyte & 0x7f));  	
-	
-	//Check bit 32 read-ready
-	retry = 0;
-	value32 = rtw_read32(Adapter, EFUSE_CTRL);
-	//while(!(((value32 >> 24) & 0xff) & 0x80)  && (retry<10))
-	while(!(((value32 >> 24) & 0xff) & 0x80)  && (retry<10000))
-	{
-		value32 = rtw_read32(Adapter, EFUSE_CTRL);
-		retry++;
-	}
+    //Write bit 32 0
+    readbyte = rtw_read8(Adapter, EFUSE_CTRL+3);
+    rtw_write8(Adapter, EFUSE_CTRL+3, (readbyte & 0x7f));
 
-	// 20100205 Joseph: Add delay suggested by SD1 Victor.
-	// This fix the problem that Efuse read error in high temperature condition.
-	// Designer says that there shall be some delay after ready bit is set, or the
-	// result will always stay on last data we read.
-	rtw_udelay_os(50);
-	value32 = rtw_read32(Adapter, EFUSE_CTRL);
-	
-	*pbuf = (u8)(value32 & 0xff);
-	//DBG_871X("ReadEFuseByte _offset:%08u, in %d ms\n",_offset ,rtw_get_passing_time_ms(start));
-	
+    //Check bit 32 read-ready
+    retry = 0;
+    value32 = rtw_read32(Adapter, EFUSE_CTRL);
+    //while(!(((value32 >> 24) & 0xff) & 0x80)  && (retry<10))
+    while(!(((value32 >> 24) & 0xff) & 0x80)  && (retry<10000))
+    {
+        value32 = rtw_read32(Adapter, EFUSE_CTRL);
+        retry++;
+    }
+
+    // 20100205 Joseph: Add delay suggested by SD1 Victor.
+    // This fix the problem that Efuse read error in high temperature condition.
+    // Designer says that there shall be some delay after ready bit is set, or the
+    // result will always stay on last data we read.
+    rtw_udelay_os(50);
+    value32 = rtw_read32(Adapter, EFUSE_CTRL);
+
+    *pbuf = (u8)(value32 & 0xff);
+    //DBG_871X("ReadEFuseByte _offset:%08u, in %d ms\n",_offset ,rtw_get_passing_time_ms(start));
+
 }
 
 //
 //	Description:
-//		1. Execute E-Fuse read byte operation according as map offset and 
+//		1. Execute E-Fuse read byte operation according as map offset and
 //		    save to E-Fuse table.
 //		2. Refered from SD1 Richard.
 //
@@ -256,36 +256,36 @@ ReadEFuseByte(
 
 VOID
 efuse_ReadEFuse(
-	PADAPTER	Adapter,
-	u8		efuseType,
-	u16		_offset,
-	u16 		_size_byte,
-	u8      	*pbuf,
-	IN	BOOLEAN	bPseudoTest
-	);
+    PADAPTER	Adapter,
+    u8		efuseType,
+    u16		_offset,
+    u16 		_size_byte,
+    u8      	*pbuf,
+    IN	BOOLEAN	bPseudoTest
+);
 VOID
 efuse_ReadEFuse(
-	PADAPTER	Adapter,
-	u8		efuseType,
-	u16		_offset,
-	u16 		_size_byte,
-	u8      	*pbuf,
-	IN	BOOLEAN	bPseudoTest
-	)
+    PADAPTER	Adapter,
+    u8		efuseType,
+    u16		_offset,
+    u16 		_size_byte,
+    u8      	*pbuf,
+    IN	BOOLEAN	bPseudoTest
+)
 {
-	Adapter->HalFunc.ReadEFuse(Adapter, efuseType, _offset, _size_byte, pbuf, bPseudoTest);
+    Adapter->HalFunc.ReadEFuse(Adapter, efuseType, _offset, _size_byte, pbuf, bPseudoTest);
 }
 
 VOID
 EFUSE_GetEfuseDefinition(
-	IN		PADAPTER	pAdapter,
-	IN		u8		efuseType,
-	IN		u8		type,
-	OUT		void		*pOut,
-	IN		BOOLEAN		bPseudoTest
-	)
+    IN		PADAPTER	pAdapter,
+    IN		u8		efuseType,
+    IN		u8		type,
+    OUT		void		*pOut,
+    IN		BOOLEAN		bPseudoTest
+)
 {
-	pAdapter->HalFunc.EFUSEGetEfuseDefinition(pAdapter, efuseType, type, pOut, bPseudoTest);
+    pAdapter->HalFunc.EFUSEGetEfuseDefinition(pAdapter, efuseType, type, pOut, bPseudoTest);
 }
 
 /*-----------------------------------------------------------------------------
@@ -305,51 +305,51 @@ EFUSE_GetEfuseDefinition(
  *
  *---------------------------------------------------------------------------*/
 u8
-EFUSE_Read1Byte(	
-	IN	PADAPTER	Adapter, 
-	IN	u16		Address)
+EFUSE_Read1Byte(
+    IN	PADAPTER	Adapter,
+    IN	u16		Address)
 {
-	u8	data;
-	u8	Bytetemp = {0x00};
-	u8	temp = {0x00};
-	u32	k=0;
-	u16	contentLen=0;
+    u8	data;
+    u8	Bytetemp = {0x00};
+    u8	temp = {0x00};
+    u32	k=0;
+    u16	contentLen=0;
 
-	EFUSE_GetEfuseDefinition(Adapter, EFUSE_WIFI , TYPE_EFUSE_REAL_CONTENT_LEN, (PVOID)&contentLen, _FALSE);
+    EFUSE_GetEfuseDefinition(Adapter, EFUSE_WIFI , TYPE_EFUSE_REAL_CONTENT_LEN, (PVOID)&contentLen, _FALSE);
 
-	if (Address < contentLen)	//E-fuse 512Byte
-	{
-		//Write E-fuse Register address bit0~7
-		temp = Address & 0xFF;	
-		rtw_write8(Adapter, EFUSE_CTRL+1, temp);	
-		Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+2);	
-		//Write E-fuse Register address bit8~9
-		temp = ((Address >> 8) & 0x03) | (Bytetemp & 0xFC);	
-		rtw_write8(Adapter, EFUSE_CTRL+2, temp);	
+    if (Address < contentLen)	//E-fuse 512Byte
+    {
+        //Write E-fuse Register address bit0~7
+        temp = Address & 0xFF;
+        rtw_write8(Adapter, EFUSE_CTRL+1, temp);
+        Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+2);
+        //Write E-fuse Register address bit8~9
+        temp = ((Address >> 8) & 0x03) | (Bytetemp & 0xFC);
+        rtw_write8(Adapter, EFUSE_CTRL+2, temp);
 
-		//Write 0x30[31]=0
-		Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
-		temp = Bytetemp & 0x7F;
-		rtw_write8(Adapter, EFUSE_CTRL+3, temp);
+        //Write 0x30[31]=0
+        Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
+        temp = Bytetemp & 0x7F;
+        rtw_write8(Adapter, EFUSE_CTRL+3, temp);
 
-		//Wait Write-ready (0x30[31]=1)
-		Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
-		while(!(Bytetemp & 0x80))
-		{				
-			Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
-			k++;
-			if(k==1000)
-			{
-				k=0;
-				break;
-			}
-		}
-		data=rtw_read8(Adapter, EFUSE_CTRL);
-		return data;
-	}
-	else
-		return 0xFF;
-	
+        //Wait Write-ready (0x30[31]=1)
+        Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
+        while(!(Bytetemp & 0x80))
+        {
+            Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
+            k++;
+            if(k==1000)
+            {
+                k=0;
+                break;
+            }
+        }
+        data=rtw_read8(Adapter, EFUSE_CTRL);
+        return data;
+    }
+    else
+        return 0xFF;
+
 }/* EFUSE_Read1Byte */
 
 /*-----------------------------------------------------------------------------
@@ -369,233 +369,233 @@ EFUSE_Read1Byte(
  *
  *---------------------------------------------------------------------------*/
 
-void	
-EFUSE_Write1Byte(	
-	IN	PADAPTER	Adapter, 
-	IN	u16		Address,
-	IN	u8		Value);
-void	
-EFUSE_Write1Byte(	
-	IN	PADAPTER	Adapter, 
-	IN	u16		Address,
-	IN	u8		Value)
+void
+EFUSE_Write1Byte(
+    IN	PADAPTER	Adapter,
+    IN	u16		Address,
+    IN	u8		Value);
+void
+EFUSE_Write1Byte(
+    IN	PADAPTER	Adapter,
+    IN	u16		Address,
+    IN	u8		Value)
 {
-	u8	Bytetemp = {0x00};
-	u8	temp = {0x00};
-	u32	k=0;
-	u16	contentLen=0;
+    u8	Bytetemp = {0x00};
+    u8	temp = {0x00};
+    u32	k=0;
+    u16	contentLen=0;
 
-	//RT_TRACE(COMP_EFUSE, DBG_LOUD, ("Addr=%x Data =%x\n", Address, Value));
-	EFUSE_GetEfuseDefinition(Adapter, EFUSE_WIFI , TYPE_EFUSE_REAL_CONTENT_LEN, (PVOID)&contentLen, _FALSE);
+    //RT_TRACE(COMP_EFUSE, DBG_LOUD, ("Addr=%x Data =%x\n", Address, Value));
+    EFUSE_GetEfuseDefinition(Adapter, EFUSE_WIFI , TYPE_EFUSE_REAL_CONTENT_LEN, (PVOID)&contentLen, _FALSE);
 
-	if( Address < contentLen)	//E-fuse 512Byte
-	{
-		rtw_write8(Adapter, EFUSE_CTRL, Value);
+    if( Address < contentLen)	//E-fuse 512Byte
+    {
+        rtw_write8(Adapter, EFUSE_CTRL, Value);
 
-		//Write E-fuse Register address bit0~7
-		temp = Address & 0xFF;	
-		rtw_write8(Adapter, EFUSE_CTRL+1, temp);	
-		Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+2);	
-		
-		//Write E-fuse Register address bit8~9
-		temp = ((Address >> 8) & 0x03) | (Bytetemp & 0xFC);	
-		rtw_write8(Adapter, EFUSE_CTRL+2, temp);	
+        //Write E-fuse Register address bit0~7
+        temp = Address & 0xFF;
+        rtw_write8(Adapter, EFUSE_CTRL+1, temp);
+        Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+2);
 
-		//Write 0x30[31]=1
-		Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
-		temp = Bytetemp | 0x80;
-		rtw_write8(Adapter, EFUSE_CTRL+3, temp);
+        //Write E-fuse Register address bit8~9
+        temp = ((Address >> 8) & 0x03) | (Bytetemp & 0xFC);
+        rtw_write8(Adapter, EFUSE_CTRL+2, temp);
 
-		//Wait Write-ready (0x30[31]=0)
-		Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
-		while(Bytetemp & 0x80)
-		{
-			Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);			
-			k++;
-			if(k==100)
-			{
-				k=0;
-				break;
-			}
-		}
-	}
+        //Write 0x30[31]=1
+        Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
+        temp = Bytetemp | 0x80;
+        rtw_write8(Adapter, EFUSE_CTRL+3, temp);
+
+        //Wait Write-ready (0x30[31]=0)
+        Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
+        while(Bytetemp & 0x80)
+        {
+            Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
+            k++;
+            if(k==100)
+            {
+                k=0;
+                break;
+            }
+        }
+    }
 }/* EFUSE_Write1Byte */
 
 
 /*  11/16/2008 MH Read one byte from real Efuse. */
 u8
 efuse_OneByteRead(
-	IN	PADAPTER	pAdapter, 
-	IN	u16			addr,
-	IN	u8			*data,
-	IN	BOOLEAN		bPseudoTest)
+    IN	PADAPTER	pAdapter,
+    IN	u16			addr,
+    IN	u8			*data,
+    IN	BOOLEAN		bPseudoTest)
 {
-	u32	tmpidx = 0;
-	u8	bResult;
-	u8	readbyte;
+    u32	tmpidx = 0;
+    u8	bResult;
+    u8	readbyte;
 
-	//DBG_871X("===> EFUSE_OneByteRead(), addr = %x\n", addr);
-	//DBG_871X("===> EFUSE_OneByteRead() start, 0x34 = 0x%X\n", rtw_read32(pAdapter, EFUSE_TEST));
+    //DBG_871X("===> EFUSE_OneByteRead(), addr = %x\n", addr);
+    //DBG_871X("===> EFUSE_OneByteRead() start, 0x34 = 0x%X\n", rtw_read32(pAdapter, EFUSE_TEST));
 
-	if(bPseudoTest)
-	{
-		bResult = Efuse_Read1ByteFromFakeContent(pAdapter, addr, data);
-		return bResult;
-	}
+    if(bPseudoTest)
+    {
+        bResult = Efuse_Read1ByteFromFakeContent(pAdapter, addr, data);
+        return bResult;
+    }
 
-	if(	IS_HARDWARE_TYPE_8723B(pAdapter) ||
-		(IS_HARDWARE_TYPE_8192E(pAdapter) && IS_VENDOR_8192E_B_CUT(pAdapter)))
-	{
-		// <20130121, Kordan> For SMIC EFUSE specificatoin.
-		//0x34[11]: SW force PGMEN input of efuse to high. (for the bank selected by 0x34[9:8])	
-		//PHY_SetMacReg(pAdapter, 0x34, BIT11, 0);
-		rtw_write16(pAdapter, 0x34, rtw_read16(pAdapter,0x34)& (~BIT11) ); 
-	}
+    if(	IS_HARDWARE_TYPE_8723B(pAdapter) ||
+            (IS_HARDWARE_TYPE_8192E(pAdapter) && IS_VENDOR_8192E_B_CUT(pAdapter)))
+    {
+        // <20130121, Kordan> For SMIC EFUSE specificatoin.
+        //0x34[11]: SW force PGMEN input of efuse to high. (for the bank selected by 0x34[9:8])
+        //PHY_SetMacReg(pAdapter, 0x34, BIT11, 0);
+        rtw_write16(pAdapter, 0x34, rtw_read16(pAdapter,0x34)& (~BIT11) );
+    }
 
-	// -----------------e-fuse reg ctrl ---------------------------------
-	//address			
-	rtw_write8(pAdapter, EFUSE_CTRL+1, (u8)(addr&0xff));		
-	rtw_write8(pAdapter, EFUSE_CTRL+2, ((u8)((addr>>8) &0x03) ) |
-	(rtw_read8(pAdapter, EFUSE_CTRL+2)&0xFC ));	
+    // -----------------e-fuse reg ctrl ---------------------------------
+    //address
+    rtw_write8(pAdapter, EFUSE_CTRL+1, (u8)(addr&0xff));
+    rtw_write8(pAdapter, EFUSE_CTRL+2, ((u8)((addr>>8) &0x03) ) |
+               (rtw_read8(pAdapter, EFUSE_CTRL+2)&0xFC ));
 
-	//rtw_write8(pAdapter, EFUSE_CTRL+3,  0x72);//read cmd	
-	//Write bit 32 0
-	readbyte = rtw_read8(pAdapter, EFUSE_CTRL+3);		
-	rtw_write8(pAdapter, EFUSE_CTRL+3, (readbyte & 0x7f));
+    //rtw_write8(pAdapter, EFUSE_CTRL+3,  0x72);//read cmd
+    //Write bit 32 0
+    readbyte = rtw_read8(pAdapter, EFUSE_CTRL+3);
+    rtw_write8(pAdapter, EFUSE_CTRL+3, (readbyte & 0x7f));
 
-	while(!(0x80 &rtw_read8(pAdapter, EFUSE_CTRL+3))&&(tmpidx<1000))
-	{
-		rtw_mdelay_os(1);
-		tmpidx++;
-	}
-	if(tmpidx<100)
-	{			
-		*data=rtw_read8(pAdapter, EFUSE_CTRL);		
-		bResult = _TRUE;
-	}
-	else
-	{
-		*data = 0xff;	
-		bResult = _FALSE;
-		DBG_871X("%s: [ERROR] addr=0x%x bResult=%d time out 1s !!!\n", __FUNCTION__, addr, bResult);
-		DBG_871X("%s: [ERROR] EFUSE_CTRL =0x%08x !!!\n", __FUNCTION__, rtw_read32(pAdapter, EFUSE_CTRL));
-	}
+    while(!(0x80 &rtw_read8(pAdapter, EFUSE_CTRL+3))&&(tmpidx<1000))
+    {
+        rtw_mdelay_os(1);
+        tmpidx++;
+    }
+    if(tmpidx<100)
+    {
+        *data=rtw_read8(pAdapter, EFUSE_CTRL);
+        bResult = _TRUE;
+    }
+    else
+    {
+        *data = 0xff;
+        bResult = _FALSE;
+        DBG_871X("%s: [ERROR] addr=0x%x bResult=%d time out 1s !!!\n", __FUNCTION__, addr, bResult);
+        DBG_871X("%s: [ERROR] EFUSE_CTRL =0x%08x !!!\n", __FUNCTION__, rtw_read32(pAdapter, EFUSE_CTRL));
+    }
 
-	return bResult;
+    return bResult;
 }
-		
+
 /*  11/16/2008 MH Write one byte to reald Efuse. */
 u8
 efuse_OneByteWrite(
-	IN	PADAPTER	pAdapter,  
-	IN	u16			addr, 
-	IN	u8			data,
-	IN	BOOLEAN		bPseudoTest)
+    IN	PADAPTER	pAdapter,
+    IN	u16			addr,
+    IN	u8			data,
+    IN	BOOLEAN		bPseudoTest)
 {
-	u8	tmpidx = 0;
-	u8	bResult=_FALSE;
-	u32 efuseValue = 0;
+    u8	tmpidx = 0;
+    u8	bResult=_FALSE;
+    u32 efuseValue = 0;
 
-	//DBG_871X("===> EFUSE_OneByteWrite(), addr = %x data=%x\n", addr, data);
-	//DBG_871X("===> EFUSE_OneByteWrite() start, 0x34 = 0x%X\n", rtw_read32(pAdapter, EFUSE_TEST));
+    //DBG_871X("===> EFUSE_OneByteWrite(), addr = %x data=%x\n", addr, data);
+    //DBG_871X("===> EFUSE_OneByteWrite() start, 0x34 = 0x%X\n", rtw_read32(pAdapter, EFUSE_TEST));
 
-	if(bPseudoTest)
-	{
-		bResult = Efuse_Write1ByteToFakeContent(pAdapter, addr, data);
-		return bResult;
-	}
-
-
-	// -----------------e-fuse reg ctrl ---------------------------------	
-	//address			
-
-	
-	efuseValue = rtw_read32(pAdapter, EFUSE_CTRL);
-	efuseValue |= (BIT21|BIT31);
-	efuseValue &= ~(0x3FFFF);
-	efuseValue |= ((addr<<8 | data) & 0x3FFFF);
+    if(bPseudoTest)
+    {
+        bResult = Efuse_Write1ByteToFakeContent(pAdapter, addr, data);
+        return bResult;
+    }
 
 
-	// <20130227, Kordan> 8192E MP chip A-cut had better not set 0x34[11] until B-Cut.
-	if (IS_HARDWARE_TYPE_8723B(pAdapter)||(IS_HARDWARE_TYPE_8192E(pAdapter) && IS_VENDOR_8192E_B_CUT(pAdapter)))
-	{
-		// <20130121, Kordan> For SMIC EFUSE specificatoin.
-		//0x34[11]: SW force PGMEN input of efuse to high. (for the bank selected by 0x34[9:8])
-		//PHY_SetMacReg(pAdapter, 0x34, BIT11, 1);
-		rtw_write16(pAdapter, 0x34, rtw_read16(pAdapter,0x34)| (BIT11) );
-		rtw_write32(pAdapter, EFUSE_CTRL, 0x90600000|((addr<<8 | data)) );
-	}
-	else
-	{
-		rtw_write32(pAdapter, EFUSE_CTRL, efuseValue);
-	}
+    // -----------------e-fuse reg ctrl ---------------------------------
+    //address
 
-	while((0x80 &  rtw_read8(pAdapter, EFUSE_CTRL+3)) && (tmpidx<100) ){
-		rtw_mdelay_os(1);
-		tmpidx++;
-	}
 
-	if(tmpidx<100)
-	{
-		bResult = _TRUE;
-	}
-	else
-	{
-		bResult = _FALSE;
-		DBG_871X("%s: [ERROR] addr=0x%x ,efuseValue=0x%x ,bResult=%d time out 1s !!! \n",
-					__FUNCTION__, addr, efuseValue, bResult);
-		DBG_871X("%s: [ERROR] EFUSE_CTRL =0x%08x !!!\n", __FUNCTION__, rtw_read32(pAdapter, EFUSE_CTRL));
-	}
+    efuseValue = rtw_read32(pAdapter, EFUSE_CTRL);
+    efuseValue |= (BIT21|BIT31);
+    efuseValue &= ~(0x3FFFF);
+    efuseValue |= ((addr<<8 | data) & 0x3FFFF);
 
-	// disable Efuse program enable
-	if (IS_HARDWARE_TYPE_8723B(pAdapter))
-	{
-		PHY_SetMacReg(pAdapter, EFUSE_TEST, BIT(11), 0);
-	}
 
-	return bResult;
+    // <20130227, Kordan> 8192E MP chip A-cut had better not set 0x34[11] until B-Cut.
+    if (IS_HARDWARE_TYPE_8723B(pAdapter)||(IS_HARDWARE_TYPE_8192E(pAdapter) && IS_VENDOR_8192E_B_CUT(pAdapter)))
+    {
+        // <20130121, Kordan> For SMIC EFUSE specificatoin.
+        //0x34[11]: SW force PGMEN input of efuse to high. (for the bank selected by 0x34[9:8])
+        //PHY_SetMacReg(pAdapter, 0x34, BIT11, 1);
+        rtw_write16(pAdapter, 0x34, rtw_read16(pAdapter,0x34)| (BIT11) );
+        rtw_write32(pAdapter, EFUSE_CTRL, 0x90600000|((addr<<8 | data)) );
+    }
+    else
+    {
+        rtw_write32(pAdapter, EFUSE_CTRL, efuseValue);
+    }
+
+    while((0x80 &  rtw_read8(pAdapter, EFUSE_CTRL+3)) && (tmpidx<100) ) {
+        rtw_mdelay_os(1);
+        tmpidx++;
+    }
+
+    if(tmpidx<100)
+    {
+        bResult = _TRUE;
+    }
+    else
+    {
+        bResult = _FALSE;
+        DBG_871X("%s: [ERROR] addr=0x%x ,efuseValue=0x%x ,bResult=%d time out 1s !!! \n",
+                 __FUNCTION__, addr, efuseValue, bResult);
+        DBG_871X("%s: [ERROR] EFUSE_CTRL =0x%08x !!!\n", __FUNCTION__, rtw_read32(pAdapter, EFUSE_CTRL));
+    }
+
+    // disable Efuse program enable
+    if (IS_HARDWARE_TYPE_8723B(pAdapter))
+    {
+        PHY_SetMacReg(pAdapter, EFUSE_TEST, BIT(11), 0);
+    }
+
+    return bResult;
 }
 
 int
 Efuse_PgPacketRead(	IN	PADAPTER	pAdapter,
-					IN	u8			offset,
-					IN	u8			*data,
-					IN	BOOLEAN		bPseudoTest)
+                    IN	u8			offset,
+                    IN	u8			*data,
+                    IN	BOOLEAN		bPseudoTest)
 {
-	int	ret=0;
+    int	ret=0;
 
-	ret =  pAdapter->HalFunc.Efuse_PgPacketRead(pAdapter, offset, data, bPseudoTest);
+    ret =  pAdapter->HalFunc.Efuse_PgPacketRead(pAdapter, offset, data, bPseudoTest);
 
-	return ret;
+    return ret;
 }
 
-int 
-Efuse_PgPacketWrite(IN	PADAPTER	pAdapter, 
-					IN	u8 			offset,
-					IN	u8			word_en,
-					IN	u8			*data,
-					IN	BOOLEAN		bPseudoTest)
+int
+Efuse_PgPacketWrite(IN	PADAPTER	pAdapter,
+                    IN	u8 			offset,
+                    IN	u8			word_en,
+                    IN	u8			*data,
+                    IN	BOOLEAN		bPseudoTest)
 {
-	int ret;
+    int ret;
 
-	ret =  pAdapter->HalFunc.Efuse_PgPacketWrite(pAdapter, offset, word_en, data, bPseudoTest);
+    ret =  pAdapter->HalFunc.Efuse_PgPacketWrite(pAdapter, offset, word_en, data, bPseudoTest);
 
-	return ret;
+    return ret;
 }
 
 
-int 
-Efuse_PgPacketWrite_BT(IN	PADAPTER	pAdapter, 
-					IN	u8 			offset,
-					IN	u8			word_en,
-					IN	u8			*data,
-					IN	BOOLEAN		bPseudoTest)
+int
+Efuse_PgPacketWrite_BT(IN	PADAPTER	pAdapter,
+                       IN	u8 			offset,
+                       IN	u8			word_en,
+                       IN	u8			*data,
+                       IN	BOOLEAN		bPseudoTest)
 {
-	int ret;
+    int ret;
 
-	ret =  pAdapter->HalFunc.Efuse_PgPacketWrite_BT(pAdapter, offset, word_en, data, bPseudoTest);
+    ret =  pAdapter->HalFunc.Efuse_PgPacketWrite_BT(pAdapter, offset, word_en, data, bPseudoTest);
 
-	return ret;
+    return ret;
 }
 
 /*-----------------------------------------------------------------------------
@@ -617,54 +617,54 @@ Efuse_PgPacketWrite_BT(IN	PADAPTER	pAdapter,
  *---------------------------------------------------------------------------*/
 void
 efuse_WordEnableDataRead(IN	u8	word_en,
-							IN	u8	*sourdata,
-							IN	u8	*targetdata)
-{	
-	if (!(word_en&BIT(0)))
-	{
-		targetdata[0] = sourdata[0];
-		targetdata[1] = sourdata[1];
-	}
-	if (!(word_en&BIT(1)))
-	{
-		targetdata[2] = sourdata[2];
-		targetdata[3] = sourdata[3];
-	}
-	if (!(word_en&BIT(2)))
-	{
-		targetdata[4] = sourdata[4];
-		targetdata[5] = sourdata[5];
-	}
-	if (!(word_en&BIT(3)))
-	{
-		targetdata[6] = sourdata[6];
-		targetdata[7] = sourdata[7];
-	}
+                         IN	u8	*sourdata,
+                         IN	u8	*targetdata)
+{
+    if (!(word_en&BIT(0)))
+    {
+        targetdata[0] = sourdata[0];
+        targetdata[1] = sourdata[1];
+    }
+    if (!(word_en&BIT(1)))
+    {
+        targetdata[2] = sourdata[2];
+        targetdata[3] = sourdata[3];
+    }
+    if (!(word_en&BIT(2)))
+    {
+        targetdata[4] = sourdata[4];
+        targetdata[5] = sourdata[5];
+    }
+    if (!(word_en&BIT(3)))
+    {
+        targetdata[6] = sourdata[6];
+        targetdata[7] = sourdata[7];
+    }
 }
 
 
 u8
 Efuse_WordEnableDataWrite(	IN	PADAPTER	pAdapter,
-							IN	u16		efuse_addr,
-							IN	u8		word_en, 
-							IN	u8		*data,
-							IN	BOOLEAN		bPseudoTest)
+                            IN	u16		efuse_addr,
+                            IN	u8		word_en,
+                            IN	u8		*data,
+                            IN	BOOLEAN		bPseudoTest)
 {
-	u8	ret=0;
+    u8	ret=0;
 
-	ret =  pAdapter->HalFunc.Efuse_WordEnableDataWrite(pAdapter, efuse_addr, word_en, data, bPseudoTest);
-	
-	return ret;
+    ret =  pAdapter->HalFunc.Efuse_WordEnableDataWrite(pAdapter, efuse_addr, word_en, data, bPseudoTest);
+
+    return ret;
 }
 
 static u8 efuse_read8(PADAPTER padapter, u16 address, u8 *value)
 {
-	return efuse_OneByteRead(padapter,address, value, _FALSE);
+    return efuse_OneByteRead(padapter,address, value, _FALSE);
 }
 
 static u8 efuse_write8(PADAPTER padapter, u16 address, u8 *value)
 {
-	return efuse_OneByteWrite(padapter,address, *value, _FALSE);
+    return efuse_OneByteWrite(padapter,address, *value, _FALSE);
 }
 
 /*
@@ -672,92 +672,92 @@ static u8 efuse_write8(PADAPTER padapter, u16 address, u8 *value)
  */
 u8 rtw_efuse_access(PADAPTER padapter, u8 bWrite, u16 start_addr, u16 cnts, u8 *data)
 {
-	int i = 0;
-	u16	real_content_len = 0, max_available_size = 0;
-	u8 res = _FAIL ;
-	u8 (*rw8)(PADAPTER, u16, u8*);
+    int i = 0;
+    u16	real_content_len = 0, max_available_size = 0;
+    u8 res = _FAIL ;
+    u8 (*rw8)(PADAPTER, u16, u8*);
 
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_EFUSE_REAL_CONTENT_LEN, (PVOID)&real_content_len, _FALSE);
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_available_size, _FALSE);
+    EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_EFUSE_REAL_CONTENT_LEN, (PVOID)&real_content_len, _FALSE);
+    EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_available_size, _FALSE);
 
-	if (start_addr > real_content_len)
-		return _FAIL;
+    if (start_addr > real_content_len)
+        return _FAIL;
 
-	if (_TRUE == bWrite) {
-		if ((start_addr + cnts) > max_available_size)
-			return _FAIL;
-		rw8 = &efuse_write8;
-	} else
-		rw8 = &efuse_read8;
+    if (_TRUE == bWrite) {
+        if ((start_addr + cnts) > max_available_size)
+            return _FAIL;
+        rw8 = &efuse_write8;
+    } else
+        rw8 = &efuse_read8;
 
-	Efuse_PowerSwitch(padapter, bWrite, _TRUE);
+    Efuse_PowerSwitch(padapter, bWrite, _TRUE);
 
-	// e-fuse one byte read / write
-	for (i = 0; i < cnts; i++) {
-		if (start_addr >= real_content_len) {
-			res = _FAIL;
-			break;
-		}
+    // e-fuse one byte read / write
+    for (i = 0; i < cnts; i++) {
+        if (start_addr >= real_content_len) {
+            res = _FAIL;
+            break;
+        }
 
-		res = rw8(padapter, start_addr++, data++);
-		if (_FAIL == res) break;
-	}
+        res = rw8(padapter, start_addr++, data++);
+        if (_FAIL == res) break;
+    }
 
-	Efuse_PowerSwitch(padapter, bWrite, _FALSE);
+    Efuse_PowerSwitch(padapter, bWrite, _FALSE);
 
-	return res;
+    return res;
 }
 //------------------------------------------------------------------------------
 u16 efuse_GetMaxSize(PADAPTER padapter)
 {
-	u16	max_size;
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI , TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_size, _FALSE);
-	return max_size;
+    u16	max_size;
+    EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI , TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_size, _FALSE);
+    return max_size;
 }
 //------------------------------------------------------------------------------
 u8 efuse_GetCurrentSize(PADAPTER padapter, u16 *size)
 {
-	Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
-	*size = Efuse_GetCurrentSize(padapter, EFUSE_WIFI, _FALSE);
-	Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
+    Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
+    *size = Efuse_GetCurrentSize(padapter, EFUSE_WIFI, _FALSE);
+    Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
 
-	return _SUCCESS;
+    return _SUCCESS;
 }
 //------------------------------------------------------------------------------
 u8 rtw_efuse_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 {
-	u16	mapLen=0;
+    u16	mapLen=0;
 
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
+    EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
 
-	if ((addr + cnts) > mapLen)
-		return _FAIL;
+    if ((addr + cnts) > mapLen)
+        return _FAIL;
 
-	Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
+    Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
 
-	efuse_ReadEFuse(padapter, EFUSE_WIFI, addr, cnts, data, _FALSE);
+    efuse_ReadEFuse(padapter, EFUSE_WIFI, addr, cnts, data, _FALSE);
 
-	Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
+    Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
 
-	return _SUCCESS;
+    return _SUCCESS;
 }
 
 u8 rtw_BT_efuse_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 {
-	u16	mapLen=0;
+    u16	mapLen=0;
 
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_BT, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
+    EFUSE_GetEfuseDefinition(padapter, EFUSE_BT, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
 
-	if ((addr + cnts) > mapLen)
-		return _FAIL;
+    if ((addr + cnts) > mapLen)
+        return _FAIL;
 
-	Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
+    Efuse_PowerSwitch(padapter, _FALSE, _TRUE);
 
-	efuse_ReadEFuse(padapter, EFUSE_BT, addr, cnts, data, _FALSE);
+    efuse_ReadEFuse(padapter, EFUSE_BT, addr, cnts, data, _FALSE);
 
-	Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
+    Efuse_PowerSwitch(padapter, _FALSE, _FALSE);
 
-	return _SUCCESS;
+    return _SUCCESS;
 }
 //------------------------------------------------------------------------------
 u8 rtw_efuse_map_write(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
@@ -769,86 +769,86 @@ u8 rtw_efuse_map_write(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 		return _FAIL;	\
 	}
 
-	u8	offset, word_en;
-	u8	*map;
-	u8	newdata[PGPKT_DATA_SIZE];
-	s32	i, j, idx;
-	u8	ret = _SUCCESS;
-	u16	mapLen=0;
-	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(padapter);
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
+    u8	offset, word_en;
+    u8	*map;
+    u8	newdata[PGPKT_DATA_SIZE];
+    s32	i, j, idx;
+    u8	ret = _SUCCESS;
+    u16	mapLen=0;
+    EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(padapter);
+    HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
+    EFUSE_GetEfuseDefinition(padapter, EFUSE_WIFI, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
 
-	if ((addr + cnts) > mapLen)
-		return _FAIL;
+    if ((addr + cnts) > mapLen)
+        return _FAIL;
 
-	RT_ASSERT_RET(PGPKT_DATA_SIZE == 8); // have to be 8 byte alignment
-	RT_ASSERT_RET((mapLen & 0x7) == 0); // have to be PGPKT_DATA_SIZE alignment for memcpy
+    RT_ASSERT_RET(PGPKT_DATA_SIZE == 8); // have to be 8 byte alignment
+    RT_ASSERT_RET((mapLen & 0x7) == 0); // have to be PGPKT_DATA_SIZE alignment for memcpy
 
-	map = rtw_zmalloc(mapLen);
-	if(map == NULL){
-		return _FAIL;
-	}
-	
-	_rtw_memset(map, 0xFF, mapLen);
-	
-	ret = rtw_efuse_map_read(padapter, 0, mapLen, map);
-	if (ret == _FAIL) goto exit;
+    map = rtw_zmalloc(mapLen);
+    if(map == NULL) {
+        return _FAIL;
+    }
 
-	Efuse_PowerSwitch(padapter, _TRUE, _TRUE);
+    _rtw_memset(map, 0xFF, mapLen);
 
-	idx = 0;
-	offset = (addr >> 3);
-	while (idx < cnts)
-	{
-		word_en = 0xF;
-		j = (addr + idx) & 0x7;
-		_rtw_memcpy(newdata, &map[offset << 3], PGPKT_DATA_SIZE);
-		for (i = j; i<PGPKT_DATA_SIZE && idx < cnts; i++, idx++)
-		{
-			if (data[idx] != map[addr + idx])
-			{
-				word_en &= ~BIT(i >> 1);
-				newdata[i] = data[idx];
-#ifdef CONFIG_RTL8723B					
-				 if( addr + idx == 0x8)
-				 {	
-					if (IS_C_CUT(pHalData->VersionID) || IS_B_CUT(pHalData->VersionID))
-					{
-						if(pEEPROM->adjuseVoltageVal == 6)
-						{
-								newdata[i] = map[addr + idx];
-							 	DBG_8192C(" %s ,\n adjuseVoltageVal = %d ,newdata[%d] = %x \n",__func__,pEEPROM->adjuseVoltageVal,i,newdata[i]);	 
-						}
-					}
-				  }
+    ret = rtw_efuse_map_read(padapter, 0, mapLen, map);
+    if (ret == _FAIL) goto exit;
+
+    Efuse_PowerSwitch(padapter, _TRUE, _TRUE);
+
+    idx = 0;
+    offset = (addr >> 3);
+    while (idx < cnts)
+    {
+        word_en = 0xF;
+        j = (addr + idx) & 0x7;
+        _rtw_memcpy(newdata, &map[offset << 3], PGPKT_DATA_SIZE);
+        for (i = j; i<PGPKT_DATA_SIZE && idx < cnts; i++, idx++)
+        {
+            if (data[idx] != map[addr + idx])
+            {
+                word_en &= ~BIT(i >> 1);
+                newdata[i] = data[idx];
+#ifdef CONFIG_RTL8723B
+                if( addr + idx == 0x8)
+                {
+                    if (IS_C_CUT(pHalData->VersionID) || IS_B_CUT(pHalData->VersionID))
+                    {
+                        if(pEEPROM->adjuseVoltageVal == 6)
+                        {
+                            newdata[i] = map[addr + idx];
+                            DBG_8192C(" %s ,\n adjuseVoltageVal = %d ,newdata[%d] = %x \n",__func__,pEEPROM->adjuseVoltageVal,i,newdata[i]);
+                        }
+                    }
+                }
 #endif
-			}
-		}
+            }
+        }
 
-		if (word_en != 0xF) {
-			ret = Efuse_PgPacketWrite(padapter, offset, word_en, newdata, _FALSE);
-			DBG_871X("offset=%x \n",offset);
-			DBG_871X("word_en=%x \n",word_en);
+        if (word_en != 0xF) {
+            ret = Efuse_PgPacketWrite(padapter, offset, word_en, newdata, _FALSE);
+            DBG_871X("offset=%x \n",offset);
+            DBG_871X("word_en=%x \n",word_en);
 
-			for(i=0;i<PGPKT_DATA_SIZE;i++)
-			{
-				DBG_871X("data=%x \t",newdata[i]);
-			}
-			if (ret == _FAIL) break;
-		}
+            for(i=0; i<PGPKT_DATA_SIZE; i++)
+            {
+                DBG_871X("data=%x \t",newdata[i]);
+            }
+            if (ret == _FAIL) break;
+        }
 
-		offset++;
-	}
+        offset++;
+    }
 
-	Efuse_PowerSwitch(padapter, _TRUE, _FALSE);
+    Efuse_PowerSwitch(padapter, _TRUE, _FALSE);
 
 exit:
 
-	rtw_mfree(map, mapLen);
+    rtw_mfree(map, mapLen);
 
-	return ret;
+    return ret;
 }
 
 
@@ -862,83 +862,83 @@ u8 rtw_BT_efuse_map_write(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 		return _FAIL;	\
 	}
 
-	u8	offset, word_en;
-	u8	*map;
-	u8	newdata[PGPKT_DATA_SIZE];
-	s32	i=0, j=0, idx;
-	u8	ret = _SUCCESS;
-	u16	mapLen=0;
+    u8	offset, word_en;
+    u8	*map;
+    u8	newdata[PGPKT_DATA_SIZE];
+    s32	i=0, j=0, idx;
+    u8	ret = _SUCCESS;
+    u16	mapLen=0;
 
-	EFUSE_GetEfuseDefinition(padapter, EFUSE_BT, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
+    EFUSE_GetEfuseDefinition(padapter, EFUSE_BT, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
 
-	if ((addr + cnts) > mapLen)
-		return _FAIL;
+    if ((addr + cnts) > mapLen)
+        return _FAIL;
 
-	RT_ASSERT_RET(PGPKT_DATA_SIZE == 8); // have to be 8 byte alignment
-	RT_ASSERT_RET((mapLen & 0x7) == 0); // have to be PGPKT_DATA_SIZE alignment for memcpy
+    RT_ASSERT_RET(PGPKT_DATA_SIZE == 8); // have to be 8 byte alignment
+    RT_ASSERT_RET((mapLen & 0x7) == 0); // have to be PGPKT_DATA_SIZE alignment for memcpy
 
-	map = rtw_zmalloc(mapLen);
-	if(map == NULL){
-		return _FAIL;
-	}
+    map = rtw_zmalloc(mapLen);
+    if(map == NULL) {
+        return _FAIL;
+    }
 
-	ret = rtw_BT_efuse_map_read(padapter, 0, mapLen, map);
-	if (ret == _FAIL) goto exit;
-	DBG_871X("OFFSET\tVALUE(hex)\n");
-	for (i=0; i<1024; i+=16) // set 512 because the iwpriv's extra size have limit 0x7FF
-	{
-			DBG_871X("0x%03x\t", i);
-			for (j=0; j<8; j++) {
-				DBG_871X("%02X ", map[i+j]);
-			}
-			DBG_871X("\t");
-			for (; j<16; j++) {
-				DBG_871X("%02X ", map[i+j]);
-			}
-			DBG_871X("\n");
-	}
-	DBG_871X("\n");
-	Efuse_PowerSwitch(padapter, _TRUE, _TRUE);
+    ret = rtw_BT_efuse_map_read(padapter, 0, mapLen, map);
+    if (ret == _FAIL) goto exit;
+    DBG_871X("OFFSET\tVALUE(hex)\n");
+    for (i=0; i<1024; i+=16) // set 512 because the iwpriv's extra size have limit 0x7FF
+    {
+        DBG_871X("0x%03x\t", i);
+        for (j=0; j<8; j++) {
+            DBG_871X("%02X ", map[i+j]);
+        }
+        DBG_871X("\t");
+        for (; j<16; j++) {
+            DBG_871X("%02X ", map[i+j]);
+        }
+        DBG_871X("\n");
+    }
+    DBG_871X("\n");
+    Efuse_PowerSwitch(padapter, _TRUE, _TRUE);
 
-	idx = 0;
-	offset = (addr >> 3);
-	while (idx < cnts)
-	{
-		word_en = 0xF;
-		j = (addr + idx) & 0x7;
-		_rtw_memcpy(newdata, &map[offset << 3], PGPKT_DATA_SIZE);
-		for (i = j; i<PGPKT_DATA_SIZE && idx < cnts; i++, idx++)
-		{
-			if (data[idx] != map[addr + idx])
-			{
-				word_en &= ~BIT(i >> 1);
-				newdata[i] = data[idx];
-			}
-		}
+    idx = 0;
+    offset = (addr >> 3);
+    while (idx < cnts)
+    {
+        word_en = 0xF;
+        j = (addr + idx) & 0x7;
+        _rtw_memcpy(newdata, &map[offset << 3], PGPKT_DATA_SIZE);
+        for (i = j; i<PGPKT_DATA_SIZE && idx < cnts; i++, idx++)
+        {
+            if (data[idx] != map[addr + idx])
+            {
+                word_en &= ~BIT(i >> 1);
+                newdata[i] = data[idx];
+            }
+        }
 
-		if (word_en != 0xF) {
-			DBG_871X("offset=%x \n",offset);
-			DBG_871X("word_en=%x \n",word_en);
-			DBG_871X("%s: data=", __FUNCTION__);
-			for(i=0;i<PGPKT_DATA_SIZE;i++)
-			{
-				DBG_871X("0x%02X ", newdata[i]);
-			}
-			DBG_871X("\n");
-			ret = Efuse_PgPacketWrite_BT(padapter, offset, word_en, newdata, _FALSE);
-			if (ret == _FAIL) break;
-		}
+        if (word_en != 0xF) {
+            DBG_871X("offset=%x \n",offset);
+            DBG_871X("word_en=%x \n",word_en);
+            DBG_871X("%s: data=", __FUNCTION__);
+            for(i=0; i<PGPKT_DATA_SIZE; i++)
+            {
+                DBG_871X("0x%02X ", newdata[i]);
+            }
+            DBG_871X("\n");
+            ret = Efuse_PgPacketWrite_BT(padapter, offset, word_en, newdata, _FALSE);
+            if (ret == _FAIL) break;
+        }
 
-		offset++;
-	}
+        offset++;
+    }
 
-	Efuse_PowerSwitch(padapter, _TRUE, _FALSE);
+    Efuse_PowerSwitch(padapter, _TRUE, _FALSE);
 
 exit:
 
-	rtw_mfree(map, mapLen);
+    rtw_mfree(map, mapLen);
 
-	return ret;
+    return ret;
 }
 
 /*-----------------------------------------------------------------------------
@@ -957,28 +957,28 @@ exit:
  * 11/11/2008 	MHC		Create Version 0.
  *
  *---------------------------------------------------------------------------*/
-VOID 
+VOID
 Efuse_ReadAllMap(
-	IN		PADAPTER	pAdapter, 
-	IN		u8		efuseType,
-	IN OUT	u8		*Efuse,
-	IN		BOOLEAN		bPseudoTest);
-VOID 
+    IN		PADAPTER	pAdapter,
+    IN		u8		efuseType,
+    IN OUT	u8		*Efuse,
+    IN		BOOLEAN		bPseudoTest);
+VOID
 Efuse_ReadAllMap(
-	IN		PADAPTER	pAdapter, 
-	IN		u8		efuseType,
-	IN OUT	u8		*Efuse,
-	IN		BOOLEAN		bPseudoTest)
+    IN		PADAPTER	pAdapter,
+    IN		u8		efuseType,
+    IN OUT	u8		*Efuse,
+    IN		BOOLEAN		bPseudoTest)
 {
-	u16	mapLen=0;
+    u16	mapLen=0;
 
-	Efuse_PowerSwitch(pAdapter,_FALSE, _TRUE);
+    Efuse_PowerSwitch(pAdapter,_FALSE, _TRUE);
 
-	EFUSE_GetEfuseDefinition(pAdapter, efuseType, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, bPseudoTest);
+    EFUSE_GetEfuseDefinition(pAdapter, efuseType, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, bPseudoTest);
 
-	efuse_ReadEFuse(pAdapter, efuseType, 0, mapLen, Efuse, bPseudoTest);
+    efuse_ReadEFuse(pAdapter, efuseType, 0, mapLen, Efuse, bPseudoTest);
 
-	Efuse_PowerSwitch(pAdapter,_FALSE, _FALSE);
+    Efuse_PowerSwitch(pAdapter,_FALSE, _FALSE);
 }
 
 /*-----------------------------------------------------------------------------
@@ -1001,43 +1001,43 @@ Efuse_ReadAllMap(
  *---------------------------------------------------------------------------*/
 static VOID
 efuse_ShadowRead1Byte(
-	IN	PADAPTER	pAdapter,
-	IN	u16		Offset,
-	IN OUT	u8		*Value)
+    IN	PADAPTER	pAdapter,
+    IN	u16		Offset,
+    IN OUT	u8		*Value)
 {
-	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
+    EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
 
-	*Value = pEEPROM->efuse_eeprom_data[Offset];
+    *Value = pEEPROM->efuse_eeprom_data[Offset];
 
 }	// EFUSE_ShadowRead1Byte
 
 //---------------Read Two Bytes
 static VOID
 efuse_ShadowRead2Byte(
-	IN	PADAPTER	pAdapter,
-	IN	u16		Offset,
-	IN OUT	u16		*Value)
+    IN	PADAPTER	pAdapter,
+    IN	u16		Offset,
+    IN OUT	u16		*Value)
 {
-	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
+    EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
 
-	*Value = pEEPROM->efuse_eeprom_data[Offset];
-	*Value |= pEEPROM->efuse_eeprom_data[Offset+1]<<8;
+    *Value = pEEPROM->efuse_eeprom_data[Offset];
+    *Value |= pEEPROM->efuse_eeprom_data[Offset+1]<<8;
 
 }	// EFUSE_ShadowRead2Byte
 
 //---------------Read Four Bytes
 static VOID
 efuse_ShadowRead4Byte(
-	IN	PADAPTER	pAdapter,
-	IN	u16		Offset,
-	IN OUT	u32		*Value)
+    IN	PADAPTER	pAdapter,
+    IN	u16		Offset,
+    IN OUT	u32		*Value)
 {
-	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
+    EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
 
-	*Value = pEEPROM->efuse_eeprom_data[Offset];
-	*Value |= pEEPROM->efuse_eeprom_data[Offset+1]<<8;
-	*Value |= pEEPROM->efuse_eeprom_data[Offset+2]<<16;
-	*Value |= pEEPROM->efuse_eeprom_data[Offset+3]<<24;
+    *Value = pEEPROM->efuse_eeprom_data[Offset];
+    *Value |= pEEPROM->efuse_eeprom_data[Offset+1]<<8;
+    *Value |= pEEPROM->efuse_eeprom_data[Offset+2]<<16;
+    *Value |= pEEPROM->efuse_eeprom_data[Offset+3]<<24;
 
 }	// efuse_ShadowRead4Byte
 
@@ -1063,49 +1063,49 @@ efuse_ShadowRead4Byte(
 #ifdef PLATFORM
 static VOID
 efuse_ShadowWrite1Byte(
-	IN	PADAPTER	pAdapter,
-	IN	u16		Offset,
-	IN 	u8		Value);
+    IN	PADAPTER	pAdapter,
+    IN	u16		Offset,
+    IN 	u8		Value);
 #endif //PLATFORM
 static VOID
 efuse_ShadowWrite1Byte(
-	IN	PADAPTER	pAdapter,
-	IN	u16		Offset,
-	IN 	u8		Value)
+    IN	PADAPTER	pAdapter,
+    IN	u16		Offset,
+    IN 	u8		Value)
 {
-	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
+    EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
 
-	pEEPROM->efuse_eeprom_data[Offset] = Value;
+    pEEPROM->efuse_eeprom_data[Offset] = Value;
 
 }	// efuse_ShadowWrite1Byte
 
 //---------------Write Two Bytes
 static VOID
 efuse_ShadowWrite2Byte(
-	IN	PADAPTER	pAdapter,
-	IN	u16		Offset,
-	IN 	u16		Value)
+    IN	PADAPTER	pAdapter,
+    IN	u16		Offset,
+    IN 	u16		Value)
 {
-	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
+    EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
 
-	pEEPROM->efuse_eeprom_data[Offset] = Value&0x00FF;
-	pEEPROM->efuse_eeprom_data[Offset+1] = Value>>8;
+    pEEPROM->efuse_eeprom_data[Offset] = Value&0x00FF;
+    pEEPROM->efuse_eeprom_data[Offset+1] = Value>>8;
 
 }	// efuse_ShadowWrite1Byte
 
 //---------------Write Four Bytes
 static VOID
 efuse_ShadowWrite4Byte(
-	IN	PADAPTER	pAdapter,
-	IN	u16		Offset,
-	IN	u32		Value)
+    IN	PADAPTER	pAdapter,
+    IN	u16		Offset,
+    IN	u32		Value)
 {
-	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
+    EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
 
-	pEEPROM->efuse_eeprom_data[Offset] = (u8)(Value&0x000000FF);
-	pEEPROM->efuse_eeprom_data[Offset+1] = (u8)((Value>>8)&0x0000FF);
-	pEEPROM->efuse_eeprom_data[Offset+2] = (u8)((Value>>16)&0x00FF);
-	pEEPROM->efuse_eeprom_data[Offset+3] = (u8)((Value>>24)&0xFF);
+    pEEPROM->efuse_eeprom_data[Offset] = (u8)(Value&0x000000FF);
+    pEEPROM->efuse_eeprom_data[Offset+1] = (u8)((Value>>8)&0x0000FF);
+    pEEPROM->efuse_eeprom_data[Offset+2] = (u8)((Value>>16)&0x00FF);
+    pEEPROM->efuse_eeprom_data[Offset+3] = (u8)((Value>>24)&0xFF);
 
 }	// efuse_ShadowWrite1Byte
 
@@ -1126,35 +1126,35 @@ efuse_ShadowWrite4Byte(
  *
  *---------------------------------------------------------------------------*/
 void EFUSE_ShadowMapUpdate(
-	IN PADAPTER	pAdapter,
-	IN u8		efuseType,
-	IN BOOLEAN	bPseudoTest)
+    IN PADAPTER	pAdapter,
+    IN u8		efuseType,
+    IN BOOLEAN	bPseudoTest)
 {
-	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
-	u16	mapLen=0;
+    EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(pAdapter);
+    u16	mapLen=0;
 
-	EFUSE_GetEfuseDefinition(pAdapter, efuseType, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, bPseudoTest);
+    EFUSE_GetEfuseDefinition(pAdapter, efuseType, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, bPseudoTest);
 
-	if (pEEPROM->bautoload_fail_flag == _TRUE)
-	{
-		_rtw_memset(pEEPROM->efuse_eeprom_data, 0xFF, mapLen);
-	}
-	else
-	{
-		#ifdef CONFIG_ADAPTOR_INFO_CACHING_FILE			
-		if(_SUCCESS != retriveAdaptorInfoFile(pAdapter->registrypriv.adaptor_info_caching_file_path, pEEPROM)) {
-		#endif
-		
-		Efuse_ReadAllMap(pAdapter, efuseType, pEEPROM->efuse_eeprom_data, bPseudoTest);
-		
-		#ifdef CONFIG_ADAPTOR_INFO_CACHING_FILE
-			storeAdaptorInfoFile(pAdapter->registrypriv.adaptor_info_caching_file_path, pEEPROM);
-		}
-		#endif
-	}
+    if (pEEPROM->bautoload_fail_flag == _TRUE)
+    {
+        _rtw_memset(pEEPROM->efuse_eeprom_data, 0xFF, mapLen);
+    }
+    else
+    {
+#ifdef CONFIG_ADAPTOR_INFO_CACHING_FILE
+        if(_SUCCESS != retriveAdaptorInfoFile(pAdapter->registrypriv.adaptor_info_caching_file_path, pEEPROM)) {
+#endif
 
-	//PlatformMoveMemory((PVOID)&pHalData->EfuseMap[EFUSE_MODIFY_MAP][0], 
-	//(PVOID)&pHalData->EfuseMap[EFUSE_INIT_MAP][0], mapLen);
+            Efuse_ReadAllMap(pAdapter, efuseType, pEEPROM->efuse_eeprom_data, bPseudoTest);
+
+#ifdef CONFIG_ADAPTOR_INFO_CACHING_FILE
+            storeAdaptorInfoFile(pAdapter->registrypriv.adaptor_info_caching_file_path, pEEPROM);
+        }
+#endif
+    }
+
+    //PlatformMoveMemory((PVOID)&pHalData->EfuseMap[EFUSE_MODIFY_MAP][0],
+    //(PVOID)&pHalData->EfuseMap[EFUSE_INIT_MAP][0], mapLen);
 }// EFUSE_ShadowMapUpdate
 
 
@@ -1176,18 +1176,18 @@ void EFUSE_ShadowMapUpdate(
  *---------------------------------------------------------------------------*/
 void
 EFUSE_ShadowRead(
-	IN		PADAPTER	pAdapter,
-	IN		u8		Type,
-	IN		u16		Offset,
-	IN OUT	u32		*Value	)
+    IN		PADAPTER	pAdapter,
+    IN		u8		Type,
+    IN		u16		Offset,
+    IN OUT	u32		*Value	)
 {
-	if (Type == 1)
-		efuse_ShadowRead1Byte(pAdapter, Offset, (u8 *)Value);
-	else if (Type == 2)
-		efuse_ShadowRead2Byte(pAdapter, Offset, (u16 *)Value);
-	else if (Type == 4)
-		efuse_ShadowRead4Byte(pAdapter, Offset, (u32 *)Value);
-	
+    if (Type == 1)
+        efuse_ShadowRead1Byte(pAdapter, Offset, (u8 *)Value);
+    else if (Type == 2)
+        efuse_ShadowRead2Byte(pAdapter, Offset, (u16 *)Value);
+    else if (Type == 4)
+        efuse_ShadowRead4Byte(pAdapter, Offset, (u32 *)Value);
+
 }	// EFUSE_ShadowRead
 
 /*-----------------------------------------------------------------------------
@@ -1208,117 +1208,117 @@ EFUSE_ShadowRead(
  *---------------------------------------------------------------------------*/
 VOID
 EFUSE_ShadowWrite(
-	IN	PADAPTER	pAdapter,
-	IN	u8		Type,
-	IN	u16		Offset,
-	IN OUT	u32		Value);
+    IN	PADAPTER	pAdapter,
+    IN	u8		Type,
+    IN	u16		Offset,
+    IN OUT	u32		Value);
 VOID
 EFUSE_ShadowWrite(
-	IN	PADAPTER	pAdapter,
-	IN	u8		Type,
-	IN	u16		Offset,
-	IN OUT	u32		Value)
+    IN	PADAPTER	pAdapter,
+    IN	u8		Type,
+    IN	u16		Offset,
+    IN OUT	u32		Value)
 {
 #if (MP_DRIVER == 0)
-	return;
+    return;
 #endif
-	if ( pAdapter->registrypriv.mp_mode == 0)
-		return;
+    if ( pAdapter->registrypriv.mp_mode == 0)
+        return;
 
 
-	if (Type == 1)
-		efuse_ShadowWrite1Byte(pAdapter, Offset, (u8)Value);
-	else if (Type == 2)
-		efuse_ShadowWrite2Byte(pAdapter, Offset, (u16)Value);
-	else if (Type == 4)
-		efuse_ShadowWrite4Byte(pAdapter, Offset, (u32)Value);
+    if (Type == 1)
+        efuse_ShadowWrite1Byte(pAdapter, Offset, (u8)Value);
+    else if (Type == 2)
+        efuse_ShadowWrite2Byte(pAdapter, Offset, (u16)Value);
+    else if (Type == 4)
+        efuse_ShadowWrite4Byte(pAdapter, Offset, (u32)Value);
 
 }	// EFUSE_ShadowWrite
 
 VOID
 Efuse_InitSomeVar(
-	IN		PADAPTER	pAdapter
-	);
+    IN		PADAPTER	pAdapter
+);
 VOID
 Efuse_InitSomeVar(
-	IN		PADAPTER	pAdapter
-	)
+    IN		PADAPTER	pAdapter
+)
 {
-	u8 i;
-	
-	_rtw_memset((PVOID)&fakeEfuseContent[0], 0xff, EFUSE_MAX_HW_SIZE);
-	_rtw_memset((PVOID)&fakeEfuseInitMap[0], 0xff, EFUSE_MAX_MAP_LEN);
-	_rtw_memset((PVOID)&fakeEfuseModifiedMap[0], 0xff, EFUSE_MAX_MAP_LEN);
+    u8 i;
 
-	for(i=0; i<EFUSE_MAX_BT_BANK; i++)
-	{
-		_rtw_memset((PVOID)&BTEfuseContent[i][0], EFUSE_MAX_HW_SIZE, 0xff);
-	}
-	_rtw_memset((PVOID)&BTEfuseInitMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
-	_rtw_memset((PVOID)&BTEfuseModifiedMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
+    _rtw_memset((PVOID)&fakeEfuseContent[0], 0xff, EFUSE_MAX_HW_SIZE);
+    _rtw_memset((PVOID)&fakeEfuseInitMap[0], 0xff, EFUSE_MAX_MAP_LEN);
+    _rtw_memset((PVOID)&fakeEfuseModifiedMap[0], 0xff, EFUSE_MAX_MAP_LEN);
 
-	for(i=0; i<EFUSE_MAX_BT_BANK; i++)
-	{
-		_rtw_memset((PVOID)&fakeBTEfuseContent[i][0], 0xff, EFUSE_MAX_HW_SIZE);
-	}
-	_rtw_memset((PVOID)&fakeBTEfuseInitMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
-	_rtw_memset((PVOID)&fakeBTEfuseModifiedMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
+    for(i=0; i<EFUSE_MAX_BT_BANK; i++)
+    {
+        _rtw_memset((PVOID)&BTEfuseContent[i][0], EFUSE_MAX_HW_SIZE, 0xff);
+    }
+    _rtw_memset((PVOID)&BTEfuseInitMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
+    _rtw_memset((PVOID)&BTEfuseModifiedMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
+
+    for(i=0; i<EFUSE_MAX_BT_BANK; i++)
+    {
+        _rtw_memset((PVOID)&fakeBTEfuseContent[i][0], 0xff, EFUSE_MAX_HW_SIZE);
+    }
+    _rtw_memset((PVOID)&fakeBTEfuseInitMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
+    _rtw_memset((PVOID)&fakeBTEfuseModifiedMap[0], 0xff, EFUSE_BT_MAX_MAP_LEN);
 }
 
 #ifdef PLATFORM_LINUX
 #ifdef CONFIG_ADAPTOR_INFO_CACHING_FILE
 //#include <rtw_eeprom.h>
 
- int isAdaptorInfoFileValid(void)
+int isAdaptorInfoFileValid(void)
 {
-	return _TRUE;
+    return _TRUE;
 }
 
 int storeAdaptorInfoFile(char *path, struct eeprom_priv * eeprom_priv)
 {
-	int ret =_SUCCESS;
+    int ret =_SUCCESS;
 
-	if(path && eeprom_priv) {
-		ret = rtw_store_to_file(path, eeprom_priv->efuse_eeprom_data, EEPROM_MAX_SIZE_512);
-		if(ret == EEPROM_MAX_SIZE)
-			ret = _SUCCESS;
-		else
-			ret = _FAIL;
-	} else {
-		DBG_871X("%s NULL pointer\n",__FUNCTION__);
-		ret =  _FAIL;
-	}
-	return ret;
+    if(path && eeprom_priv) {
+        ret = rtw_store_to_file(path, eeprom_priv->efuse_eeprom_data, EEPROM_MAX_SIZE_512);
+        if(ret == EEPROM_MAX_SIZE)
+            ret = _SUCCESS;
+        else
+            ret = _FAIL;
+    } else {
+        DBG_871X("%s NULL pointer\n",__FUNCTION__);
+        ret =  _FAIL;
+    }
+    return ret;
 }
 
 int retriveAdaptorInfoFile(char *path, struct eeprom_priv * eeprom_priv)
 {
-	int ret = _SUCCESS;
-	mm_segment_t oldfs;
-	struct file *fp;
-	
-	if(path && eeprom_priv) {
+    int ret = _SUCCESS;
+    mm_segment_t oldfs;
+    struct file *fp;
 
-		ret = rtw_retrive_from_file(path, eeprom_priv->efuse_eeprom_data, EEPROM_MAX_SIZE);
-		
-		if(ret == EEPROM_MAX_SIZE)
-			ret = _SUCCESS;
-		else
-			ret = _FAIL;
+    if(path && eeprom_priv) {
 
-		#if 0
-		if(isAdaptorInfoFileValid()) {	
-			return 0;
-		} else {
-			return _FAIL;
-		}
-		#endif
-		
-	} else {
-		DBG_871X("%s NULL pointer\n",__FUNCTION__);
-		ret = _FAIL;
-	}
-	return ret;
+        ret = rtw_retrive_from_file(path, eeprom_priv->efuse_eeprom_data, EEPROM_MAX_SIZE);
+
+        if(ret == EEPROM_MAX_SIZE)
+            ret = _SUCCESS;
+        else
+            ret = _FAIL;
+
+#if 0
+        if(isAdaptorInfoFileValid()) {
+            return 0;
+        } else {
+            return _FAIL;
+        }
+#endif
+
+    } else {
+        DBG_871X("%s NULL pointer\n",__FUNCTION__);
+        ret = _FAIL;
+    }
+    return ret;
 }
 #endif //CONFIG_ADAPTOR_INFO_CACHING_FILE
 #endif //PLATFORM_LINUX
@@ -1327,110 +1327,110 @@ int retriveAdaptorInfoFile(char *path, struct eeprom_priv * eeprom_priv)
 
 void Rtw_Hal_ReadMACAddrFromFile(PADAPTER padapter)
 {
-	u32 i;
-	struct file *fp;
-	mm_segment_t fs;
-	u8 source_addr[18];
-	loff_t pos = 0;
-	u32 curtime = rtw_get_current_time();
-	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(padapter);
-	u8 *head, *end;
+    u32 i;
+    struct file *fp;
+    mm_segment_t fs;
+    u8 source_addr[18];
+    loff_t pos = 0;
+    u32 curtime = rtw_get_current_time();
+    EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(padapter);
+    u8 *head, *end;
 
-	u8 null_mac_addr[ETH_ALEN] = {0, 0, 0,0, 0, 0};
-	u8 multi_mac_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
-	
-	_rtw_memset(source_addr, 0, 18);
-	_rtw_memset(pEEPROM->mac_addr, 0, ETH_ALEN);
+    u8 null_mac_addr[ETH_ALEN] = {0, 0, 0,0, 0, 0};
+    u8 multi_mac_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 
-	fp = filp_open("/data/wifimac.txt", O_RDWR,  0644);
-	if (IS_ERR(fp)) {
-		pEEPROM->bloadmac_fail_flag = _TRUE;
-		DBG_871X("Error, wifi mac address file doesn't exist.\n");
-	} else {
-		fs = get_fs();
-		set_fs(KERNEL_DS);
+    _rtw_memset(source_addr, 0, 18);
+    _rtw_memset(pEEPROM->mac_addr, 0, ETH_ALEN);
 
-		DBG_871X("wifi mac address:\n");
-		vfs_read(fp, source_addr, 18, &pos);
-		source_addr[17] = ':';
+    fp = filp_open("/data/wifimac.txt", O_RDWR,  0644);
+    if (IS_ERR(fp)) {
+        pEEPROM->bloadmac_fail_flag = _TRUE;
+        DBG_871X("Error, wifi mac address file doesn't exist.\n");
+    } else {
+        fs = get_fs();
+        set_fs(KERNEL_DS);
 
-		head = end = source_addr;
-		for (i=0; i<ETH_ALEN; i++) {
-			while (end && (*end != ':') )
-				end++;
+        DBG_871X("wifi mac address:\n");
+        vfs_read(fp, source_addr, 18, &pos);
+        source_addr[17] = ':';
 
-			if (end && (*end == ':') )
-				*end = '\0';
+        head = end = source_addr;
+        for (i=0; i<ETH_ALEN; i++) {
+            while (end && (*end != ':') )
+                end++;
 
-			pEEPROM->mac_addr[i] = simple_strtoul(head, NULL, 16 );
+            if (end && (*end == ':') )
+                *end = '\0';
 
-			if (end) {
-				end++;
-				head = end;
-			}
-			DBG_871X("%02x \n", pEEPROM->mac_addr[i]);
-		}
-		DBG_871X("\n");
-		set_fs(fs);
-		pEEPROM->bloadmac_fail_flag = _FALSE;
-		filp_close(fp, NULL);
-	}
+            pEEPROM->mac_addr[i] = simple_strtoul(head, NULL, 16 );
 
-	if ( (_rtw_memcmp(pEEPROM->mac_addr, null_mac_addr, ETH_ALEN)) ||
-		(_rtw_memcmp(pEEPROM->mac_addr, multi_mac_addr, ETH_ALEN)) ) {
-		pEEPROM->mac_addr[0] = 0x00;
-		pEEPROM->mac_addr[1] = 0xe0;
-		pEEPROM->mac_addr[2] = 0x4c;
-		pEEPROM->mac_addr[3] = (u8)(curtime & 0xff) ;
-		pEEPROM->mac_addr[4] = (u8)((curtime>>8) & 0xff) ;
-		pEEPROM->mac_addr[5] = (u8)((curtime>>16) & 0xff) ;
-	}
+            if (end) {
+                end++;
+                head = end;
+            }
+            DBG_871X("%02x \n", pEEPROM->mac_addr[i]);
+        }
+        DBG_871X("\n");
+        set_fs(fs);
+        pEEPROM->bloadmac_fail_flag = _FALSE;
+        filp_close(fp, NULL);
+    }
 
-	DBG_871X("Hal_ReadMACAddrFromFile: Permanent Address = %02x-%02x-%02x-%02x-%02x-%02x !!!\n",
-		  pEEPROM->mac_addr[0], pEEPROM->mac_addr[1],
-		  pEEPROM->mac_addr[2], pEEPROM->mac_addr[3],
-		  pEEPROM->mac_addr[4], pEEPROM->mac_addr[5]);
+    if ( (_rtw_memcmp(pEEPROM->mac_addr, null_mac_addr, ETH_ALEN)) ||
+            (_rtw_memcmp(pEEPROM->mac_addr, multi_mac_addr, ETH_ALEN)) ) {
+        pEEPROM->mac_addr[0] = 0x00;
+        pEEPROM->mac_addr[1] = 0xe0;
+        pEEPROM->mac_addr[2] = 0x4c;
+        pEEPROM->mac_addr[3] = (u8)(curtime & 0xff) ;
+        pEEPROM->mac_addr[4] = (u8)((curtime>>8) & 0xff) ;
+        pEEPROM->mac_addr[5] = (u8)((curtime>>16) & 0xff) ;
+    }
+
+    DBG_871X("Hal_ReadMACAddrFromFile: Permanent Address = %02x-%02x-%02x-%02x-%02x-%02x !!!\n",
+             pEEPROM->mac_addr[0], pEEPROM->mac_addr[1],
+             pEEPROM->mac_addr[2], pEEPROM->mac_addr[3],
+             pEEPROM->mac_addr[4], pEEPROM->mac_addr[5]);
 }
 
 
 u32 Rtw_Hal_readPGDataFromConfigFile(PADAPTER	padapter)
 {
-	u32 i;
-	struct file *fp;
-	mm_segment_t fs;
-	u8 temp[3];
-	loff_t pos = 0;
-	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(padapter);
-	u8	*PROMContent = pEEPROM->efuse_eeprom_data;
+    u32 i;
+    struct file *fp;
+    mm_segment_t fs;
+    u8 temp[3];
+    loff_t pos = 0;
+    EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(padapter);
+    u8	*PROMContent = pEEPROM->efuse_eeprom_data;
 
 
-	temp[2] = 0; // add end of string '\0'
+    temp[2] = 0; // add end of string '\0'
 
-	fp = filp_open("/system/etc/wifi/wifi_efuse.map", O_RDWR,  0644);
-	if (IS_ERR(fp)) {
-		pEEPROM->bloadfile_fail_flag = _TRUE;
-		DBG_871X("Error, Efuse configure file doesn't exist.\n");
-		return _FAIL;
-	}
+    fp = filp_open("/system/etc/wifi/wifi_efuse.map", O_RDWR,  0644);
+    if (IS_ERR(fp)) {
+        pEEPROM->bloadfile_fail_flag = _TRUE;
+        DBG_871X("Error, Efuse configure file doesn't exist.\n");
+        return _FAIL;
+    }
 
-	fs = get_fs();
-	set_fs(KERNEL_DS);
+    fs = get_fs();
+    set_fs(KERNEL_DS);
 
-	DBG_871X("Efuse configure file:\n");
-	for (i=0; i< EFUSE_MAP_SIZE  ; i++) {
-		vfs_read(fp, temp, 2, &pos);
-		PROMContent[i] = simple_strtoul(temp, NULL, 16 );
-		pos += 1; // Filter the space character
-		DBG_871X("%02X \n", PROMContent[i]);
-	}
-	DBG_871X("\n");
-	set_fs(fs);
+    DBG_871X("Efuse configure file:\n");
+    for (i=0; i< EFUSE_MAP_SIZE  ; i++) {
+        vfs_read(fp, temp, 2, &pos);
+        PROMContent[i] = simple_strtoul(temp, NULL, 16 );
+        pos += 1; // Filter the space character
+        DBG_871X("%02X \n", PROMContent[i]);
+    }
+    DBG_871X("\n");
+    set_fs(fs);
 
-	filp_close(fp, NULL);
-	
-	pEEPROM->bloadfile_fail_flag = _FALSE;
-	
-	return _SUCCESS;
+    filp_close(fp, NULL);
+
+    pEEPROM->bloadfile_fail_flag = _FALSE;
+
+    return _SUCCESS;
 }
 
 #endif //#CONFIG_EFUSE_CONFIG_FILE

@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -17,7 +17,7 @@
  *
  *
  ******************************************************************************/
- 
+
 #ifndef	__PHYDMDIG_H__
 #define    __PHYDMDIG_H__
 
@@ -25,104 +25,104 @@
 
 typedef struct _Dynamic_Initial_Gain_Threshold_
 {
-	BOOLEAN		bStopDIG;		// for debug
-	BOOLEAN		bPauseDIG;
-	BOOLEAN		bIgnoreDIG;
-	BOOLEAN		bPSDInProgress;
+    BOOLEAN		bStopDIG;		// for debug
+    BOOLEAN		bPauseDIG;
+    BOOLEAN		bIgnoreDIG;
+    BOOLEAN		bPSDInProgress;
 
-	u1Byte		Dig_Enable_Flag;
-	u1Byte		Dig_Ext_Port_Stage;
-	
-	int		   	RssiLowThresh;
-	int		    	RssiHighThresh;
+    u1Byte		Dig_Enable_Flag;
+    u1Byte		Dig_Ext_Port_Stage;
 
-	u4Byte		FALowThresh;
-	u4Byte		FAHighThresh;
+    int		   	RssiLowThresh;
+    int		    	RssiHighThresh;
 
-	u1Byte		CurSTAConnectState;
-	u1Byte		PreSTAConnectState;
-	u1Byte		CurMultiSTAConnectState;
+    u4Byte		FALowThresh;
+    u4Byte		FAHighThresh;
 
-	u1Byte		PreIGValue;
-	u1Byte		CurIGValue;
-	u1Byte		BackupIGValue;		//MP DIG
-	u1Byte		BT30_CurIGI;
-	u1Byte		IGIBackup;
+    u1Byte		CurSTAConnectState;
+    u1Byte		PreSTAConnectState;
+    u1Byte		CurMultiSTAConnectState;
 
-	s1Byte		BackoffVal;
-	s1Byte		BackoffVal_range_max;
-	s1Byte		BackoffVal_range_min;
-	u1Byte		rx_gain_range_max;
-	u1Byte		rx_gain_range_min;
-	u1Byte		Rssi_val_min;
+    u1Byte		PreIGValue;
+    u1Byte		CurIGValue;
+    u1Byte		BackupIGValue;		//MP DIG
+    u1Byte		BT30_CurIGI;
+    u1Byte		IGIBackup;
 
-	u1Byte		PreCCK_CCAThres;
-	u1Byte		CurCCK_CCAThres;
-	u1Byte		PreCCKPDState;
-	u1Byte		CurCCKPDState;
-	u1Byte		CCKPDBackup;
+    s1Byte		BackoffVal;
+    s1Byte		BackoffVal_range_max;
+    s1Byte		BackoffVal_range_min;
+    u1Byte		rx_gain_range_max;
+    u1Byte		rx_gain_range_min;
+    u1Byte		Rssi_val_min;
 
-	u1Byte		LargeFAHit;
-	u1Byte		ForbiddenIGI;
-	u4Byte		Recover_cnt;
+    u1Byte		PreCCK_CCAThres;
+    u1Byte		CurCCK_CCAThres;
+    u1Byte		PreCCKPDState;
+    u1Byte		CurCCKPDState;
+    u1Byte		CCKPDBackup;
 
-	u1Byte		DIG_Dynamic_MIN_0;
-	u1Byte		DIG_Dynamic_MIN_1;
-	BOOLEAN		bMediaConnect_0;
-	BOOLEAN		bMediaConnect_1;
+    u1Byte		LargeFAHit;
+    u1Byte		ForbiddenIGI;
+    u4Byte		Recover_cnt;
 
-	u4Byte		AntDiv_RSSI_max;
-	u4Byte		RSSI_max;
+    u1Byte		DIG_Dynamic_MIN_0;
+    u1Byte		DIG_Dynamic_MIN_1;
+    BOOLEAN		bMediaConnect_0;
+    BOOLEAN		bMediaConnect_1;
 
-	u1Byte		*pbP2pLinkInProgress;
+    u4Byte		AntDiv_RSSI_max;
+    u4Byte		RSSI_max;
+
+    u1Byte		*pbP2pLinkInProgress;
 
 #if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
-	BOOLEAN		bTpTarget;
-	BOOLEAN		bNoiseEst;
-	u4Byte		TpTrainTH_min;
-	u1Byte		IGIOffset_A;
-	u1Byte		IGIOffset_B;
+    BOOLEAN		bTpTarget;
+    BOOLEAN		bNoiseEst;
+    u4Byte		TpTrainTH_min;
+    u1Byte		IGIOffset_A;
+    u1Byte		IGIOffset_B;
 #endif
-}DIG_T,*pDIG_T;
+} DIG_T,*pDIG_T;
 
-typedef struct _FALSE_ALARM_STATISTICS{
-	u4Byte	Cnt_Parity_Fail;
-	u4Byte	Cnt_Rate_Illegal;
-	u4Byte	Cnt_Crc8_fail;
-	u4Byte	Cnt_Mcs_fail;
-	u4Byte	Cnt_Ofdm_fail;
-	u4Byte	Cnt_Ofdm_fail_pre;	//For RTL8881A
-	u4Byte	Cnt_Cck_fail;
-	u4Byte	Cnt_all;
-	u4Byte	Cnt_Fast_Fsync;
-	u4Byte	Cnt_SB_Search_fail;
-	u4Byte	Cnt_OFDM_CCA;
-	u4Byte	Cnt_CCK_CCA;
-	u4Byte	Cnt_CCA_all;
-	u4Byte	Cnt_BW_USC;	//Gary
-	u4Byte	Cnt_BW_LSC;	//Gary
-}FALSE_ALARM_STATISTICS, *PFALSE_ALARM_STATISTICS;
+typedef struct _FALSE_ALARM_STATISTICS {
+    u4Byte	Cnt_Parity_Fail;
+    u4Byte	Cnt_Rate_Illegal;
+    u4Byte	Cnt_Crc8_fail;
+    u4Byte	Cnt_Mcs_fail;
+    u4Byte	Cnt_Ofdm_fail;
+    u4Byte	Cnt_Ofdm_fail_pre;	//For RTL8881A
+    u4Byte	Cnt_Cck_fail;
+    u4Byte	Cnt_all;
+    u4Byte	Cnt_Fast_Fsync;
+    u4Byte	Cnt_SB_Search_fail;
+    u4Byte	Cnt_OFDM_CCA;
+    u4Byte	Cnt_CCK_CCA;
+    u4Byte	Cnt_CCA_all;
+    u4Byte	Cnt_BW_USC;	//Gary
+    u4Byte	Cnt_BW_LSC;	//Gary
+} FALSE_ALARM_STATISTICS, *PFALSE_ALARM_STATISTICS;
 
 typedef enum tag_Dynamic_Init_Gain_Operation_Type_Definition
 {
-	DIG_TYPE_THRESH_HIGH	= 0,
-	DIG_TYPE_THRESH_LOW	= 1,
-	DIG_TYPE_BACKOFF		= 2,
-	DIG_TYPE_RX_GAIN_MIN	= 3,
-	DIG_TYPE_RX_GAIN_MAX	= 4,
-	DIG_TYPE_ENABLE 		= 5,
-	DIG_TYPE_DISABLE 		= 6,	
-	DIG_OP_TYPE_MAX
-}DM_DIG_OP_E;
+    DIG_TYPE_THRESH_HIGH	= 0,
+    DIG_TYPE_THRESH_LOW	= 1,
+    DIG_TYPE_BACKOFF		= 2,
+    DIG_TYPE_RX_GAIN_MIN	= 3,
+    DIG_TYPE_RX_GAIN_MAX	= 4,
+    DIG_TYPE_ENABLE 		= 5,
+    DIG_TYPE_DISABLE 		= 6,
+    DIG_OP_TYPE_MAX
+} DM_DIG_OP_E;
 
 typedef enum tag_ODM_PauseDIG_Type {
-	ODM_PAUSE_DIG    		= 	BIT0,
-	ODM_RESUME_DIG  		= 	BIT1
+    ODM_PAUSE_DIG    		= 	BIT0,
+    ODM_RESUME_DIG  		= 	BIT1
 } ODM_Pause_DIG_TYPE;
 
 typedef enum tag_ODM_PauseCCKPD_Type {
-	ODM_PAUSE_CCKPD    	= 	BIT0,
-	ODM_RESUME_CCKPD  	= 	BIT1
+    ODM_PAUSE_CCKPD    	= 	BIT0,
+    ODM_RESUME_CCKPD  	= 	BIT1
 } ODM_Pause_CCKPD_TYPE;
 
 /*
@@ -144,7 +144,7 @@ typedef enum tag_DIG_EXT_PORT_ALGO_Definition
 
 typedef enum tag_DIG_Connect_Definition
 {
-	DIG_STA_DISCONNECT = 0,	
+	DIG_STA_DISCONNECT = 0,
 	DIG_STA_CONNECT = 1,
 	DIG_STA_BEFORE_CONNECT = 2,
 	DIG_MultiSTA_DISCONNECT = 3,
@@ -195,13 +195,13 @@ typedef enum tag_DIG_Connect_Definition
 //vivi 92c&92d has different definition, 20110504
 //this is for 92c
 #if (DM_ODM_SUPPORT_TYPE & ODM_CE)
-	#ifdef CONFIG_SPECIAL_SETTING_FOR_FUNAI_TV
-	#define		DM_DIG_FA_TH0				0x80//0x20
-	#else
-	#define		DM_DIG_FA_TH0				0x200//0x20
-	#endif
+#ifdef CONFIG_SPECIAL_SETTING_FOR_FUNAI_TV
+#define		DM_DIG_FA_TH0				0x80//0x20
 #else
-	#define		DM_DIG_FA_TH0				0x200//0x20
+#define		DM_DIG_FA_TH0				0x200//0x20
+#endif
+#else
+#define		DM_DIG_FA_TH0				0x200//0x20
 #endif
 
 #define		DM_DIG_FA_TH1					0x300
@@ -222,118 +222,118 @@ typedef enum tag_DIG_Connect_Definition
 
 VOID
 ODM_ChangeDynamicInitGainThresh(
-	IN		PVOID					pDM_VOID,
-	IN		u4Byte  					DM_Type,
-	IN		u4Byte 					DM_Value
-	);
+    IN		PVOID					pDM_VOID,
+    IN		u4Byte  					DM_Type,
+    IN		u4Byte 					DM_Value
+);
 
 VOID
 ODM_Write_DIG(
-	IN		PVOID					pDM_VOID, 	
-	IN		u1Byte					CurrentIGI
-	);
+    IN		PVOID					pDM_VOID,
+    IN		u1Byte					CurrentIGI
+);
 
 VOID
 odm_PauseDIG(
-	IN		PVOID					pDM_VOID,
-	IN		ODM_Pause_DIG_TYPE		PauseType,
-	IN		u1Byte					IGIValue
-	);
+    IN		PVOID					pDM_VOID,
+    IN		ODM_Pause_DIG_TYPE		PauseType,
+    IN		u1Byte					IGIValue
+);
 
 VOID
 odm_DIGInit(
-	IN		PVOID					pDM_VOID
-	);
+    IN		PVOID					pDM_VOID
+);
 
-VOID	
+VOID
 odm_DIG(
-	IN		PVOID					pDM_VOID
-	);
+    IN		PVOID					pDM_VOID
+);
 
 VOID
 odm_DIGbyRSSI_LPS(
-	IN		PVOID					pDM_VOID
-	);
+    IN		PVOID					pDM_VOID
+);
 
 VOID
 odm_DigForBtHsMode(
-	IN		PVOID					pDM_VOID
-	);
+    IN		PVOID					pDM_VOID
+);
 
-VOID 
+VOID
 odm_FalseAlarmCounterStatistics(
-	IN		PVOID					pDM_VOID
-	);
+    IN		PVOID					pDM_VOID
+);
 
 VOID
 odm_FAThresholdCheck(
-	IN		PVOID					pDM_VOID,
-	IN		BOOLEAN					bDFSBand,
-	IN		BOOLEAN					bPerformance,
-	IN		u4Byte					RxTp,
-	IN		u4Byte					TxTp,
-	OUT		u4Byte*					dm_FA_thres
-	);
+    IN		PVOID					pDM_VOID,
+    IN		BOOLEAN					bDFSBand,
+    IN		BOOLEAN					bPerformance,
+    IN		u4Byte					RxTp,
+    IN		u4Byte					TxTp,
+    OUT		u4Byte*					dm_FA_thres
+);
 
 u1Byte
 odm_ForbiddenIGICheck(
-	IN		PVOID					pDM_VOID,
-	IN		u1Byte					DIG_Dynamic_MIN,
-	IN		u1Byte					CurrentIGI
-	);
+    IN		PVOID					pDM_VOID,
+    IN		u1Byte					DIG_Dynamic_MIN,
+    IN		u1Byte					CurrentIGI
+);
 
 VOID
-odm_InbandNoiseCalculate (	
-	IN		PVOID					pDM_VOID
-	);
+odm_InbandNoiseCalculate (
+    IN		PVOID					pDM_VOID
+);
 
-BOOLEAN 
+BOOLEAN
 odm_DigAbort(
-	IN		PVOID					pDM_VOID
-	);
+    IN		PVOID					pDM_VOID
+);
 
 VOID
 odm_PauseCCKPacketDetection(
-	IN		PVOID					pDM_VOID,
-	IN		ODM_Pause_CCKPD_TYPE	PauseType,
-	IN		u1Byte					CCKPDThreshold
-	);
+    IN		PVOID					pDM_VOID,
+    IN		ODM_Pause_CCKPD_TYPE	PauseType,
+    IN		u1Byte					CCKPDThreshold
+);
 
-VOID 
+VOID
 odm_CCKPacketDetectionThresh(
-	IN		PVOID					pDM_VOID
-	);
+    IN		PVOID					pDM_VOID
+);
 
-VOID 
+VOID
 ODM_Write_CCK_CCA_Thres(
-	IN		PVOID					pDM_VOID, 
-	IN		u1Byte					CurCCK_CCAThres
-	);
+    IN		PVOID					pDM_VOID,
+    IN		u1Byte					CurCCK_CCAThres
+);
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 VOID
 odm_MPT_DIGCallback(
-	PRT_TIMER						pTimer
+    PRT_TIMER						pTimer
 );
 
 VOID
 odm_MPT_DIGWorkItemCallback(
     IN 		PVOID            			pContext
-    );
+);
 
 #endif
 
 #if (DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
 VOID
 odm_MPT_DIGCallback(
-	IN		PVOID					pDM_VOID
+    IN		PVOID					pDM_VOID
 );
 #endif
 
 #if (DM_ODM_SUPPORT_TYPE != ODM_CE)
 VOID
 ODM_MPT_DIG(
-	IN		PVOID					pDM_VOID
+    IN		PVOID					pDM_VOID
 );
 #endif
 

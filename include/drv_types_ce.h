@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -43,35 +43,35 @@
 typedef struct _MP_REG_ENTRY
 {
 
-	NDIS_STRING		RegName;	// variable name text
-	BOOLEAN			bRequired;	// 1 -> required, 0 -> optional
+    NDIS_STRING		RegName;	// variable name text
+    BOOLEAN			bRequired;	// 1 -> required, 0 -> optional
 
-	u8			Type;		// NdisParameterInteger/NdisParameterHexInteger/NdisParameterStringle/NdisParameterMultiString
-	uint			FieldOffset;	// offset to MP_ADAPTER field
-	uint			FieldSize;	// size (in bytes) of the field
-	
+    u8			Type;		// NdisParameterInteger/NdisParameterHexInteger/NdisParameterStringle/NdisParameterMultiString
+    uint			FieldOffset;	// offset to MP_ADAPTER field
+    uint			FieldSize;	// size (in bytes) of the field
+
 #ifdef UNDER_AMD64
-	u64			Default;
+    u64			Default;
 #else
-	u32			Default;		// default value to use
+    u32			Default;		// default value to use
 #endif
 
-	u32			Min;			// minimum value allowed
-	u32			Max;		// maximum value allowed
+    u32			Min;			// minimum value allowed
+    u32			Max;		// maximum value allowed
 } MP_REG_ENTRY, *PMP_REG_ENTRY;
 
 #ifdef CONFIG_USB_HCI
 typedef struct _USB_EXTENSION {
     LPCUSB_FUNCS    _lpUsbFuncs;
-	USB_HANDLE	    _hDevice;
+    USB_HANDLE	    _hDevice;
     PVOID 		    pAdapter;
 
 #if 0
-	USB_ENDPOINT_DESCRIPTOR		_endpACLIn;
+    USB_ENDPOINT_DESCRIPTOR		_endpACLIn;
     USB_ENDPOINT_DESCRIPTOR		_endpACLOutHigh;
-	USB_ENDPOINT_DESCRIPTOR		_endpACLOutNormal;
+    USB_ENDPOINT_DESCRIPTOR		_endpACLOutNormal;
 
-	USB_PIPE        pPipeIn;
+    USB_PIPE        pPipeIn;
     USB_PIPE        pPipeOutNormal;
     USB_PIPE        pPipeOutHigh;
 #endif
@@ -80,9 +80,9 @@ typedef struct _USB_EXTENSION {
 #endif
 
 
-typedef struct _OCTET_STRING{
-	u8      *Octet;
-	u16      Length;
+typedef struct _OCTET_STRING {
+    u8      *Octet;
+    u16      Length;
 } OCTET_STRING, *POCTET_STRING;
 
 

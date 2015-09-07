@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -24,16 +24,16 @@
 typedef u8 NDIS_802_11_PMKID_VALUE[16];
 
 typedef struct _BSSIDInfo {
-	NDIS_802_11_MAC_ADDRESS  BSSID;
-	NDIS_802_11_PMKID_VALUE  PMKID;
+    NDIS_802_11_MAC_ADDRESS  BSSID;
+    NDIS_802_11_PMKID_VALUE  PMKID;
 } BSSIDInfo, *PBSSIDInfo;
 
 
 #ifdef PLATFORM_OS_XP
 typedef struct _NDIS_802_11_PMKID {
-	u32	Length;
-	u32	BSSIDInfoCount;
-	BSSIDInfo BSSIDInfo[1];
+    u32	Length;
+    u32	BSSIDInfoCount;
+    BSSIDInfo BSSIDInfo[1];
 } NDIS_802_11_PMKID, *PNDIS_802_11_PMKID;
 #endif
 

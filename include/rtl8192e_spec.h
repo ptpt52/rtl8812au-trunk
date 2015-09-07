@@ -45,7 +45,7 @@
 #define REG_SDIO_CTRL_8192E			0x0070
 #define REG_OPT_CTRL_8192E				0x0074
 #define REG_RF_B_CTRL_8192E			0x0076
-#define REG_AFE_CTRL4_8192E			0x0078 
+#define REG_AFE_CTRL4_8192E			0x0078
 #define REG_LDO_SWR_CTRL				0x007C
 #define REG_FW_DRV_MSG_8192E			0x0088
 #define REG_HMEBOX_E2_E3_8192E		0x008C
@@ -55,7 +55,7 @@
 #define REG_HISR1_8192E					0x00BC
 
 #define REG_SYS_CFG1_8192E				0x00F0
-#define REG_SYS_CFG2_8192E				0x00FC 
+#define REG_SYS_CFG2_8192E				0x00FC
 //-----------------------------------------------------
 //
 //	0x0100h ~ 0x01FFh	MACTOP General Configuration
@@ -297,7 +297,7 @@
 #define BIT_BCN_PORT_SEL		BIT5
 
 //============================================================================
-//       Regsiter Bit and Content definition 
+//       Regsiter Bit and Content definition
 //============================================================================
 
 //2 ACMHWCTRL 0x05C0

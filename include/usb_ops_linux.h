@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -67,7 +67,7 @@ void usb_write_port_cancel(struct intf_hdl *pintfhdl);
 int usbctrl_vendorreq(struct intf_hdl *pintfhdl, u8 request, u16 value, u16 index, void *pdata, u16 len, u8 requesttype);
 #ifdef CONFIG_USB_SUPPORT_ASYNC_VDN_REQ
 int _usbctrl_vendorreq_async_write(struct usb_device *udev, u8 request,
-	u16 value, u16 index, void *pdata, u16 len, u8 requesttype);
+                                   u16 value, u16 index, void *pdata, u16 len, u8 requesttype);
 #endif /* CONFIG_USB_SUPPORT_ASYNC_VDN_REQ */
 
 u8 usb_read8(struct intf_hdl *pintfhdl, u32 addr);

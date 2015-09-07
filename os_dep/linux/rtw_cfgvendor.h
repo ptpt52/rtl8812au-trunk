@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2014 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -44,52 +44,52 @@
 									VENDOR_SUBCMD_OVERHEAD + \
 									VENDOR_DATA_OVERHEAD)
 typedef enum {
-	/* don't use 0 as a valid subcommand */
-	VENDOR_NL80211_SUBCMD_UNSPECIFIED,
+    /* don't use 0 as a valid subcommand */
+    VENDOR_NL80211_SUBCMD_UNSPECIFIED,
 
-	/* define all vendor startup commands between 0x0 and 0x0FFF */
-	VENDOR_NL80211_SUBCMD_RANGE_START = 0x0001,
-	VENDOR_NL80211_SUBCMD_RANGE_END   = 0x0FFF,
+    /* define all vendor startup commands between 0x0 and 0x0FFF */
+    VENDOR_NL80211_SUBCMD_RANGE_START = 0x0001,
+    VENDOR_NL80211_SUBCMD_RANGE_END   = 0x0FFF,
 
-	/* define all GScan related commands between 0x1000 and 0x10FF */
-	ANDROID_NL80211_SUBCMD_GSCAN_RANGE_START = 0x1000,
-	ANDROID_NL80211_SUBCMD_GSCAN_RANGE_END   = 0x10FF,
+    /* define all GScan related commands between 0x1000 and 0x10FF */
+    ANDROID_NL80211_SUBCMD_GSCAN_RANGE_START = 0x1000,
+    ANDROID_NL80211_SUBCMD_GSCAN_RANGE_END   = 0x10FF,
 
-	/* define all NearbyDiscovery related commands between 0x1100 and 0x11FF */
-	ANDROID_NL80211_SUBCMD_NBD_RANGE_START = 0x1100,
-	ANDROID_NL80211_SUBCMD_NBD_RANGE_END   = 0x11FF,
+    /* define all NearbyDiscovery related commands between 0x1100 and 0x11FF */
+    ANDROID_NL80211_SUBCMD_NBD_RANGE_START = 0x1100,
+    ANDROID_NL80211_SUBCMD_NBD_RANGE_END   = 0x11FF,
 
-	/* define all RTT related commands between 0x1100 and 0x11FF */
-	ANDROID_NL80211_SUBCMD_RTT_RANGE_START = 0x1100,
-	ANDROID_NL80211_SUBCMD_RTT_RANGE_END   = 0x11FF,
+    /* define all RTT related commands between 0x1100 and 0x11FF */
+    ANDROID_NL80211_SUBCMD_RTT_RANGE_START = 0x1100,
+    ANDROID_NL80211_SUBCMD_RTT_RANGE_END   = 0x11FF,
 
-	ANDROID_NL80211_SUBCMD_LSTATS_RANGE_START = 0x1200,
-	ANDROID_NL80211_SUBCMD_LSTATS_RANGE_END   = 0x12FF,
+    ANDROID_NL80211_SUBCMD_LSTATS_RANGE_START = 0x1200,
+    ANDROID_NL80211_SUBCMD_LSTATS_RANGE_END   = 0x12FF,
 
-	ANDROID_NL80211_SUBCMD_TDLS_RANGE_START = 0x1300,
-	ANDROID_NL80211_SUBCMD_TDLS_RANGE_END	= 0x13FF,
-	/* This is reserved for future usage */
+    ANDROID_NL80211_SUBCMD_TDLS_RANGE_START = 0x1300,
+    ANDROID_NL80211_SUBCMD_TDLS_RANGE_END	= 0x13FF,
+    /* This is reserved for future usage */
 
 } ANDROID_VENDOR_SUB_COMMAND;
 
 enum wl_vendor_subcmd {
-	BRCM_VENDOR_SCMD_UNSPEC,
-	BRCM_VENDOR_SCMD_PRIV_STR,
-	GSCAN_SUBCMD_GET_CAPABILITIES = ANDROID_NL80211_SUBCMD_GSCAN_RANGE_START,
-	GSCAN_SUBCMD_SET_CONFIG,
-	GSCAN_SUBCMD_SET_SCAN_CONFIG,
-	GSCAN_SUBCMD_ENABLE_GSCAN,
-	GSCAN_SUBCMD_GET_SCAN_RESULTS,
-	GSCAN_SUBCMD_SCAN_RESULTS,
-	GSCAN_SUBCMD_SET_HOTLIST,
-	GSCAN_SUBCMD_SET_SIGNIFICANT_CHANGE_CONFIG,
-	GSCAN_SUBCMD_ENABLE_FULL_SCAN_RESULTS,
-	GSCAN_SUBCMD_GET_CHANNEL_LIST,
-	ANDR_WIFI_SUBCMD_GET_FEATURE_SET,
-	ANDR_WIFI_SUBCMD_GET_FEATURE_SET_MATRIX,
-	RTT_SUBCMD_SET_CONFIG = ANDROID_NL80211_SUBCMD_RTT_RANGE_START,
-	RTT_SUBCMD_CANCEL_CONFIG,
-	RTT_SUBCMD_GETCAPABILITY,
+    BRCM_VENDOR_SCMD_UNSPEC,
+    BRCM_VENDOR_SCMD_PRIV_STR,
+    GSCAN_SUBCMD_GET_CAPABILITIES = ANDROID_NL80211_SUBCMD_GSCAN_RANGE_START,
+    GSCAN_SUBCMD_SET_CONFIG,
+    GSCAN_SUBCMD_SET_SCAN_CONFIG,
+    GSCAN_SUBCMD_ENABLE_GSCAN,
+    GSCAN_SUBCMD_GET_SCAN_RESULTS,
+    GSCAN_SUBCMD_SCAN_RESULTS,
+    GSCAN_SUBCMD_SET_HOTLIST,
+    GSCAN_SUBCMD_SET_SIGNIFICANT_CHANGE_CONFIG,
+    GSCAN_SUBCMD_ENABLE_FULL_SCAN_RESULTS,
+    GSCAN_SUBCMD_GET_CHANNEL_LIST,
+    ANDR_WIFI_SUBCMD_GET_FEATURE_SET,
+    ANDR_WIFI_SUBCMD_GET_FEATURE_SET_MATRIX,
+    RTT_SUBCMD_SET_CONFIG = ANDROID_NL80211_SUBCMD_RTT_RANGE_START,
+    RTT_SUBCMD_CANCEL_CONFIG,
+    RTT_SUBCMD_GETCAPABILITY,
     /* Add more sub commands here */
     VENDOR_SUBCMD_MAX
 };
@@ -122,7 +122,7 @@ enum gscan_attributes {
     GSCAN_ATTRIBUTE_NUM_CHANNELS,
     GSCAN_ATTRIBUTE_CHANNEL_LIST,
 
-	/* remaining reserved for additional attributes */
+    /* remaining reserved for additional attributes */
 
     GSCAN_ATTRIBUTE_SSID = 40,
     GSCAN_ATTRIBUTE_BSSID,
@@ -150,49 +150,49 @@ enum gscan_attributes {
 };
 
 enum gscan_bucket_attributes {
-	GSCAN_ATTRIBUTE_CH_BUCKET_1,
-	GSCAN_ATTRIBUTE_CH_BUCKET_2,
-	GSCAN_ATTRIBUTE_CH_BUCKET_3,
-	GSCAN_ATTRIBUTE_CH_BUCKET_4,
-	GSCAN_ATTRIBUTE_CH_BUCKET_5,
-	GSCAN_ATTRIBUTE_CH_BUCKET_6,
-	GSCAN_ATTRIBUTE_CH_BUCKET_7
+    GSCAN_ATTRIBUTE_CH_BUCKET_1,
+    GSCAN_ATTRIBUTE_CH_BUCKET_2,
+    GSCAN_ATTRIBUTE_CH_BUCKET_3,
+    GSCAN_ATTRIBUTE_CH_BUCKET_4,
+    GSCAN_ATTRIBUTE_CH_BUCKET_5,
+    GSCAN_ATTRIBUTE_CH_BUCKET_6,
+    GSCAN_ATTRIBUTE_CH_BUCKET_7
 };
 
 enum gscan_ch_attributes {
-	GSCAN_ATTRIBUTE_CH_ID_1,
-	GSCAN_ATTRIBUTE_CH_ID_2,
-	GSCAN_ATTRIBUTE_CH_ID_3,
-	GSCAN_ATTRIBUTE_CH_ID_4,
-	GSCAN_ATTRIBUTE_CH_ID_5,
-	GSCAN_ATTRIBUTE_CH_ID_6,
-	GSCAN_ATTRIBUTE_CH_ID_7
+    GSCAN_ATTRIBUTE_CH_ID_1,
+    GSCAN_ATTRIBUTE_CH_ID_2,
+    GSCAN_ATTRIBUTE_CH_ID_3,
+    GSCAN_ATTRIBUTE_CH_ID_4,
+    GSCAN_ATTRIBUTE_CH_ID_5,
+    GSCAN_ATTRIBUTE_CH_ID_6,
+    GSCAN_ATTRIBUTE_CH_ID_7
 };
 
 enum rtt_attributes {
-	RTT_ATTRIBUTE_TARGET_CNT,
-	RTT_ATTRIBUTE_TARGET_INFO,
-	RTT_ATTRIBUTE_TARGET_MAC,
-	RTT_ATTRIBUTE_TARGET_TYPE,
-	RTT_ATTRIBUTE_TARGET_PEER,
-	RTT_ATTRIBUTE_TARGET_CHAN,
-	RTT_ATTRIBUTE_TARGET_MODE,
-	RTT_ATTRIBUTE_TARGET_INTERVAL,
-	RTT_ATTRIBUTE_TARGET_NUM_MEASUREMENT,
-	RTT_ATTRIBUTE_TARGET_NUM_PKT,
-	RTT_ATTRIBUTE_TARGET_NUM_RETRY
+    RTT_ATTRIBUTE_TARGET_CNT,
+    RTT_ATTRIBUTE_TARGET_INFO,
+    RTT_ATTRIBUTE_TARGET_MAC,
+    RTT_ATTRIBUTE_TARGET_TYPE,
+    RTT_ATTRIBUTE_TARGET_PEER,
+    RTT_ATTRIBUTE_TARGET_CHAN,
+    RTT_ATTRIBUTE_TARGET_MODE,
+    RTT_ATTRIBUTE_TARGET_INTERVAL,
+    RTT_ATTRIBUTE_TARGET_NUM_MEASUREMENT,
+    RTT_ATTRIBUTE_TARGET_NUM_PKT,
+    RTT_ATTRIBUTE_TARGET_NUM_RETRY
 };
 
 typedef enum wl_vendor_event {
-	BRCM_VENDOR_EVENT_UNSPEC,
-	BRCM_VENDOR_EVENT_PRIV_STR,
-	GOOGLE_GSCAN_SIGNIFICANT_EVENT,
-	GOOGLE_GSCAN_GEOFENCE_FOUND_EVENT,
-	GOOGLE_GSCAN_BATCH_SCAN_EVENT,
-	GOOGLE_SCAN_FULL_RESULTS_EVENT,
-	GOOGLE_RTT_COMPLETE_EVENT,
-	GOOGLE_SCAN_COMPLETE_EVENT,
-	GOOGLE_GSCAN_GEOFENCE_LOST_EVENT
+    BRCM_VENDOR_EVENT_UNSPEC,
+    BRCM_VENDOR_EVENT_PRIV_STR,
+    GOOGLE_GSCAN_SIGNIFICANT_EVENT,
+    GOOGLE_GSCAN_GEOFENCE_FOUND_EVENT,
+    GOOGLE_GSCAN_BATCH_SCAN_EVENT,
+    GOOGLE_SCAN_FULL_RESULTS_EVENT,
+    GOOGLE_RTT_COMPLETE_EVENT,
+    GOOGLE_SCAN_COMPLETE_EVENT,
+    GOOGLE_GSCAN_GEOFENCE_LOST_EVENT
 } wl_vendor_event_t;
 
 enum andr_wifi_feature_set_attr {
@@ -201,31 +201,31 @@ enum andr_wifi_feature_set_attr {
 };
 
 typedef enum wl_vendor_gscan_attribute {
-	ATTR_START_GSCAN,
-	ATTR_STOP_GSCAN,
-	ATTR_SET_SCAN_BATCH_CFG_ID, /* set batch scan params */
-	ATTR_SET_SCAN_GEOFENCE_CFG_ID, /* set list of bssids to track */
-	ATTR_SET_SCAN_SIGNIFICANT_CFG_ID, /* set list of bssids, rssi threshold etc.. */
-	ATTR_SET_SCAN_CFG_ID, /* set common scan config params here */
-	ATTR_GET_GSCAN_CAPABILITIES_ID,
+    ATTR_START_GSCAN,
+    ATTR_STOP_GSCAN,
+    ATTR_SET_SCAN_BATCH_CFG_ID, /* set batch scan params */
+    ATTR_SET_SCAN_GEOFENCE_CFG_ID, /* set list of bssids to track */
+    ATTR_SET_SCAN_SIGNIFICANT_CFG_ID, /* set list of bssids, rssi threshold etc.. */
+    ATTR_SET_SCAN_CFG_ID, /* set common scan config params here */
+    ATTR_GET_GSCAN_CAPABILITIES_ID,
     /* Add more sub commands here */
     ATTR_GSCAN_MAX
 } wl_vendor_gscan_attribute_t;
 
 typedef enum gscan_batch_attribute {
-	ATTR_GSCAN_BATCH_BESTN,
-	ATTR_GSCAN_BATCH_MSCAN,
-	ATTR_GSCAN_BATCH_BUFFER_THRESHOLD
+    ATTR_GSCAN_BATCH_BESTN,
+    ATTR_GSCAN_BATCH_MSCAN,
+    ATTR_GSCAN_BATCH_BUFFER_THRESHOLD
 } gscan_batch_attribute_t;
 
 typedef enum gscan_geofence_attribute {
-	ATTR_GSCAN_NUM_HOTLIST_BSSID,
-	ATTR_GSCAN_HOTLIST_BSSID
+    ATTR_GSCAN_NUM_HOTLIST_BSSID,
+    ATTR_GSCAN_HOTLIST_BSSID
 } gscan_geofence_attribute_t;
 
 typedef enum gscan_complete_event {
-	WIFI_SCAN_BUFFER_FULL,
-	WIFI_SCAN_COMPLETE
+    WIFI_SCAN_BUFFER_FULL,
+    WIFI_SCAN_COMPLETE
 } gscan_complete_event_t;
 
 /* Capture the BRCM_VENDOR_SUBCMD_PRIV_STRINGS* here */
@@ -235,10 +235,10 @@ typedef enum gscan_complete_event {
 extern int rtw_cfgvendor_attach(struct wiphy *wiphy);
 extern int rtw_cfgvendor_detach(struct wiphy *wiphy);
 extern int rtw_cfgvendor_send_async_event(struct wiphy *wiphy,
-                  struct net_device *dev, int event_id, const void  *data, int len);
+        struct net_device *dev, int event_id, const void  *data, int len);
 #if defined(GSCAN_SUPPORT) && 0
 extern int wl_cfgvendor_send_hotlist_event(struct wiphy *wiphy,
-                struct net_device *dev, void  *data, int len, wl_vendor_event_t event);
+        struct net_device *dev, void  *data, int len, wl_vendor_event_t event);
 #endif
 #endif /* (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0)) || defined(RTW_VENDOR_EXT_SUPPORT) */
 
