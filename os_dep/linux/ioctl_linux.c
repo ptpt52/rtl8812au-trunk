@@ -4768,10 +4768,10 @@ static int rtw_p2p_get_status(struct net_device *dev,
 	//struct iw_point *pdata = &wrqu->data;
 	struct wifidirect_info	*pwdinfo = &( padapter->wdinfo );
 #ifdef CONFIG_CONCURRENT_MODE
-	_adapter				*pbuddy_adapter = padapter->pbuddy_adapter;
-	struct wifidirect_info	*pbuddy_wdinfo = &pbuddy_adapter->wdinfo;
-	struct mlme_priv		*pbuddy_mlmepriv = &pbuddy_adapter->mlmepriv;
-	struct mlme_ext_priv	*pbuddy_mlmeext = &pbuddy_adapter->mlmeextpriv;
+	//_adapter				*pbuddy_adapter = padapter->pbuddy_adapter;
+	//struct wifidirect_info	*pbuddy_wdinfo = &pbuddy_adapter->wdinfo;
+	//struct mlme_priv		*pbuddy_mlmepriv = &pbuddy_adapter->mlmepriv;
+	//struct mlme_ext_priv	*pbuddy_mlmeext = &pbuddy_adapter->mlmeextpriv;
 #endif
 
 	if ( padapter->bShowGetP2PState ) {
@@ -5738,9 +5738,9 @@ static int rtw_p2p_set_persistent(struct net_device *dev,
 	//_irqL					irqL;
 	//struct tx_invite_req_info*	pinvite_req_info = &pwdinfo->invitereq_info;
 #ifdef CONFIG_CONCURRENT_MODE
-	_adapter					*pbuddy_adapter = padapter->pbuddy_adapter;
-	struct mlme_priv			*pbuddy_mlmepriv = &pbuddy_adapter->mlmepriv;
-	struct mlme_ext_priv		*pbuddy_mlmeext = &pbuddy_adapter->mlmeextpriv;
+	//_adapter					*pbuddy_adapter = padapter->pbuddy_adapter;
+	//struct mlme_priv			*pbuddy_mlmepriv = &pbuddy_adapter->mlmepriv;
+	//struct mlme_ext_priv		*pbuddy_mlmeext = &pbuddy_adapter->mlmeextpriv;
 #endif // CONFIG_CONCURRENT_MODE
 
 #ifdef CONFIG_WFD
@@ -5868,8 +5868,8 @@ static int rtw_p2p_set_pc(struct net_device *dev,
 	_irqL				irqL;
 	uint					uintPeerChannel = 0;
 #ifdef CONFIG_CONCURRENT_MODE
-	_adapter				*pbuddy_adapter = padapter->pbuddy_adapter;
-	struct mlme_ext_priv	*pbuddy_mlmeext = &pbuddy_adapter->mlmeextpriv;
+	//_adapter				*pbuddy_adapter = padapter->pbuddy_adapter;
+	//struct mlme_ext_priv	*pbuddy_mlmeext = &pbuddy_adapter->mlmeextpriv;
 #endif // CONFIG_CONCURRENT_MODE	
 
 	struct wifi_display_info*	pwfd_info = pwdinfo->wfd_info;

@@ -324,7 +324,7 @@ static void _rtw_reg_apply_flags(struct wiphy *wiphy)
 {
 #if 1				// by channel plan
 	_adapter *padapter = wiphy_to_adapter(wiphy);
-	u8 channel_plan = padapter->mlmepriv.ChannelPlan;
+	//u8 channel_plan = padapter->mlmepriv.ChannelPlan;
 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 	RT_CHANNEL_INFO *channel_set = pmlmeext->channel_set;
 	u8 max_chan_nums = pmlmeext->max_chan_nums;
@@ -542,7 +542,7 @@ static void _rtw_regd_init_wiphy(struct rtw_regulatory *reg, struct wiphy *wiphy
 	_rtw_reg_apply_world_flags(wiphy, NL80211_REGDOM_SET_BY_DRIVER, reg);
 }
 
-static struct country_code_to_enum_rd *_rtw_regd_find_country(u16 countrycode)
+static inline struct country_code_to_enum_rd *_rtw_regd_find_country(u16 countrycode)
 {
 	int i;
 

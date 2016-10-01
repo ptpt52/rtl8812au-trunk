@@ -1798,7 +1798,6 @@ int _netdev_if2_open(struct net_device *pnetdev)
 
 	if(padapter->bup == _FALSE && primary_padapter->bup == _TRUE &&
 	   primary_padapter->hw_init_completed == _TRUE) {
-		int i;
 
 		padapter->bDriverStopped = _FALSE;
 		padapter->bSurpriseRemoved = _FALSE;
@@ -2071,7 +2070,7 @@ void rtw_drv_if2_free(_adapter *if2)
 void rtw_drv_if2_stop(_adapter *if2)
 {
 	_adapter *padapter = if2;
-	struct net_device *pnetdev = NULL;
+	//struct net_device *pnetdev = NULL;
 
 	if (padapter == NULL)
 		return;

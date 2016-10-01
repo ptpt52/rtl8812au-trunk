@@ -145,7 +145,9 @@ extern void rtw_indicate_wx_disassoc_event(_adapter *padapter);
 
 void rtw_os_indicate_connect(_adapter *adapter)
 {
-	//struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
+#ifdef CONFIG_IOCTL_CFG80211
+	struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
+#endif
 	_func_enter_;
 
 #ifdef CONFIG_IOCTL_CFG80211

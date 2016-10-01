@@ -413,10 +413,9 @@ int rtw_android_get_p2p_dev_addr(struct net_device *net, char *command, int tota
 
 int rtw_android_set_block(struct net_device *net, char *command, int total_len)
 {
-	//_adapter *adapter = (_adapter *)rtw_netdev_priv(net);
-	//char *block_value = command + strlen(android_wifi_cmd_str[ANDROID_WIFI_CMD_BLOCK]) + 1;
-
 #ifdef CONFIG_IOCTL_CFG80211
+	_adapter *adapter = (_adapter *)rtw_netdev_priv(net);
+	char *block_value = command + strlen(android_wifi_cmd_str[ANDROID_WIFI_CMD_BLOCK]) + 1;
 	adapter_wdev_data(adapter)->block = (*block_value=='0')?_FALSE:_TRUE;
 #endif
 

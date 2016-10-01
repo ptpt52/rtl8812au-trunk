@@ -3938,10 +3938,10 @@ void issue_p2p_invitation_request(_adapter *padapter, const u8* raddr )
 	u32					wfdielen = 0;
 #endif //CONFIG_WFD
 #ifdef CONFIG_CONCURRENT_MODE
-	_adapter				*pbuddy_adapter = padapter->pbuddy_adapter;
-	struct wifidirect_info	*pbuddy_wdinfo = &pbuddy_adapter->wdinfo;
-	struct mlme_priv		*pbuddy_mlmepriv = &pbuddy_adapter->mlmepriv;
-	struct mlme_ext_priv	*pbuddy_mlmeext = &pbuddy_adapter->mlmeextpriv;
+	//_adapter				*pbuddy_adapter = padapter->pbuddy_adapter;
+	//struct wifidirect_info	*pbuddy_wdinfo = &pbuddy_adapter->wdinfo;
+	//struct mlme_priv		*pbuddy_mlmepriv = &pbuddy_adapter->mlmepriv;
+	//struct mlme_ext_priv	*pbuddy_mlmeext = &pbuddy_adapter->mlmeextpriv;
 #endif
 
 	struct xmit_frame			*pmgntframe;
@@ -4261,10 +4261,10 @@ void issue_p2p_invitation_response(_adapter *padapter, const u8* raddr, u8 dialo
 	//u8			channel_cnt_24g = 0, channel_cnt_5gl = 0, channel_cnt_5gh = 0;
 	u16			len_channellist_attr = 0;
 #ifdef CONFIG_CONCURRENT_MODE
-	_adapter				*pbuddy_adapter = padapter->pbuddy_adapter;
-	struct wifidirect_info	*pbuddy_wdinfo = &pbuddy_adapter->wdinfo;
-	struct mlme_priv		*pbuddy_mlmepriv = &pbuddy_adapter->mlmepriv;
-	struct mlme_ext_priv	*pbuddy_mlmeext = &pbuddy_adapter->mlmeextpriv;
+	//_adapter				*pbuddy_adapter = padapter->pbuddy_adapter;
+	//struct wifidirect_info	*pbuddy_wdinfo = &pbuddy_adapter->wdinfo;
+	//struct mlme_priv		*pbuddy_mlmepriv = &pbuddy_adapter->mlmepriv;
+	//struct mlme_ext_priv	*pbuddy_mlmeext = &pbuddy_adapter->mlmeextpriv;
 #endif
 #ifdef CONFIG_WFD
 	u32					wfdielen = 0;
@@ -4656,7 +4656,9 @@ void issue_probersp_p2p(_adapter *padapter, const unsigned char *da)
 	struct xmit_priv	*pxmitpriv = &(padapter->xmitpriv);
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 	//struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
-	//struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+#ifdef CONFIG_IOCTL_CFG80211
+	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+#endif
 	//WLAN_BSSID_EX 		*cur_network = &(pmlmeinfo->network);
 	u16					beacon_interval = 100;
 	u16					capInfo = 0;
@@ -5801,12 +5803,14 @@ unsigned int on_action_public_default(union recv_frame *precv_frame, u8 action)
 {
 	unsigned int ret = _FAIL;
 	u8 *pframe = precv_frame->u.hdr.rx_data;
-	//uint frame_len = precv_frame->u.hdr.len;
 	u8 *frame_body = pframe + sizeof(struct rtw_ieee80211_hdr_3addr);
 	u8 token;
-	//_adapter *adapter = precv_frame->u.hdr.adapter;
-	//int cnt = 0;
-	//char msg[64];
+#ifdef CONFIG_IOCTL_CFG80211
+	uint frame_len = precv_frame->u.hdr.len;
+	_adapter *adapter = precv_frame->u.hdr.adapter;
+	int cnt = 0;
+	char msg[64];
+#endif
 
 	token = frame_body[2];
 
@@ -8931,7 +8935,7 @@ void site_survey(_adapter *padapter)
 #if defined(CONFIG_STA_MODE_SCAN_UNDER_AP_MODE) || defined(CONFIG_ATMEL_RC_PATCH)
 	u8 stay_buddy_ch = 0;
 #endif
-	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+	//struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 	PADAPTER pbuddy_adapter = padapter->pbuddy_adapter;
 	struct mlme_ext_priv *pbuddy_mlmeext = &pbuddy_adapter->mlmeextpriv;
 
@@ -10315,7 +10319,7 @@ bool rtw_port_switch_chk(_adapter *adapter)
 #ifdef CONFIG_CONCURRENT_MODE
 #ifdef CONFIG_RUNTIME_PORT_SWITCH
 	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
-	struct pwrctrl_priv *pwrctl = dvobj_to_pwrctl(dvobj);
+	//struct pwrctrl_priv *pwrctl = dvobj_to_pwrctl(dvobj);
 	_adapter *if_port0 = NULL;
 	_adapter *if_port1 = NULL;
 	struct mlme_ext_info *if_port0_mlmeinfo = NULL;
@@ -13171,10 +13175,10 @@ int rtw_chk_start_clnt_join(_adapter *padapter, u8 *ch, u8 *bw, u8 *offset)
 	unsigned char	cur_ch = pmlmeext->cur_channel;
 	unsigned char	cur_bw = pmlmeext->cur_bwmode;
 	unsigned char	cur_ch_offset = pmlmeext->cur_ch_offset;
-	//bool chbw_allow = _TRUE;
 	bool connect_allow = _TRUE;
 
 #ifdef CONFIG_CONCURRENT_MODE
+	bool chbw_allow = _TRUE;
 	PADAPTER pbuddy_adapter;
 	struct mlme_ext_priv *pbuddy_mlmeext;
 	struct mlme_ext_info	*pbuddy_pmlmeinfo;

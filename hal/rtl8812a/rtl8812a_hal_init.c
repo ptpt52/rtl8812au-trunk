@@ -5155,7 +5155,7 @@ static void hw_var_set_bcn_func(PADAPTER Adapter, u8 variable, const u8* val)
 
 }
 
-static inline void hw_var_set_correct_tsf(PADAPTER Adapter, u8 variable, u8* val)
+static inline void hw_var_set_correct_tsf(PADAPTER Adapter, u8 variable, const u8* val)
 {
 #ifdef CONFIG_CONCURRENT_MODE
 	u64	tsf;
@@ -5245,7 +5245,7 @@ static inline void hw_var_set_correct_tsf(PADAPTER Adapter, u8 variable, u8* val
 #endif
 }
 
-static inline void hw_var_set_mlme_disconnect(PADAPTER Adapter, u8 variable, u8* val)
+static inline void hw_var_set_mlme_disconnect(PADAPTER Adapter, u8 variable, const u8* val)
 {
 #ifdef CONFIG_CONCURRENT_MODE
 
@@ -5368,12 +5368,12 @@ static void hw_var_set_mlme_sitesurvey(PADAPTER Adapter, u8 variable, const u8* 
 	}
 }
 
-static inline void hw_var_set_mlme_join(PADAPTER Adapter, u8 variable, u8* val)
+static inline void hw_var_set_mlme_join(PADAPTER Adapter, u8 variable, const u8* val)
 {
 #ifdef CONFIG_CONCURRENT_MODE
 	u8	RetryLimit = 0x30;
 	u8	type = *((u8 *)val);
-	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(Adapter);
+	//HAL_DATA_TYPE *pHalData = GET_HAL_DATA(Adapter);
 	struct mlme_priv	*pmlmepriv = &Adapter->mlmepriv;
 	EEPROM_EFUSE_PRIV	*pEEPROM = GET_EEPROM_EFUSE_PRIV(Adapter);
 

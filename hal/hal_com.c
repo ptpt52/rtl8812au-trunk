@@ -1206,7 +1206,7 @@ void hw_var_port_switch(_adapter *adapter)
 	u8 macid_1[6];
 	u8 bssid_1[6];
 
-	u8 iface_type;
+	//u8 iface_type;
 
 	msr = rtw_read8(adapter, MSR);
 	bcn_ctrl = rtw_read8(adapter, REG_BCN_CTRL);

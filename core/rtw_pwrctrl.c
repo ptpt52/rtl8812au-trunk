@@ -183,7 +183,6 @@ bool rtw_pwr_unassociated_idle(_adapter *adapter)
 	struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
 	struct xmit_priv *pxmit_priv = &adapter->xmitpriv;
 #ifdef CONFIG_P2P
-	struct wifidirect_info	*pwdinfo = &(adapter->wdinfo);
 #ifdef CONFIG_IOCTL_CFG80211
 	struct cfg80211_wifidirect_info *pcfg80211_wdinfo = &adapter->cfg80211_wdinfo;
 #endif
@@ -208,7 +207,7 @@ bool rtw_pwr_unassociated_idle(_adapter *adapter)
 #if defined(CONFIG_P2P) && defined(CONFIG_IOCTL_CFG80211) && defined(CONFIG_P2P_IPS)
 	    || pcfg80211_wdinfo->is_ro_ch
 #elif defined(CONFIG_P2P)
-	    || !rtw_p2p_chk_state(pwdinfo, P2P_STATE_NONE)
+	    || !rtw_p2p_chk_state(&adapter->wdinfo, P2P_STATE_NONE)
 #endif
 #if defined(CONFIG_P2P) && defined(CONFIG_IOCTL_CFG80211)
 	    || rtw_get_passing_time_ms(pcfg80211_wdinfo->last_ro_ch_time) < 3000
@@ -221,7 +220,6 @@ bool rtw_pwr_unassociated_idle(_adapter *adapter)
 	if (buddy) {
 		struct mlme_priv *b_pmlmepriv = &(buddy->mlmepriv);
 #ifdef CONFIG_P2P
-		struct wifidirect_info *b_pwdinfo = &(buddy->wdinfo);
 #ifdef CONFIG_IOCTL_CFG80211
 		struct cfg80211_wifidirect_info *b_pcfg80211_wdinfo = &buddy->cfg80211_wdinfo;
 #endif
@@ -234,7 +232,7 @@ bool rtw_pwr_unassociated_idle(_adapter *adapter)
 #if defined(CONFIG_P2P) && defined(CONFIG_IOCTL_CFG80211) && defined(CONFIG_P2P_IPS)
 		    || b_pcfg80211_wdinfo->is_ro_ch
 #elif defined(CONFIG_P2P)
-		    || !rtw_p2p_chk_state(b_pwdinfo, P2P_STATE_NONE)
+		    || !rtw_p2p_chk_state(&buddy->wdinfo, P2P_STATE_NONE)
 #endif
 #if defined(CONFIG_P2P) && defined(CONFIG_IOCTL_CFG80211)
 		    || rtw_get_passing_time_ms(b_pcfg80211_wdinfo->last_ro_ch_time) < 3000
@@ -624,7 +622,6 @@ u8 PS_RDY_CHECK(_adapter * padapter)
 	struct pwrctrl_priv	*pwrpriv = adapter_to_pwrctl(padapter);
 	struct mlme_priv	*pmlmepriv = &(padapter->mlmepriv);
 #ifdef CONFIG_P2P
-	struct wifidirect_info *pwdinfo = &(padapter->wdinfo);
 #ifdef CONFIG_IOCTL_CFG80211
 	struct cfg80211_wifidirect_info *pcfg80211_wdinfo = &padapter->cfg80211_wdinfo;
 #endif /* CONFIG_IOCTL_CFG80211 */
@@ -657,7 +654,7 @@ u8 PS_RDY_CHECK(_adapter * padapter)
 #if defined(CONFIG_P2P) && defined(CONFIG_IOCTL_CFG80211) && defined(CONFIG_P2P_IPS)
 	    || pcfg80211_wdinfo->is_ro_ch
 #elif defined(CONFIG_P2P)
-	    || !rtw_p2p_chk_state(pwdinfo, P2P_STATE_NONE)
+	    || !rtw_p2p_chk_state(&padapter->wdinfo, P2P_STATE_NONE)
 #endif
 	    || rtw_is_scan_deny(padapter)
 #ifdef CONFIG_TDLS

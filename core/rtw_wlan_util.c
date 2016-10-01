@@ -1167,9 +1167,10 @@ void flush_all_cam_entry(_adapter *padapter)
 {
 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-	//struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 
 #ifdef CONFIG_CONCURRENT_MODE
+	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+
 	if(check_buddy_fwstate(padapter, _FW_LINKED) == _TRUE) {
 		if(check_fwstate(pmlmepriv, WIFI_STATION_STATE)) {
 			struct sta_priv	*pstapriv = &padapter->stapriv;

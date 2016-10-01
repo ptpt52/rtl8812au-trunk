@@ -256,7 +256,7 @@ u8 *rtw_get_ie(u8 *pbuf, sint index, sint *len, sint limit)
  *
  * Returns: The address of the specific IE found, or NULL
  */
-u8 *rtw_get_ie_ex(u8 *in_ie, uint in_len, u8 eid, u8 *oui, u8 oui_len, u8 *ie, uint *ielen)
+u8 *rtw_get_ie_ex(u8 *in_ie, uint in_len, u8 eid, const u8 *oui, u8 oui_len, u8 *ie, uint *ielen)
 {
 	uint cnt;
 	u8 *target_ie = NULL;
@@ -302,7 +302,7 @@ u8 *rtw_get_ie_ex(u8 *in_ie, uint in_len, u8 eid, u8 *oui, u8 oui_len, u8 *ie, u
  *
  * Returns: _SUCCESS: ies is updated, _FAIL: not updated
  */
-int rtw_ies_remove_ie(u8 *ies, uint *ies_len, uint offset, u8 eid, u8 *oui, u8 oui_len)
+int rtw_ies_remove_ie(u8 *ies, uint *ies_len, uint offset, u8 eid, const u8 *oui, u8 oui_len)
 {
 	int ret = _FAIL;
 	u8 *target_ie;
