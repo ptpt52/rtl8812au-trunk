@@ -406,30 +406,36 @@ void mpt_InitHWConfig(PADAPTER Adapter)
 */
 
 #ifndef CONFIG_RTL8812A
-#define	PHY_IQCalibrate_8812A
-#define	PHY_LCCalibrate_8812A
-#define	PHY_SetRFPathSwitch_8812A
+#define	PHY_IQCalibrate_8812A(a, b) do {} while (0)
+#define	PHY_LCCalibrate_8812A(a) do {} while (0)
+#define	PHY_SetRFPathSwitch_8812A(a, b) do {} while (0)
 #endif
 
 #ifndef CONFIG_RTL8821A
-#define	PHY_IQCalibrate_8821A
-#define	PHY_LCCalibrate_8821A
-#define	PHY_SetRFPathSwitch_8812A
+#define	PHY_IQCalibrate_8821A(a, b) do {} while (0)
+#define	PHY_LCCalibrate_8821A(a) do {} while (0)
+#define	PHY_SetRFPathSwitch_8812A(a, b) do {} while (0)
 #endif
 
-#define PHY_IQCalibrate(_Adapter, b)	\
-		IS_HARDWARE_TYPE_8812(_Adapter) ? PHY_IQCalibrate_8812A(_Adapter, b) : \
-		IS_HARDWARE_TYPE_8821(_Adapter) ? PHY_IQCalibrate_8821A(&(GET_HAL_DATA(_Adapter)->odmpriv), b) : \
-		PHY_IQCalibrate_default(_Adapter, b)
+#define PHY_IQCalibrate(_Adapter, b) \
+	do { \
+		if (IS_HARDWARE_TYPE_8812(_Adapter)) PHY_IQCalibrate_8812A(_Adapter, b); \
+		else if (IS_HARDWARE_TYPE_8821(_Adapter)) PHY_IQCalibrate_8821A(&(GET_HAL_DATA(_Adapter)->odmpriv), b); \
+		else PHY_IQCalibrate_default(_Adapter, b); \
+	} while (0)
 
-#define PHY_LCCalibrate(_Adapter)	\
-		IS_HARDWARE_TYPE_8812(_Adapter) ? PHY_LCCalibrate_8812A(&(GET_HAL_DATA(_Adapter)->odmpriv)) : \
-		IS_HARDWARE_TYPE_8821(_Adapter) ? PHY_LCCalibrate_8821A(&(GET_HAL_DATA(_Adapter)->odmpriv)) : \
-		PHY_LCCalibrate_default(_Adapter)
+#define PHY_LCCalibrate(_Adapter) \
+	do { \
+		if (IS_HARDWARE_TYPE_8812(_Adapter)) PHY_LCCalibrate_8812A(&(GET_HAL_DATA(_Adapter)->odmpriv)); \
+		else if (IS_HARDWARE_TYPE_8821(_Adapter)) PHY_LCCalibrate_8821A(&(GET_HAL_DATA(_Adapter)->odmpriv)); \
+		else PHY_LCCalibrate_default(_Adapter); \
+	} while (0)
 
-#define PHY_SetRFPathSwitch(_Adapter, b)	\
-		(IS_HARDWARE_TYPE_JAGUAR(_Adapter)) ? PHY_SetRFPathSwitch_8812A(_Adapter, b) : \
-		PHY_SetRFPathSwitch_default(_Adapter, b)
+#define PHY_SetRFPathSwitch(_Adapter, b) \
+	do { \
+		if (IS_HARDWARE_TYPE_JAGUAR(_Adapter)) PHY_SetRFPathSwitch_8812A(_Adapter, b); \
+		else PHY_SetRFPathSwitch_default(_Adapter, b); \
+	} while (0)
 
 #endif //#if defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8821A)
 #ifdef CONFIG_RTL8192E
