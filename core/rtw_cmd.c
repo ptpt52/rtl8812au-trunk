@@ -640,12 +640,16 @@ post_process:
 
 		if((cmd_process_time = rtw_get_passing_time_ms(cmd_start_time)) > 1000) {
 			if (pcmd->cmdcode == GEN_CMD_CODE(_Set_Drv_Extra)) {
+#ifdef CONFIG_DEBUG
 				struct drvextra_cmd_parm *drvextra_parm = (struct drvextra_cmd_parm *)pcmdbuf;
+#endif
 				DBG_871X(ADPT_FMT" cmd=%d,%d,%d process_time=%d > 1 sec\n",
 				         ADPT_ARG(pcmd->padapter), pcmd->cmdcode, drvextra_parm->ec_id, drvextra_parm->type, cmd_process_time);
 				//rtw_warn_on(1);
 			} else if(pcmd->cmdcode == GEN_CMD_CODE(_Set_MLME_EVT)) {
+#ifdef CONFIG_DEBUG
 				struct C2HEvent_Header *pc2h_evt_hdr = (struct C2HEvent_Header *)pcmdbuf;
+#endif
 				DBG_871X(ADPT_FMT" cmd=%d,%d, process_time=%d > 1 sec\n",
 				         ADPT_ARG(pcmd->padapter), pcmd->cmdcode, pc2h_evt_hdr->ID, cmd_process_time);
 				//rtw_warn_on(1);

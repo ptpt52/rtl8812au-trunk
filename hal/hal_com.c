@@ -1543,8 +1543,10 @@ SetHalDefVar(_adapter *adapter, HAL_DEF_VARIABLE variable, void *value)
 			odm->DebugComponents &= ~(ODM_COMP_DIG |ODM_COMP_FA_CNT);
 		break;
 	case HAL_DEF_DBG_RX_INFO_DUMP: {
+#ifdef CONFIG_DEBUG
 		PFALSE_ALARM_STATISTICS FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( odm , PhyDM_FalseAlmCnt);
 		pDIG_T	pDM_DigTable = &odm->DM_DigTable;
+#endif
 
 		DBG_871X("============ Rx Info dump ===================\n");
 		DBG_871X("bLinked = %d, RSSI_Min = %d(%%), CurrentIGI = 0x%x \n",

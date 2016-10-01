@@ -460,7 +460,7 @@ static const char *miracast_mode_str[] = {
 	"INVALID",
 };
 
-static const char *get_miracast_mode_str(int mode)
+static inline const char *get_miracast_mode_str(int mode)
 {
 	if (mode < MIRACAST_DISABLED || mode >= MIRACAST_INVALID)
 		mode = MIRACAST_INVALID;

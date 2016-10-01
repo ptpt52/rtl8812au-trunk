@@ -3953,7 +3953,9 @@ static int rtw_wx_set_channel_plan(struct net_device *dev,
 {
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
 	//struct registry_priv *pregistrypriv = &padapter->registrypriv;
+#ifdef CONFIG_DEBUG
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+#endif
 	//extern int rtw_channel_plan;
 	u8 channel_plan_req = (u8) (*((int *)wrqu));
 
@@ -6661,7 +6663,9 @@ static int rtw_dbg_port(struct net_device *dev,
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
+#ifdef CONFIG_DEBUG
 	struct security_priv *psecuritypriv = &padapter->securitypriv;
+#endif
 	struct wlan_network *cur_network = &(pmlmepriv->cur_network);
 	struct sta_priv *pstapriv = &padapter->stapriv;
 
@@ -6990,8 +6994,10 @@ static int rtw_dbg_port(struct net_device *dev,
 			         padapter->bSurpriseRemoved, padapter->bDriverStopped);
 			break;
 		case 0x08: {
+#ifdef CONFIG_DEBUG
 			struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
 			struct recv_priv  *precvpriv = &padapter->recvpriv;
+#endif
 
 			DBG_871X("free_xmitbuf_cnt=%d, free_xmitframe_cnt=%d"
 			         ", free_xmit_extbuf_cnt=%d, free_xframe_ext_cnt=%d"
@@ -7136,7 +7142,9 @@ static int rtw_dbg_port(struct net_device *dev,
 		}
 		break;
 		case 0x15: {
+#ifdef CONFIG_DEBUG
 			struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
+#endif
 			DBG_871X("==>silent resete cnts:%d\n",pwrpriv->ips_enter_cnts);
 		}
 		break;
@@ -7188,7 +7196,9 @@ static int rtw_dbg_port(struct net_device *dev,
 		break;
 #endif
 		case 0x14: { //get wifi_spec
+#ifdef CONFIG_DEBUG
 			struct registry_priv	*pregpriv = &padapter->registrypriv;
+#endif
 			DBG_871X("get wifi_spec=%d\n",pregpriv->wifi_spec);
 
 		}

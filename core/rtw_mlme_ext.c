@@ -5324,7 +5324,9 @@ int issue_probereq_p2p_ex(_adapter *adapter, u8 *da, int try_cnt, int wait_ms)
 {
 	int ret;
 	int i = 0;
+#ifdef CONFIG_DEBUG
 	u32 start = rtw_get_current_time();
+#endif
 
 	do {
 		ret = _issue_probereq_p2p(adapter, da, wait_ms>0?_TRUE:_FALSE);
@@ -6978,7 +6980,9 @@ int issue_probereq_ex(_adapter *padapter, NDIS_802_11_SSID *pssid, u8 *da, u8 ch
 {
 	int ret;
 	int i = 0;
+#ifdef CONFIG_DEBUG
 	u32 start = rtw_get_current_time();
+#endif
 
 	do {
 		ret = _issue_probereq(padapter, pssid, da, ch, append_wps, wait_ms>0?_TRUE:_FALSE);
@@ -7866,7 +7870,9 @@ int issue_nulldata(_adapter *padapter, unsigned char *da, unsigned int power_mod
 {
 	int ret;
 	int i = 0;
+#ifdef CONFIG_DEBUG
 	u32 start = rtw_get_current_time();
+#endif
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct sta_info *psta;
@@ -8031,7 +8037,9 @@ int issue_qos_nulldata(_adapter *padapter, unsigned char *da, u16 tid, int try_c
 {
 	int ret;
 	int i = 0;
+#ifdef CONFIG_DEBUG
 	u32 start = rtw_get_current_time();
+#endif
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 
@@ -8153,7 +8161,9 @@ int issue_deauth_ex(_adapter *padapter, u8 *da, unsigned short reason, int try_c
 {
 	int ret;
 	int i = 0;
+#ifdef CONFIG_DEBUG
 	u32 start = rtw_get_current_time();
+#endif
 
 	do {
 		ret = _issue_deauth(padapter, da, reason, wait_ms>0?_TRUE:_FALSE);
@@ -8725,7 +8735,9 @@ int issue_action_SM_PS_wait_ack(_adapter *padapter, unsigned char *raddr, u8 New
 {
 	int ret = 0;
 	int i = 0;
+#ifdef CONFIG_DEBUG
 	u32 start = rtw_get_current_time();
+#endif
 
 	do {
 		ret = _issue_action_SM_PS(padapter, raddr, NewMimoPsMode , wait_ms>0?_TRUE:_FALSE );

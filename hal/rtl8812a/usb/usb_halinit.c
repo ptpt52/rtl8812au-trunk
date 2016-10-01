@@ -1354,8 +1354,9 @@ u32 rtl8812au_hal_init(PADAPTER Adapter)
 
 	//rt_rf_power_state		eRfPowerStateToSet;
 
+#ifdef CONFIG_DEBUG
 	u32 init_start_time = rtw_get_current_time();
-
+#endif
 
 #ifdef DBG_HAL_INIT_PROFILING
 

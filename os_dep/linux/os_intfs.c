@@ -2367,7 +2367,9 @@ int rtw_ips_pwr_up(_adapter *padapter)
 #ifdef DBG_CONFIG_ERROR_DETECT
 	//struct sreset_priv *psrtpriv = &pHalData->srestpriv;
 #endif//#ifdef DBG_CONFIG_ERROR_DETECT
+#ifdef CONFIG_DEBUG
 	u32 start_time = rtw_get_current_time();
+#endif
 	DBG_871X("===>  rtw_ips_pwr_up..............\n");
 
 #if defined(CONFIG_SWLPS_IN_IPS) || defined(CONFIG_FWLPS_IN_IPS)
@@ -2388,7 +2390,9 @@ int rtw_ips_pwr_up(_adapter *padapter)
 
 void rtw_ips_pwr_down(_adapter *padapter)
 {
+#ifdef CONFIG_DEBUG
 	u32 start_time = rtw_get_current_time();
+#endif
 	DBG_871X("===> rtw_ips_pwr_down...................\n");
 
 	padapter->bCardDisableWOHSM = _TRUE;

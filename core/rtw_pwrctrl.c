@@ -280,7 +280,9 @@ void rtw_ps_processor(_adapter*padapter)
 	//struct wifidirect_info	*pwdinfo = &( padapter->wdinfo );
 #endif //CONFIG_P2P
 	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
+#ifdef CONFIG_DEBUG
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+#endif
 	struct dvobj_priv *psdpriv = padapter->dvobj;
 	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
 #ifdef SUPPORT_HW_RFOFF_DETECTED
