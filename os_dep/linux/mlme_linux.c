@@ -311,7 +311,7 @@ void rtw_report_sec_ie(_adapter *adapter,u8 authmode,u8 *sec_ie)
 		rtw_mfree(buff, IW_CUSTOM_MAX);
 	}
 
-exit:
+//exit:
 
 	_func_exit_;
 

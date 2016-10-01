@@ -2466,8 +2466,6 @@ static struct xmit_buf *__rtw_alloc_cmd_xmitbuf(struct xmit_priv *pxmitpriv,
 		DBG_871X("%s fail, no xmitbuf available !!!\n", __func__);
 	}
 
-exit:
-
 	_func_exit_;
 
 	return pxmitbuf;
@@ -4316,8 +4314,9 @@ void xmit_delivery_enabled_frames(_adapter *padapter, struct sta_info *psta)
 		}
 
 	}
-
+#ifdef CONFIG_TDLS
 exit:
+#endif
 	//_exit_critical_bh(&psta->sleep_q.lock, &irqL);
 	_exit_critical_bh(&pxmitpriv->lock, &irqL);
 

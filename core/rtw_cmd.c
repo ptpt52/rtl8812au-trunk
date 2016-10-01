@@ -2269,10 +2269,8 @@ u8 rtw_tdls_cmd(_adapter *padapter, u8 *addr, u8 option)
 	init_h2fwcmd_w_parm_no_rsp(pcmdobj, TDLSoption, GEN_CMD_CODE(_TDLS));
 	res = rtw_enqueue_cmd(pcmdpriv, pcmdobj);
 
-#endif	//CONFIG_TDLS
-
 exit:
-
+#endif	//CONFIG_TDLS
 
 	_func_exit_;
 

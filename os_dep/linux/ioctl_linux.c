@@ -5516,7 +5516,7 @@ static int rtw_p2p_connect(struct net_device *dev,
 #endif //CONFIG_INTEL_WIDI 
 		ret = -1;
 	}
-exit:
+//exit:
 	return ret;
 }
 
@@ -5766,8 +5766,7 @@ static int rtw_p2p_set_persistent(struct net_device *dev,
 	}
 	printk( "[%s] persistent_supported = %d\n", __FUNCTION__, pwdinfo->persistent_supported );
 
-exit:
-
+//exit:
 	return ret;
 
 }
@@ -5960,8 +5959,7 @@ static int rtw_p2p_set_pc(struct net_device *dev,
 		DBG_871X( "[%s] NOT Found in the Scanning Queue!\n", __FUNCTION__ );
 	}
 
-exit:
-
+//exit:
 	return ret;
 
 }
@@ -5990,8 +5988,7 @@ static int rtw_p2p_set_wfd_device_type(struct net_device *dev,
 		pwfd_info->wfd_device_type = WFD_DEVINFO_PSINK;
 	}
 
-exit:
-
+//exit:
 	return ret;
 
 }
@@ -6068,8 +6065,7 @@ static int rtw_p2p_set_sa(struct net_device *dev,
 	}
 	printk( "[%s] session available = %d\n", __FUNCTION__, pwdinfo->session_available );
 
-exit:
-
+//exit:
 	return ret;
 
 }
@@ -12634,8 +12630,8 @@ static int rtw_tdls_getsta(struct net_device *dev,
 	}
 	wrqu->data.length = strlen( extra );
 
-#endif //CONFIG_TDLS
 exit:
+#endif //CONFIG_TDLS
 	return ret;
 
 }

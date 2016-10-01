@@ -650,7 +650,7 @@ struct wlan_network *_rtw_find_same_network(_queue *scanned_queue, struct wlan_n
 
 	if(plist == phead)
 		found = NULL;
-exit:
+
 	return found;
 }
 

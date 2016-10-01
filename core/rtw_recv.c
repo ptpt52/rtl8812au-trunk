@@ -3276,8 +3276,7 @@ int recv_indicatepkt_reorder(_adapter *padapter, union recv_frame *prframe)
 		_cancel_timer_ex(&preorder_ctrl->reordering_ctrl_timer);
 	}
 
-
-_success_exit:
+//_success_exit:
 
 	return _SUCCESS;
 
@@ -3786,7 +3785,9 @@ int recv_func_posthandle(_adapter *padapter, union recv_frame *prframe)
 	}
 #endif // CONFIG_80211N_HT
 
+#ifdef CONFIG_TDLS
 _exit_recv_func:
+#endif
 	return ret;
 
 _recv_data_drop:
