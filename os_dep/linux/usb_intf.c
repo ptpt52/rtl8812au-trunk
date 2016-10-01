@@ -451,7 +451,7 @@ static u8 rtw_deinit_intf_priv(struct dvobj_priv *dvobj)
 static struct dvobj_priv *usb_dvobj_init(struct usb_interface *usb_intf)
 {
 	int	i;
-	u8	val8;
+	//u8	val8;
 	int	status = _FAIL;
 	struct dvobj_priv *pdvobjpriv;
 	struct usb_device_descriptor 	*pdev_desc;
@@ -1002,7 +1002,7 @@ exit:
 
 int rtw_resume_process(_adapter *padapter)
 {
-	int ret,pm_cnt = 0;
+	int ret;
 	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
 	struct dvobj_priv *pdvobj = padapter->dvobj;
 	struct debug_priv *pdbgpriv = &pdvobj->drv_dbg;
@@ -1420,7 +1420,7 @@ exit:
 
 static void rtw_usb_if1_deinit(_adapter *if1)
 {
-	struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(if1);
+	//struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(if1);
 	struct net_device *pnetdev = if1->pnetdev;
 	struct mlme_priv *pmlmepriv= &if1->mlmepriv;
 
@@ -1572,10 +1572,10 @@ exit:
 static void rtw_dev_remove(struct usb_interface *pusb_intf)
 {
 	struct dvobj_priv *dvobj = usb_get_intfdata(pusb_intf);
-	struct pwrctrl_priv *pwrctl = dvobj_to_pwrctl(dvobj);
+	//struct pwrctrl_priv *pwrctl = dvobj_to_pwrctl(dvobj);
 	_adapter *padapter = dvobj->if1;
-	struct net_device *pnetdev = padapter->pnetdev;
-	struct mlme_priv *pmlmepriv= &padapter->mlmepriv;
+	//struct net_device *pnetdev = padapter->pnetdev;
+	//struct mlme_priv *pmlmepriv= &padapter->mlmepriv;
 
 	_func_enter_;
 

@@ -223,7 +223,7 @@ odm_DynamicTxPowerAP(
 
 )
 {
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
+	//PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 #if (DM_ODM_SUPPORT_TYPE == ODM_AP)
 
 //#if ((RTL8192C_SUPPORT==1) || (RTL8192D_SUPPORT==1) || (RTL8188E_SUPPORT==1) || (RTL8812E_SUPPORT==1))
@@ -292,7 +292,7 @@ odm_DynamicTxPower_92C(
     IN		PVOID					pDM_VOID
 )
 {
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
+	//PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 	PADAPTER Adapter = pDM_Odm->Adapter;
 	PMGNT_INFO			pMgntInfo = &Adapter->MgntInfo;
@@ -508,7 +508,7 @@ odm_DynamicTxPower_92D(
     IN		PVOID					pDM_VOID
 )
 {
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
+	//PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 	PADAPTER Adapter = pDM_Odm->Adapter;
 	PMGNT_INFO			pMgntInfo = &Adapter->MgntInfo;

@@ -24,7 +24,7 @@
 
 static void process_rssi(_adapter *padapter,union recv_frame *prframe)
 {
-	u32	last_rssi, tmp_val;
+	//u32	last_rssi, tmp_val;
 	struct rx_pkt_attrib *pattrib = &prframe->u.hdr.attrib;
 #ifdef CONFIG_NEW_SIGNAL_STAT_PROCESS
 	struct signal_stat * signal_stat = &padapter->recvpriv.signal_strength_data;
@@ -79,7 +79,7 @@ static void process_rssi(_adapter *padapter,union recv_frame *prframe)
 
 static void process_link_qual(_adapter *padapter,union recv_frame *prframe)
 {
-	u32	last_evm=0, tmpVal;
+	//u32	last_evm=0, tmpVal;
 	struct rx_pkt_attrib *pattrib;
 #ifdef CONFIG_NEW_SIGNAL_STAT_PROCESS
 	struct signal_stat * signal_stat;

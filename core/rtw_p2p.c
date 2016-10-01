@@ -296,7 +296,7 @@ static void issue_p2p_provision_resp(struct wifidirect_info *pwdinfo, u8* raddr,
 	unsigned short				*fctrl;
 	struct xmit_priv			*pxmitpriv = &(padapter->xmitpriv);
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
-	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
+	//struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 
 
 	if ((pmgntframe = alloc_mgtxmitframe(pxmitpriv)) == NULL) {
@@ -2812,8 +2812,8 @@ u8 process_p2p_group_negotation_resp( struct wifidirect_info *pwdinfo, u8 *pfram
 		u8	attr_content = 0x00;
 		u32	attr_contentlen = 0;
 		u8	operatingch_info[5] = { 0x00 };
-		uint	ch_cnt = 0;
-		u8	ch_content[100] = { 0x00 };
+		//uint	ch_cnt = 0;
+		//u8	ch_content[100] = { 0x00 };
 		u8	groupid[ 38 ];
 		u16	cap_attr;
 		u8	peer_ch_list[100] = { 0x00 };
@@ -3119,7 +3119,7 @@ void p2p_concurrent_handler(  _adapter* padapter );
 void restore_p2p_state_handler( _adapter*	padapter )
 {
 	struct wifidirect_info  *pwdinfo = &padapter->wdinfo;
-	struct mlme_priv		*pmlmepriv = &padapter->mlmepriv;
+	//struct mlme_priv		*pmlmepriv = &padapter->mlmepriv;
 
 	_func_enter_;
 
@@ -4093,7 +4093,7 @@ void rtw_init_cfg80211_wifidirect_info( _adapter*	padapter)
 
 void p2p_protocol_wk_hdl(_adapter *padapter, int intCmdType)
 {
-	struct wifidirect_info	*pwdinfo= &(padapter->wdinfo);
+	//struct wifidirect_info	*pwdinfo= &(padapter->wdinfo);
 
 	_func_enter_;
 
@@ -4423,7 +4423,7 @@ static void pre_tx_scan_timer_process (void *FunctionContext)
 	struct	wifidirect_info				*pwdinfo = &adapter->wdinfo;
 	_irqL							irqL;
 	struct mlme_priv					*pmlmepriv = &adapter->mlmepriv;
-	u8								_status = 0;
+	//u8								_status = 0;
 
 	if(rtw_p2p_chk_state(pwdinfo, P2P_STATE_NONE))
 		return;
@@ -4860,8 +4860,8 @@ int rtw_p2p_enable(_adapter *padapter, enum P2P_ROLE role)
 	struct wifidirect_info *pwdinfo= &(padapter->wdinfo);
 
 	if (role == P2P_ROLE_DEVICE || role == P2P_ROLE_CLIENT|| role == P2P_ROLE_GO) {
-		u8 channel, ch_offset;
-		u16 bwmode;
+		//u8 channel, ch_offset;
+		//u16 bwmode;
 
 #ifdef CONFIG_CONCURRENT_MODE
 		_adapter				*pbuddy_adapter = padapter->pbuddy_adapter;

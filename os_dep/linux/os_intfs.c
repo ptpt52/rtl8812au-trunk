@@ -783,7 +783,7 @@ static const struct net_device_ops rtw_netdev_ops = {
 
 int rtw_init_netdev_name(struct net_device *pnetdev, const char *ifname)
 {
-	_adapter *padapter = rtw_netdev_priv(pnetdev);
+	//_adapter *padapter = rtw_netdev_priv(pnetdev);
 
 #ifdef CONFIG_EASY_REPLACEMENT
 	struct net_device	*TargetNetdev = NULL;
@@ -1361,7 +1361,7 @@ void rtw_cancel_all_timer(_adapter *padapter)
 
 u8 rtw_free_drv_sw(_adapter *padapter)
 {
-	struct net_device *pnetdev = (struct net_device*)padapter->pnetdev;
+	//struct net_device *pnetdev = (struct net_device*)padapter->pnetdev;
 
 	RT_TRACE(_module_os_intfs_c_,_drv_info_,("==>rtw_free_drv_sw"));
 
@@ -2363,9 +2363,9 @@ netdev_open_error:
 int rtw_ips_pwr_up(_adapter *padapter)
 {
 	int result;
-	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(padapter);
+	//PHAL_DATA_TYPE pHalData = GET_HAL_DATA(padapter);
 #ifdef DBG_CONFIG_ERROR_DETECT
-	struct sreset_priv *psrtpriv = &pHalData->srestpriv;
+	//struct sreset_priv *psrtpriv = &pHalData->srestpriv;
 #endif//#ifdef DBG_CONFIG_ERROR_DETECT
 	u32 start_time = rtw_get_current_time();
 	DBG_871X("===>  rtw_ips_pwr_up..............\n");
@@ -2401,11 +2401,11 @@ void rtw_ips_pwr_down(_adapter *padapter)
 #endif
 void rtw_ips_dev_unload(_adapter *padapter)
 {
-	struct net_device *pnetdev= (struct net_device*)padapter->pnetdev;
-	struct xmit_priv	*pxmitpriv = &(padapter->xmitpriv);
-	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(padapter);
+	//struct net_device *pnetdev= (struct net_device*)padapter->pnetdev;
+	//struct xmit_priv	*pxmitpriv = &(padapter->xmitpriv);
+	//PHAL_DATA_TYPE pHalData = GET_HAL_DATA(padapter);
 #ifdef DBG_CONFIG_ERROR_DETECT
-	struct sreset_priv *psrtpriv = &pHalData->srestpriv;
+	//struct sreset_priv *psrtpriv = &pHalData->srestpriv;
 #endif//#ifdef DBG_CONFIG_ERROR_DETECT
 	DBG_871X("====> %s...\n",__FUNCTION__);
 
@@ -2820,7 +2820,7 @@ int	rtw_gw_addr_query(_adapter *padapter)
 
 void rtw_dev_unload(PADAPTER padapter)
 {
-	struct net_device *pnetdev = (struct net_device*)padapter->pnetdev;
+	//struct net_device *pnetdev = (struct net_device*)padapter->pnetdev;
 	struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(padapter);
 	struct dvobj_priv *pobjpriv = padapter->dvobj;
 	struct debug_priv *pdbgpriv = &pobjpriv->drv_dbg;
@@ -2900,7 +2900,7 @@ void rtw_dev_unload(PADAPTER padapter)
 int rtw_suspend_free_assoc_resource(_adapter *padapter)
 {
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-	struct net_device *pnetdev = padapter->pnetdev;
+	//struct net_device *pnetdev = padapter->pnetdev;
 	struct wifidirect_info*	pwdinfo = &padapter->wdinfo;
 
 	DBG_871X("==> "FUNC_ADPT_FMT" entry....\n", FUNC_ADPT_ARG(padapter));
@@ -3196,12 +3196,12 @@ int rtw_suspend_ap_wow(_adapter *padapter)
 
 int rtw_suspend_normal(_adapter *padapter)
 {
-	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+	//struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
 	struct net_device *pnetdev = padapter->pnetdev;
 #ifdef CONFIG_CONCURRENT_MODE
 	struct net_device *pbuddy_netdev = padapter->pbuddy_adapter->pnetdev;
 #endif
-	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
+	//struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
 	int ret = _SUCCESS;
 
 	DBG_871X("==> "FUNC_ADPT_FMT" entry....\n", FUNC_ADPT_ARG(padapter));

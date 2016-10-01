@@ -262,7 +262,7 @@ phy_StoreTxPowerByRateBaseOld(
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
 	u16			rawValue = 0;
 	u8			base = 0;
-	u8			path = 0;
+	//u8			path = 0;
 
 	rawValue = ( u16 ) ( pHalData->MCSTxPowerLevelOriginalOffset[0][7] >> 8 ) & 0xFF;
 	base = ( rawValue >> 4 ) * 10 + ( rawValue & 0xF );
@@ -302,7 +302,7 @@ phy_StoreTxPowerByRateBase(
     IN	PADAPTER	pAdapter
 )
 {
-	u8	path = 0, base = 0, index = 0;
+	u8	path = 0, base = 0;
 
 	//DBG_871X( "===>%s\n", __FUNCTION__ );
 
@@ -453,9 +453,9 @@ PHY_GetRateValuesOfTxPowerByRate(
     OUT	u8*			RateNum
 )
 {
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
-	PDM_ODM_T		pDM_Odm = &pHalData->odmpriv;
-	u8	 			index = 0, i = 0;
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
+	//PDM_ODM_T		pDM_Odm = &pHalData->odmpriv;
+	u8	 			i = 0;
 
 	switch ( RegAddr ) {
 	case rTxAGC_A_Rate18_06:
@@ -1045,24 +1045,24 @@ phy_ConvertTxPowerByRateInDbmToRelativeValues(
     IN	PADAPTER	pAdapter
 )
 {
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
 	u8 			base = 0, i = 0, value = 0,
-	            band = 0, path = 0, txNum = 0, index = 0,
-	            startIndex = 0, endIndex = 0;
-	u8			cckRates[4] = {MGN_1M, MGN_2M, MGN_5_5M, MGN_11M},
-	                          ofdmRates[8] = {MGN_6M, MGN_9M, MGN_12M, MGN_18M, MGN_24M, MGN_36M, MGN_48M, MGN_54M},
-	                                  mcs0_7Rates[8] = {MGN_MCS0, MGN_MCS1, MGN_MCS2, MGN_MCS3, MGN_MCS4, MGN_MCS5, MGN_MCS6, MGN_MCS7},
-	                                          mcs8_15Rates[8] = {MGN_MCS8, MGN_MCS9, MGN_MCS10, MGN_MCS11, MGN_MCS12, MGN_MCS13, MGN_MCS14, MGN_MCS15},
-	                                                  mcs16_23Rates[8] = {MGN_MCS16, MGN_MCS17, MGN_MCS18, MGN_MCS19, MGN_MCS20, MGN_MCS21, MGN_MCS22, MGN_MCS23},
-	                                                          vht1ssRates[10] = {MGN_VHT1SS_MCS0, MGN_VHT1SS_MCS1, MGN_VHT1SS_MCS2, MGN_VHT1SS_MCS3, MGN_VHT1SS_MCS4,
-	                                                                             MGN_VHT1SS_MCS5, MGN_VHT1SS_MCS6, MGN_VHT1SS_MCS7, MGN_VHT1SS_MCS8, MGN_VHT1SS_MCS9
-	                                                                            },
-	                                                                  vht2ssRates[10] = {MGN_VHT2SS_MCS0, MGN_VHT2SS_MCS1, MGN_VHT2SS_MCS2, MGN_VHT2SS_MCS3, MGN_VHT2SS_MCS4,
-	                                                                                     MGN_VHT2SS_MCS5, MGN_VHT2SS_MCS6, MGN_VHT2SS_MCS7, MGN_VHT2SS_MCS8, MGN_VHT2SS_MCS9
-	                                                                                    },
-	                                                                          vht3ssRates[10] = {MGN_VHT3SS_MCS0, MGN_VHT3SS_MCS1, MGN_VHT3SS_MCS2, MGN_VHT3SS_MCS3, MGN_VHT3SS_MCS4,
-	                                                                                             MGN_VHT3SS_MCS5, MGN_VHT3SS_MCS6, MGN_VHT3SS_MCS7, MGN_VHT3SS_MCS8, MGN_VHT3SS_MCS9
-	                                                                                            };
+	            band = 0, path = 0, txNum = 0;
+	            //startIndex = 0;
+	const u8			cckRates[4] = {MGN_1M, MGN_2M, MGN_5_5M, MGN_11M},
+				ofdmRates[8] = {MGN_6M, MGN_9M, MGN_12M, MGN_18M, MGN_24M, MGN_36M, MGN_48M, MGN_54M},
+				mcs0_7Rates[8] = {MGN_MCS0, MGN_MCS1, MGN_MCS2, MGN_MCS3, MGN_MCS4, MGN_MCS5, MGN_MCS6, MGN_MCS7},
+				mcs8_15Rates[8] = {MGN_MCS8, MGN_MCS9, MGN_MCS10, MGN_MCS11, MGN_MCS12, MGN_MCS13, MGN_MCS14, MGN_MCS15},
+				mcs16_23Rates[8] = {MGN_MCS16, MGN_MCS17, MGN_MCS18, MGN_MCS19, MGN_MCS20, MGN_MCS21, MGN_MCS22, MGN_MCS23},
+				vht1ssRates[10] = {MGN_VHT1SS_MCS0, MGN_VHT1SS_MCS1, MGN_VHT1SS_MCS2, MGN_VHT1SS_MCS3, MGN_VHT1SS_MCS4,
+					MGN_VHT1SS_MCS5, MGN_VHT1SS_MCS6, MGN_VHT1SS_MCS7, MGN_VHT1SS_MCS8, MGN_VHT1SS_MCS9
+				},
+				vht2ssRates[10] = {MGN_VHT2SS_MCS0, MGN_VHT2SS_MCS1, MGN_VHT2SS_MCS2, MGN_VHT2SS_MCS3, MGN_VHT2SS_MCS4,
+					MGN_VHT2SS_MCS5, MGN_VHT2SS_MCS6, MGN_VHT2SS_MCS7, MGN_VHT2SS_MCS8, MGN_VHT2SS_MCS9
+				},
+				vht3ssRates[10] = {MGN_VHT3SS_MCS0, MGN_VHT3SS_MCS1, MGN_VHT3SS_MCS2, MGN_VHT3SS_MCS3, MGN_VHT3SS_MCS4,
+					MGN_VHT3SS_MCS5, MGN_VHT3SS_MCS6, MGN_VHT3SS_MCS7, MGN_VHT3SS_MCS8, MGN_VHT3SS_MCS9
+				};
 
 	//DBG_871X("===>PHY_ConvertTxPowerByRateInDbmToRelativeValues()\n" );
 
@@ -1140,7 +1140,7 @@ PHY_TxPowerByRateConfiguration(
     IN  PADAPTER			pAdapter
 )
 {
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter);
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter);
 
 	phy_StoreTxPowerByRateBase( pAdapter );
 	phy_ConvertTxPowerByRateInDbmToRelativeValues( pAdapter );
@@ -1262,7 +1262,7 @@ PHY_GetTxPowerIndexBase(
 )
 {
 	PHAL_DATA_TYPE		pHalData = GET_HAL_DATA(pAdapter);
-	PDM_ODM_T			pDM_Odm = &pHalData->odmpriv;
+	//PDM_ODM_T			pDM_Odm = &pHalData->odmpriv;
 	u8					i = 0;	//default set to 1S
 	u8					txPower = 0;
 	u8					chnlIdx = (Channel-1);
@@ -1715,7 +1715,7 @@ PHY_GetTxPowerByRate(
 )
 {
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
-	s8 			value = 0, limit = 0;
+	s8 			value = 0;
 	u8			rateIndex = PHY_GetRateIndexOfTxPowerByRate( Rate );
 
 	if ( ( pAdapter->registrypriv.RegEnableTxPowerByRate == 2 && pHalData->EEPROMRegulatory == 2 ) ||
@@ -2198,8 +2198,8 @@ PHY_ConvertTxPowerLimitToPowerIndex(
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 	u8 				BW40PwrBasedBm2_4G = 0x2E, BW40PwrBasedBm5G = 0x2E;
 	u8 				regulation, bw, channel, rateSection;
-	u8 				baseIndex2_4G;
-	u8				baseIndex5G;
+	//u8 				baseIndex2_4G;
+	//u8				baseIndex5G;
 	s8 				tempValue = 0, tempPwrLmt = 0;
 	u8 				rfPath = 0;
 
@@ -2481,7 +2481,7 @@ Hal_ChannelPlanToRegulation(
 )
 {
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(Adapter);
-	DM_ODM_T *odm = &pHalData->odmpriv;
+	//DM_ODM_T *odm = &pHalData->odmpriv;
 
 	pHalData->Regulation2_4G = TXPWR_LMT_WW;
 	pHalData->Regulation5G = TXPWR_LMT_WW;
@@ -3000,7 +3000,7 @@ phy_ParseBBPgParaFile(
 					}
 				}
 			} else if ( pHalData->odmpriv.PhyRegPgVersion > 0 ) {
-				u32	index = 0, cnt = 0;
+				u32	index = 0;
 
 				if ( eqNByte( szLine, "0xffff", 6 ) )
 					break;
@@ -3485,12 +3485,12 @@ PHY_ConfigRFWithTxPwrTrackParaFile(
 )
 {
 	HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
-	PDM_ODM_T			pDM_Odm = &pHalData->odmpriv;
-	PODM_RF_CAL_T  		pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
+	//PDM_ODM_T			pDM_Odm = &pHalData->odmpriv;
+	//PODM_RF_CAL_T  		pRFCalibrateInfo = &(pDM_Odm->RFCalibrateInfo);
 	int	rlen = 0, rtStatus = _FAIL;
 	char	*szLine, *ptmp;
-	u32	i = 0, j = 0;
-	char	c = 0;
+	u32	i = 0;
+	//char	c = 0;
 
 	if(!(Adapter->registrypriv.load_phy_file & LOAD_RF_TXPWR_TRACK_PARA_FILE))
 		return rtStatus;
@@ -3586,7 +3586,7 @@ phy_ParsePowerLimitTableFile(
     char*			buffer
 )
 {
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 	u32	i = 0, forCnt = 0;
 	u8	loadingStage = 0, limitValue = 0, fraction = 0;
 	char	*szLine, *ptmp;

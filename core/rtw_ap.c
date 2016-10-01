@@ -32,7 +32,7 @@ extern unsigned char	WFD_OUI[];
 
 void init_mlme_ap_info(_adapter *padapter)
 {
-	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+	//struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct wlan_acl_pool *pacl_list = &pstapriv->acl_list;
@@ -50,9 +50,9 @@ void init_mlme_ap_info(_adapter *padapter)
 
 void free_mlme_ap_info(_adapter *padapter)
 {
-	_irqL irqL;
+	//_irqL irqL;
 	struct sta_info *psta=NULL;
-	struct sta_priv *pstapriv = &padapter->stapriv;
+	//struct sta_priv *pstapriv = &padapter->stapriv;
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
@@ -628,8 +628,8 @@ void	expire_timeout_chk(_adapter *padapter)
 
 void add_RATid(_adapter *padapter, struct sta_info *psta, u8 rssi_level)
 {
-	int i;
-	u8 rf_type;
+	//int i;
+	//u8 rf_type;
 	unsigned char sta_band = 0, shortGIrate = _FALSE;
 	unsigned int tx_ra_bitmap=0;
 	struct ht_priv	*psta_ht = NULL;
@@ -1033,7 +1033,7 @@ static void update_ap_info(_adapter *padapter, struct sta_info *psta)
 {
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 	WLAN_BSSID_EX *pnetwork = (WLAN_BSSID_EX *)&pmlmepriv->cur_network.network;
-	struct security_priv *psecuritypriv = &padapter->securitypriv;
+	//struct security_priv *psecuritypriv = &padapter->securitypriv;
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 #ifdef CONFIG_80211N_HT
 	struct ht_priv	*phtpriv_ap = &pmlmepriv->htpriv;
@@ -1087,7 +1087,7 @@ static void update_hw_ht_param(_adapter *padapter)
 {
 	unsigned char		max_AMPDU_len;
 	unsigned char		min_MPDU_spacing;
-	struct registry_priv	 *pregpriv = &padapter->registrypriv;
+	//struct registry_priv	 *pregpriv = &padapter->registrypriv;
 	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 
@@ -1147,7 +1147,7 @@ void start_bss_network(_adapter *padapter, u8 *pbuf)
 	struct wifidirect_info	*pwdinfo = &(padapter->wdinfo);
 #endif //CONFIG_P2P
 	u8	cbw40_enable=0;
-	u8	change_band = _FALSE;
+	//u8	change_band = _FALSE;
 
 	//DBG_871X("%s\n", __FUNCTION__);
 
@@ -1359,13 +1359,13 @@ int rtw_check_beacon_data(_adapter *padapter, u8 *pbuf,  int len)
 	u8	channel, network_type, supportRate[NDIS_802_11_LENGTH_RATES_EX];
 	int supportRateNum = 0;
 	u8 OUI1[] = {0x00, 0x50, 0xf2,0x01};
-	u8 wps_oui[4]= {0x0,0x50,0xf2,0x04};
+	//u8 wps_oui[4]= {0x0,0x50,0xf2,0x04};
 	u8 WMM_PARA_IE[] = {0x00, 0x50, 0xf2, 0x02, 0x01, 0x01};
 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
 	struct security_priv *psecuritypriv = &padapter->securitypriv;
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 	WLAN_BSSID_EX *pbss_network = (WLAN_BSSID_EX *)&pmlmepriv->cur_network.network;
-	struct sta_priv *pstapriv = &padapter->stapriv;
+	//struct sta_priv *pstapriv = &padapter->stapriv;
 	u8 *ie = pbss_network->IEs;
 	u8 vht_cap=_FALSE;
 
@@ -1918,7 +1918,7 @@ int rtw_acl_remove_sta(_adapter *padapter, u8 *addr)
 {
 	_irqL irqL;
 	_list	*plist, *phead;
-	int i, ret=0;
+	int ret=0;
 	struct rtw_wlan_acl_node *paclnode;
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct wlan_acl_pool *pacl_list = &pstapriv->acl_list;
@@ -2708,9 +2708,9 @@ u8 ap_free_sta(_adapter *padapter, struct sta_info *psta, bool active, u16 reaso
 {
 	_irqL irqL;
 	u8 beacon_updated = _FALSE;
-	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
-	struct sta_priv *pstapriv = &padapter->stapriv;
+	//struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+	//struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
+	//struct sta_priv *pstapriv = &padapter->stapriv;
 
 	if(!psta)
 		return beacon_updated;
@@ -2919,7 +2919,7 @@ void rtw_ap_restore_network(_adapter *padapter)
 {
 	struct mlme_priv *mlmepriv = &padapter->mlmepriv;
 	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
-	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
+	//struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct sta_priv * pstapriv = &padapter->stapriv;
 	struct sta_info *psta;
 	struct security_priv* psecuritypriv=&(padapter->securitypriv);

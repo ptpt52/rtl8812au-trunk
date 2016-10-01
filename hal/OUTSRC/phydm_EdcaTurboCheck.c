@@ -132,7 +132,7 @@ odm_EdcaTurboCheckCE(
 	u8	bBiasOnRx = _FALSE;
 	HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
 	struct dvobj_priv		*pdvobjpriv = adapter_to_dvobj(Adapter);
-	struct xmit_priv		*pxmitpriv = &(Adapter->xmitpriv);
+	//struct xmit_priv		*pxmitpriv = &(Adapter->xmitpriv);
 	struct recv_priv		*precvpriv = &(Adapter->recvpriv);
 	struct registry_priv	*pregpriv = &Adapter->registrypriv;
 	struct mlme_ext_priv	*pmlmeext = &(Adapter->mlmeextpriv);

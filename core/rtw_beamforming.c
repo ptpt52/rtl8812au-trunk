@@ -145,7 +145,7 @@ void beamforming_dym_period(PADAPTER Adapter)
 	u8	Idx;
 	BOOLEAN	bChangePeriod = _FALSE;
 	u16	SoundPeriod_SW, SoundPeriod_FW;
-	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
+	//PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(Adapter);
 	struct beamforming_entry	*pBeamformEntry;
 	struct beamforming_info	*pBeamInfo = GET_BEAMFORM_INFO(( &Adapter->mlmepriv));
@@ -531,9 +531,9 @@ BOOLEAN	beamforming_select_beam_entry(struct beamforming_info *pBeamInfo)
 
 BOOLEAN	beamforming_start_fw(PADAPTER adapter, u8 idx)
 {
-	u8						*RA = NULL;
+	//u8						*RA = NULL;
 	struct beamforming_entry	*pEntry;
-	BOOLEAN					ret = _TRUE;
+	//BOOLEAN					ret = _TRUE;
 	struct mlme_priv			*pmlmepriv = &(adapter->mlmepriv);
 	struct beamforming_info	*pBeamInfo = GET_BEAMFORM_INFO(pmlmepriv);
 
@@ -584,8 +584,8 @@ BOOLEAN	beamforming_start_period(PADAPTER adapter)
 
 void	beamforming_end_period(PADAPTER adapter)
 {
-	u8						idx = 0;
-	struct beamforming_entry	*pBeamformEntry;
+	//u8						idx = 0;
+	//struct beamforming_entry	*pBeamformEntry;
 	struct mlme_priv			*pmlmepriv = &(adapter->mlmepriv);
 	struct beamforming_info	*pBeamInfo = GET_BEAMFORM_INFO(pmlmepriv);
 	struct sounding_info		*pSoundInfo = &(pBeamInfo->sounding_info);
@@ -635,8 +635,8 @@ BOOLEAN	beamforming_init_entry(PADAPTER	adapter, struct sta_info *psta, u8* idx)
 #ifdef CONFIG_80211AC_VHT
 	struct vht_priv		*pvhtpriv = &(pmlmepriv->vhtpriv);
 #endif
-	struct mlme_ext_priv	*pmlmeext = &(adapter->mlmeextpriv);
-	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
+	//struct mlme_ext_priv	*pmlmeext = &(adapter->mlmeextpriv);
+	//struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct beamforming_entry	*pBeamformEntry = NULL;
 	u8	*ra;
 	u16	aid, mac_id;

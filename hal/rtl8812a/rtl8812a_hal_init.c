@@ -504,7 +504,7 @@ s32 InitLLTTable8812A(PADAPTER padapter, u8 txpktbuf_bndy)
 	s32	status = _FAIL;
 	u32	i;
 	u32	Last_Entry_Of_TxPktBuf = LAST_ENTRY_OF_TX_PKT_BUFFER_8812;
-	HAL_DATA_TYPE *pHalData	= GET_HAL_DATA(padapter);
+	//HAL_DATA_TYPE *pHalData	= GET_HAL_DATA(padapter);
 
 #if defined(CONFIG_IOL_LLT)
 	if(1 || rtw_IOL_applied(padapter)) {
@@ -951,8 +951,8 @@ FirmwareDownload8812(
 	u32 fwdl_start_time;
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 
-	u8				*pFwImageFileName;
-	u8				*pucMappedFile = NULL;
+	//u8				*pFwImageFileName;
+	//u8				*pucMappedFile = NULL;
 	PRT_FIRMWARE_8812	pFirmware = NULL;
 	u8				*pFwHdr = NULL;
 	u8				*pFirmwareBuf;
@@ -1214,10 +1214,10 @@ int _WriteBTFWtoTxPktBuf8812(
 	BOOLEAN 			bRecover=_FALSE;
 	pu1Byte 			ReservedPagePacket = NULL;
 	pu1Byte 			pGenBufReservedPagePacket = NULL;
-	u4Byte				TotalPktLen,txpktbuf_bndy;
+	u4Byte				TotalPktLen;
 	//u1Byte				tmpReg422;
 	//u1Byte				u1bTmp;
-	u8			*pframe;
+	//u8			*pframe;
 	struct xmit_priv	*pxmitpriv = &(Adapter->xmitpriv);
 	struct xmit_frame	*pmgntframe;
 	struct pkt_attrib	*pattrib;
@@ -2114,7 +2114,7 @@ Hal_ReadTxPowerInfo8812A(
 
 	// 2010/10/19 MH Add Regulator recognize for CU.
 	if(!AutoLoadFail) {
-		struct registry_priv  *registry_par = &Adapter->registrypriv;
+		//struct registry_priv  *registry_par = &Adapter->registrypriv;
 
 
 		if(PROMContent[EEPROM_RF_BOARD_OPTION_8812] == 0xFF)
@@ -2188,9 +2188,9 @@ void Hal_ReadRemoteWakeup_8812A(
     IN	BOOLEAN			AutoLoadFail
 )
 {
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 	struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(padapter);
-	u8 tmpvalue;
+	//u8 tmpvalue;
 
 	if(AutoLoadFail) {
 		pwrctl->bHWPowerdown = _FALSE;
@@ -3223,7 +3223,7 @@ hal_EfusePgPacketRead_8812A(
 	u8	hoffset = 0,hworden = 0;
 	u8	tmpidx = 0;
 	u8	tmpdata[8];
-	u8	max_section = 0;
+	//u8	max_section = 0;
 	u8	tmp_header = 0;
 
 	if(data==NULL)
@@ -3917,8 +3917,8 @@ void rtl8812_GetHalODMVar(
     PVOID					pValue1,
     PVOID					pValue2)
 {
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-	PDM_ODM_T podmpriv = &pHalData->odmpriv;
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
+	//PDM_ODM_T podmpriv = &pHalData->odmpriv;
 	switch(eVariable) {
 	default:
 		GetHalODMVar(Adapter,eVariable,pValue1,pValue2);
@@ -3932,8 +3932,8 @@ void rtl8812_SetHalODMVar(
     PVOID					pValue1,
     BOOLEAN					bSet)
 {
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-	PDM_ODM_T podmpriv = &pHalData->odmpriv;
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
+	//PDM_ODM_T podmpriv = &pHalData->odmpriv;
 	//_irqL irqL;
 	switch(eVariable) {
 	default:
@@ -4000,7 +4000,7 @@ void InitPGData8812A(PADAPTER padapter)
 {
 	PEEPROM_EFUSE_PRIV pEEPROM;
 	u32 i;
-	u16 val16;
+	//u16 val16;
 
 
 	pEEPROM = GET_EEPROM_EFUSE_PRIV(padapter);
@@ -4325,7 +4325,7 @@ static void StopTxBeacon(_adapter *padapter)
 void SetBeaconRelatedRegisters8812A(PADAPTER padapter)
 {
 	u32	value32;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	u32 bcn_ctrl_reg 			= REG_BCN_CTRL;
@@ -4385,7 +4385,7 @@ SetBeamformingCLK_8812(
     IN 	PADAPTER			Adapter
 )
 {
-	struct pwrctrl_priv	*pwrpriv = adapter_to_pwrctl(Adapter);
+	//struct pwrctrl_priv	*pwrpriv = adapter_to_pwrctl(Adapter);
 	u16	u2btmp;
 	u8	Count = 0, u1btmp;
 
@@ -4842,7 +4842,7 @@ SetBeamformPatch_8812(
     IN	u8					Operation
 )
 {
-	HAL_DATA_TYPE			*pHalData = GET_HAL_DATA(Adapter);
+	//HAL_DATA_TYPE			*pHalData = GET_HAL_DATA(Adapter);
 	struct beamforming_info	*pBeamInfo = GET_BEAMFORM_INFO(&(Adapter->mlmepriv));
 
 	if(pBeamInfo->beamforming_cap == BEAMFORMING_CAP_NONE)
@@ -6333,7 +6333,7 @@ void GetHwReg8812A(PADAPTER padapter, u8 variable, u8 *pval)
 	PDM_ODM_T podmpriv;
 	u8 val8;
 	u16 val16;
-	u32 val32;
+	//u32 val32;
 
 	_func_enter_;
 

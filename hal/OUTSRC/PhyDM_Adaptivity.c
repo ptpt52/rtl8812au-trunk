@@ -246,7 +246,7 @@ Phydm_CheckEnvironment(
 {
 	PDM_ODM_T	pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	BOOLEAN 	isCleanEnvironment = FALSE;
-	u1Byte		i, clean = 0;
+	//u1Byte		i, clean = 0;
 
 	if(pDM_Odm->bFirstLink == TRUE) {
 		pDM_Odm->adaptivity_flag = TRUE;

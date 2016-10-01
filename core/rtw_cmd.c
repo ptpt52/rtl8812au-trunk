@@ -480,7 +480,6 @@ void rtw_cmd_clr_isr(struct	cmd_priv *pcmdpriv)
 
 void rtw_free_cmd_obj(struct cmd_obj *pcmd)
 {
-	struct drvextra_cmd_parm *extra_parm = NULL;
 	_func_enter_;
 
 	if(pcmd->parmbuf != NULL) {
@@ -838,7 +837,7 @@ u8 rtw_sitesurvey_cmd(_adapter  *padapter, NDIS_802_11_SSID *ssid, int ssid_num,
 	struct cmd_priv 	*pcmdpriv = &padapter->cmdpriv;
 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
 #ifdef CONFIG_P2P
-	struct wifidirect_info *pwdinfo= &(padapter->wdinfo);
+	//struct wifidirect_info *pwdinfo= &(padapter->wdinfo);
 #endif //CONFIG_P2P
 
 	_func_enter_;
@@ -1706,8 +1705,8 @@ u8 rtw_clearstakey_cmd(_adapter *padapter, struct sta_info *sta, u8 enqueue)
 	struct set_stakey_parm	*psetstakey_para;
 	struct cmd_priv 			*pcmdpriv=&padapter->cmdpriv;
 	struct set_stakey_rsp		*psetstakey_rsp = NULL;
-	struct mlme_priv			*pmlmepriv = &padapter->mlmepriv;
-	struct security_priv 		*psecuritypriv = &padapter->securitypriv;
+	//struct mlme_priv			*pmlmepriv = &padapter->mlmepriv;
+	//struct security_priv 		*psecuritypriv = &padapter->securitypriv;
 	s16 cam_id = 0;
 	u8	res=_SUCCESS;
 
@@ -2201,7 +2200,7 @@ u8 rtw_set_csa_cmd(_adapter*padapter, u8 new_ch_no)
 {
 	struct	cmd_obj*	pcmdobj;
 	struct	SetChannelSwitch_param*setChannelSwitch_param;
-	struct 	mlme_priv *pmlmepriv = &padapter->mlmepriv;
+	//struct 	mlme_priv *pmlmepriv = &padapter->mlmepriv;
 	struct	cmd_priv   *pcmdpriv = &padapter->cmdpriv;
 
 	u8	res=_SUCCESS;
@@ -2237,10 +2236,10 @@ exit:
 
 u8 rtw_tdls_cmd(_adapter *padapter, u8 *addr, u8 option)
 {
-	struct	cmd_obj*	pcmdobj;
-	struct	TDLSoption_param	*TDLSoption;
-	struct 	mlme_priv *pmlmepriv = &padapter->mlmepriv;
-	struct	cmd_priv   *pcmdpriv = &padapter->cmdpriv;
+	//struct	cmd_obj*	pcmdobj;
+	//struct	TDLSoption_param	*TDLSoption;
+	//struct 	mlme_priv *pmlmepriv = &padapter->mlmepriv;
+	//struct	cmd_priv   *pcmdpriv = &padapter->cmdpriv;
 
 	u8	res=_SUCCESS;
 

@@ -744,9 +744,9 @@ phydm_BasicDbgMessage
 )
 {
 #if( DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	PFALSE_ALARM_STATISTICS FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm , PhyDM_FalseAlmCnt);
-	pDIG_T	pDM_DigTable = &pDM_Odm->DM_DigTable;
+	//PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
+	//PFALSE_ALARM_STATISTICS FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm , PhyDM_FalseAlmCnt);
+	//pDIG_T	pDM_DigTable = &pDM_Odm->DM_DigTable;
 
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD, ("odm_BasicDbgMsg==>\n"));
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD, ("bLinked = %d, RSSI_Min = %d, CurrentIGI = 0x%x \n",

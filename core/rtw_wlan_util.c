@@ -135,7 +135,7 @@ u8 networktype_to_raid(_adapter *adapter,struct sta_info *psta)
 
 u8 networktype_to_raid_ex(_adapter *adapter, struct sta_info *psta)
 {
-	struct mlme_ext_priv	*pmlmeext = &adapter->mlmeextpriv;
+	//struct mlme_ext_priv	*pmlmeext = &adapter->mlmeextpriv;
 	u8 raid, cur_rf_type, rf_type= RF_1T1R;
 
 	rtw_hal_get_hwreg(adapter, HW_VAR_RF_TYPE, (u8 *)(&cur_rf_type));
@@ -620,7 +620,7 @@ inline u32 rtw_get_on_cur_ch_time(_adapter *adapter)
 
 void SelectChannel(_adapter *padapter, unsigned char channel)
 {
-	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+	//struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 
 #ifdef CONFIG_DUALMAC_CONCURRENT
 	//saved channel info
@@ -642,7 +642,7 @@ void SelectChannel(_adapter *padapter, unsigned char channel)
 
 void SetBWMode(_adapter *padapter, unsigned short bwmode, unsigned char channel_offset)
 {
-	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+	//struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 
 #ifdef CONFIG_DUALMAC_CONCURRENT
 	//saved bw info
@@ -667,7 +667,7 @@ void SetBWMode(_adapter *padapter, unsigned short bwmode, unsigned char channel_
 void set_channel_bwmode(_adapter *padapter, unsigned char channel, unsigned char channel_offset, unsigned short bwmode)
 {
 	u8 center_ch, chnl_offset80 = HAL_PRIME_CHNL_OFFSET_DONT_CARE;
-	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+	//struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 
 	if ( padapter->bNotifyChannelChange ) {
 		DBG_871X( "[%s] ch = %d, offset = %d, bwmode = %d\n", __FUNCTION__, channel, channel_offset, bwmode );
@@ -828,7 +828,7 @@ static u32 _ReadCAM(_adapter *padapter ,u32 addr)
 }
 void read_cam(_adapter *padapter ,u8 entry, u8 *get_key)
 {
-	u32	j,count = 0, addr, cmd;
+	u32	j, addr, cmd;
 	addr = entry << 3;
 
 	//DBG_8192C("********* DUMP CAM Entry_#%02d***************\n",entry);
@@ -1014,7 +1014,7 @@ bool rtw_camid_is_gk(_adapter *adapter, u8 cam_id)
 s16 _rtw_camid_search(_adapter *adapter, u8 *addr, s16 kid)
 {
 	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
-	struct cam_ctl_t *cam_ctl = &dvobj->cam_ctl;
+	//struct cam_ctl_t *cam_ctl = &dvobj->cam_ctl;
 	int i;
 	s16 cam_id = -1;
 
@@ -1167,7 +1167,7 @@ void flush_all_cam_entry(_adapter *padapter)
 {
 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+	//struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 
 #ifdef CONFIG_CONCURRENT_MODE
 	if(check_buddy_fwstate(padapter, _FW_LINKED) == _TRUE) {
@@ -1220,10 +1220,10 @@ void flush_all_cam_entry(_adapter *padapter)
 #if defined(CONFIG_P2P) && defined(CONFIG_WFD)
 int WFD_info_handler(_adapter *padapter, PNDIS_802_11_VARIABLE_IEs	pIE)
 {
-	struct registry_priv	*pregpriv = &padapter->registrypriv;
-	struct mlme_priv	*pmlmepriv = &(padapter->mlmepriv);
-	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
-	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
+	//struct registry_priv	*pregpriv = &padapter->registrypriv;
+	//struct mlme_priv	*pmlmepriv = &(padapter->mlmepriv);
+	//struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
+	//struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct wifidirect_info	*pwdinfo;
 	u8	wfd_ie[ 128 ] = { 0x00 };
 	u32	wfd_ielen = 0;
@@ -1540,7 +1540,7 @@ void HT_caps_handler(_adapter *padapter, PNDIS_802_11_VARIABLE_IEs pIE)
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct mlme_priv 		*pmlmepriv = &padapter->mlmepriv;
 	struct ht_priv			*phtpriv = &pmlmepriv->htpriv;
-	struct registry_priv 	*pregistrypriv = &padapter->registrypriv;
+	//struct registry_priv 	*pregistrypriv = &padapter->registrypriv;
 
 	if(pIE==NULL) return;
 
@@ -1954,8 +1954,8 @@ int rtw_get_bcn_keys(ADAPTER *Adapter, u8 *pframe, u32 packet_len,
 
 void rtw_dump_bcn_keys(struct beacon_keys *recv_beacon)
 {
-	int i;
-	char *p;
+	//int i;
+	//char *p;
 	u8 ssid[IW_ESSID_MAX_SIZE + 1];
 
 	_rtw_memcpy(ssid, recv_beacon->ssid, recv_beacon->ssid_len);
@@ -3498,7 +3498,7 @@ static _adapter *pbuddy_padapter = NULL;
 int rtw_handle_dualmac(_adapter *adapter, bool init)
 {
 	int status = _SUCCESS;
-	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
+	//struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
 
 	if(adapter->chip_type != RTL8192D)
 		goto exit;

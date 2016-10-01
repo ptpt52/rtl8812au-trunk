@@ -704,13 +704,13 @@ struct	wlan_network	* rtw_get_oldest_wlan_network(_queue *scanned_queue)
 void update_network(WLAN_BSSID_EX *dst, WLAN_BSSID_EX *src,
                     _adapter * padapter, bool update_ie)
 {
-	u8 ss_ori = dst->PhyInfo.SignalStrength;
-	u8 sq_ori = dst->PhyInfo.SignalQuality;
+	//u8 ss_ori = dst->PhyInfo.SignalStrength;
+	//u8 sq_ori = dst->PhyInfo.SignalQuality;
 	long rssi_ori = dst->Rssi;
 
-	u8 ss_smp = src->PhyInfo.SignalStrength;
+	//u8 ss_smp = src->PhyInfo.SignalStrength;
 	u8 sq_smp = src->PhyInfo.SignalQuality;
-	long rssi_smp = src->Rssi;
+	//long rssi_smp = src->Rssi;
 
 	u8 ss_final;
 	u8 sq_final;
@@ -849,7 +849,7 @@ void rtw_update_scanned_network(_adapter *adapter, WLAN_BSSID_EX *target)
 	_list	*plist, *phead;
 	ULONG	bssid_ex_sz;
 	struct mlme_priv	*pmlmepriv = &(adapter->mlmepriv);
-	struct mlme_ext_priv	*pmlmeext = &(adapter->mlmeextpriv);
+	//struct mlme_ext_priv	*pmlmeext = &(adapter->mlmeextpriv);
 	struct wifidirect_info *pwdinfo= &(adapter->wdinfo);
 	_queue	*queue	= &(pmlmepriv->scanned_queue);
 	struct wlan_network	*pnetwork = NULL;
@@ -991,8 +991,8 @@ exit:
 void rtw_add_network(_adapter *adapter, WLAN_BSSID_EX *pnetwork);
 void rtw_add_network(_adapter *adapter, WLAN_BSSID_EX *pnetwork)
 {
-	_irqL irqL;
-	struct	mlme_priv	*pmlmepriv = &(((_adapter *)adapter)->mlmepriv);
+	//_irqL irqL;
+	//struct	mlme_priv	*pmlmepriv = &(((_adapter *)adapter)->mlmepriv);
 	//_queue	*queue	= &(pmlmepriv->scanned_queue);
 
 	_func_enter_;
@@ -1410,7 +1410,7 @@ void rtw_free_assoc_resources(_adapter *adapter, int lock_scanned_queue)
 	_irqL irqL;
 	struct wlan_network* pwlan = NULL;
 	struct	mlme_priv *pmlmepriv = &adapter->mlmepriv;
-	struct	sta_priv *pstapriv = &adapter->stapriv;
+	//struct	sta_priv *pstapriv = &adapter->stapriv;
 	struct wlan_network *tgt_network = &pmlmepriv->cur_network;
 	struct dvobj_priv *psdpriv = adapter->dvobj;
 	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
@@ -1518,7 +1518,7 @@ void rtw_free_assoc_resources(_adapter *adapter, int lock_scanned_queue)
 void rtw_indicate_connect(_adapter *padapter)
 {
 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
-	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
+	//struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
 
 	_func_enter_;
 
@@ -1575,8 +1575,8 @@ void rtw_indicate_disconnect( _adapter *padapter )
 	struct mlme_ext_priv *pmlmeext = &(padapter->mlmeextpriv);
 	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
 	WLAN_BSSID_EX	*cur_network = &(pmlmeinfo->network);
-	struct sta_info *psta;
-	struct sta_priv *pstapriv = &padapter->stapriv;
+	//struct sta_info *psta;
+	//struct sta_priv *pstapriv = &padapter->stapriv;
 	u8 *wps_ie=NULL;
 	uint wpsie_len=0;
 
@@ -1672,7 +1672,7 @@ inline void rtw_indicate_scan_done( _adapter *padapter, bool aborted)
 
 void rtw_scan_abort(_adapter *adapter)
 {
-	u32 cnt=0;
+	//u32 cnt=0;
 	u32 start;
 	struct mlme_priv	*pmlmepriv = &(adapter->mlmepriv);
 	struct mlme_ext_priv	*pmlmeext = &(adapter->mlmeextpriv);
@@ -1894,7 +1894,7 @@ static void rtw_joinbss_update_network(_adapter *padapter, struct wlan_network *
 //#define REJOIN
 void rtw_joinbss_event_prehandle(_adapter *adapter, u8 *pbuf)
 {
-	_irqL irqL,irqL2;
+	_irqL irqL;
 	static u8 retry=0;
 	u8 timer_cancelled;
 	struct sta_info *ptarget_sta= NULL, *pcur_sta = NULL;
@@ -2189,8 +2189,10 @@ void rtw_stassoc_event_callback(_adapter *adapter, u8 *pbuf)
 	if(check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
 		psta = rtw_get_stainfo(&adapter->stapriv, pstassoc->macaddr);
 		if(psta) {
+#ifdef CONFIG_IOCTL_CFG80211
 			u8 *passoc_req = NULL;
 			u32 assoc_req_len = 0;
+#endif
 
 			rtw_sta_media_status_rpt(adapter, psta, 1);
 
@@ -2306,7 +2308,7 @@ void rtw_stadel_event_callback(_adapter *adapter, u8 *pbuf)
 	u8* pibss = NULL;
 	struct	mlme_priv	*pmlmepriv = &(adapter->mlmepriv);
 	struct 	stadel_event *pstadel	= (struct stadel_event*)pbuf;
-	struct	sta_priv *pstapriv = &adapter->stapriv;
+	//struct	sta_priv *pstapriv = &adapter->stapriv;
 	struct wlan_network *tgt_network = &(pmlmepriv->cur_network);
 	struct mlme_ext_priv	*pmlmeext = &adapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
@@ -2675,7 +2677,7 @@ void rtw_dynamic_check_timer_handlder(_adapter *adapter)
 #ifdef CONFIG_AP_MODE
 	struct mlme_priv *pmlmepriv = &adapter->mlmepriv;
 #endif //CONFIG_AP_MODE
-	struct registry_priv *pregistrypriv = &adapter->registrypriv;
+	//struct registry_priv *pregistrypriv = &adapter->registrypriv;
 #ifdef CONFIG_CONCURRENT_MODE
 	PADAPTER pbuddy_adapter = adapter->pbuddy_adapter;
 #endif
@@ -2888,7 +2890,7 @@ int rtw_select_roaming_candidate(struct mlme_priv *mlme)
 	_queue	*queue	= &(mlme->scanned_queue);
 	struct	wlan_network	*pnetwork = NULL;
 	struct	wlan_network	*candidate = NULL;
-	u8 		bSupportAntDiv = _FALSE;
+	//u8 		bSupportAntDiv = _FALSE;
 
 	_func_enter_;
 
@@ -3033,7 +3035,7 @@ int rtw_select_and_join_from_scanned_queue(struct mlme_priv *pmlmepriv )
 	_queue	*queue	= &(pmlmepriv->scanned_queue);
 	struct	wlan_network	*pnetwork = NULL;
 	struct	wlan_network	*candidate = NULL;
-	u8 		bSupportAntDiv = _FALSE;
+	//u8 		bSupportAntDiv = _FALSE;
 
 	_func_enter_;
 
@@ -3186,7 +3188,7 @@ sint rtw_set_key(_adapter * adapter,struct security_priv *psecuritypriv,sint key
 	struct cmd_obj		*pcmd;
 	struct setkey_parm	*psetkeyparm;
 	struct cmd_priv		*pcmdpriv = &(adapter->cmdpriv);
-	struct mlme_priv		*pmlmepriv = &(adapter->mlmepriv);
+	//struct mlme_priv		*pmlmepriv = &(adapter->mlmepriv);
 	sint	res=_SUCCESS;
 
 	_func_enter_;
@@ -3402,7 +3404,7 @@ exit:
 
 static int rtw_remove_pmkid(_adapter *adapter, u8 *ie, uint ie_len)
 {
-	struct security_priv *sec=&adapter->securitypriv;
+	//struct security_priv *sec=&adapter->securitypriv;
 	int i;
 	u16 pmkid_cnt = RTW_GET_LE16(ie+14+20);
 
@@ -3424,16 +3426,18 @@ exit:
 
 sint rtw_restruct_sec_ie(_adapter *adapter,u8 *in_ie, u8 *out_ie, uint in_len)
 {
-	u8 authmode=0x0, securitytype, match;
-	u8 sec_ie[255], uncst_oui[4], bkup_ie[255];
-	u8 wpa_oui[4]= {0x0, 0x50, 0xf2, 0x01};
-	uint 	ielength, cnt, remove_cnt;
+	//u8 authmode=0x0, securitytype, match;
+	u8 authmode=0x0;
+	//u8 sec_ie[255], uncst_oui[4], bkup_ie[255];
+	//u8 wpa_oui[4]= {0x0, 0x50, 0xf2, 0x01};
+	//uint 	ielength, cnt, remove_cnt;
+	uint 	ielength;
 	int iEntry;
 
 	struct mlme_priv *pmlmepriv = &adapter->mlmepriv;
 	struct security_priv *psecuritypriv=&adapter->securitypriv;
 	uint 	ndisauthmode=psecuritypriv->ndisauthtype;
-	uint ndissecuritytype = psecuritypriv->ndisencryptstatus;
+	//uint ndissecuritytype = psecuritypriv->ndisencryptstatus;
 
 	_func_enter_;
 

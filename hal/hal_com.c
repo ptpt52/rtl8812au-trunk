@@ -137,7 +137,7 @@ hal_com_config_channel_plan(
 )
 {
 	PHAL_DATA_TYPE	pHalData;
-	u8 hwConfig;
+	//u8 hwConfig;
 	u8 chnlPlan;
 
 
@@ -992,9 +992,9 @@ void c2h_evt_clear(_adapter *adapter)
 s32 c2h_evt_read(_adapter *adapter, u8 *buf)
 {
 	s32 ret = _FAIL;
-	struct c2h_evt_hdr *c2h_evt;
-	int i;
-	u8 trigger;
+	//struct c2h_evt_hdr *c2h_evt;
+	//int i;
+	//u8 trigger;
 
 	if (buf == NULL)
 		goto exit;
@@ -1682,8 +1682,8 @@ void GetHalODMVar(
     PVOID					pValue1,
     PVOID					pValue2)
 {
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-	PDM_ODM_T podmpriv = &pHalData->odmpriv;
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
+	//PDM_ODM_T podmpriv = &pHalData->odmpriv;
 	switch(eVariable) {
 #if defined(CONFIG_SIGNAL_DISPLAY_DBM) && defined(CONFIG_BACKGROUND_NOISE_MONITOR)
 	case HAL_ODM_NOISE_MONITOR: {

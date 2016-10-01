@@ -160,7 +160,7 @@ exit:
 u8 rtl8812_set_rssi_cmd(_adapter*padapter, u8 *param)
 {
 	u8	res=_SUCCESS;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 	_func_enter_;
 
 	*((u32*) param ) = cpu_to_le32( *((u32*) param ) );
@@ -560,7 +560,7 @@ void ConstructPSPoll(_adapter *padapter, u8 *pframe, u32 *pLength)
 {
 	struct rtw_ieee80211_hdr	*pwlanhdr;
 	u16					*fctrl;
-	u32					pktlen;
+	//u32					pktlen;
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 
@@ -817,7 +817,7 @@ CheckFwRsvdPageContent(
 )
 {
 	HAL_DATA_TYPE*	pHalData = GET_HAL_DATA(Adapter);
-	u32	MaxBcnPageNum;
+	//u32	MaxBcnPageNum;
 
 	if(pHalData->FwRsvdPageStartOffset != 0) {
 		/*MaxBcnPageNum = PageNum_128(pMgntInfo->MaxBeaconSize);
@@ -839,7 +839,7 @@ GetTxBufferRsvdPageNum8812(
     IN	BOOLEAN		bWoWLANBoundary
 )
 {
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 	u8	RsvdPageNum=0;
 	u8	TxPageBndy= LAST_ENTRY_OF_TX_PKT_BUFFER_8812; // default reseved 1 page for the IC type which is undefined.
 
@@ -1190,7 +1190,7 @@ void rtl8812_set_FwJoinBssReport_cmd(PADAPTER padapter, u8 mstatus)
 void rtl8812_set_p2p_ps_offload_cmd(_adapter* padapter, u8 p2p_ps_state)
 {
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-	struct pwrctrl_priv		*pwrpriv = adapter_to_pwrctl(padapter);
+	//struct pwrctrl_priv		*pwrpriv = adapter_to_pwrctl(padapter);
 	struct wifidirect_info	*pwdinfo = &( padapter->wdinfo );
 	u8	*p2p_ps_offload = (u8 *)&pHalData->p2p_ps_offload;
 	u8	i;
@@ -2618,10 +2618,10 @@ C2HRaReportHandler_8812(
 )
 {
 	u8 	Rate = CmdBuf[0] & 0x3F;
-	u8	MacId = CmdBuf[1];
-	BOOLEAN	bLDPC = CmdBuf[2] & BIT0;
-	BOOLEAN	bTxBF = (CmdBuf[2] & BIT1) >> 1;
-	BOOLEAN	bNoisyStateFromC2H = (CmdBuf[2] & BIT2) >> 2;
+	//u8	MacId = CmdBuf[1];
+	//BOOLEAN	bLDPC = CmdBuf[2] & BIT0;
+	//BOOLEAN	bTxBF = (CmdBuf[2] & BIT1) >> 1;
+	//BOOLEAN	bNoisyStateFromC2H = (CmdBuf[2] & BIT2) >> 2;
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 
 	//pHalData->CurrentRARate = MRateToHwRate(Rate);
@@ -2638,8 +2638,8 @@ _C2HContentParsing8812(
     IN	u8 			*tmpBuf
 )
 {
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-	PDM_ODM_T		pDM_Odm = &pHalData->odmpriv;
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
+	//PDM_ODM_T		pDM_Odm = &pHalData->odmpriv;
 	s32 ret = _SUCCESS;
 
 	switch(c2hCmdId) {
@@ -2710,7 +2710,7 @@ C2HPacketHandler_8812(
     IN	u8			Length
 )
 {
-	struct c2h_evt_hdr_88xx *c2h_evt = (struct c2h_evt_hdr_88xx *)Buffer;
+	//struct c2h_evt_hdr_88xx *c2h_evt = (struct c2h_evt_hdr_88xx *)Buffer;
 	u8	c2hCmdId=0, c2hCmdSeq=0, c2hCmdLen=0;
 	u8	*tmpBuf=NULL;
 

@@ -145,7 +145,7 @@ extern void rtw_indicate_wx_disassoc_event(_adapter *padapter);
 
 void rtw_os_indicate_connect(_adapter *adapter)
 {
-	struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
+	//struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
 	_func_enter_;
 
 #ifdef CONFIG_IOCTL_CFG80211
@@ -187,7 +187,7 @@ void rtw_reset_securitypriv( _adapter *adapter )
 	u32	backupTKIPcountermeasure_time = 0;
 	// add for CONFIG_IEEE80211W, none 11w also can use
 	_irqL irqL;
-	struct mlme_ext_priv	*pmlmeext = &adapter->mlmeextpriv;
+	//struct mlme_ext_priv	*pmlmeext = &adapter->mlmeextpriv;
 
 	_enter_critical_bh(&adapter->security_key_mutex, &irqL);
 

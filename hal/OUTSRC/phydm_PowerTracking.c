@@ -579,7 +579,7 @@ odm_TXPowerTrackingCheckMP(
     IN 	PVOID	 	pDM_VOID
 )
 {
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
+	//PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 	PADAPTER	Adapter = pDM_Odm->Adapter;
 
@@ -606,7 +606,7 @@ odm_TXPowerTrackingCheckAP(
     IN 	PVOID	 	pDM_VOID
 )
 {
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
+	//PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 #if (DM_ODM_SUPPORT_TYPE == ODM_AP)
 	prtl8192cd_priv	priv		= pDM_Odm->priv;
 

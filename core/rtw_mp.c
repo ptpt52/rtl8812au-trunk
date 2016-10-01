@@ -462,11 +462,11 @@ MPT_InitializeAdapter(
     IN	u8				Channel
 )
 {
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
 	s32		rtStatus = _SUCCESS;
 	PMPT_CONTEXT	pMptCtx = &pAdapter->mppriv.MptCtx;
 	u32		ledsetting;
-	struct mlme_priv *pmlmepriv = &pAdapter->mlmepriv;
+	//struct mlme_priv *pmlmepriv = &pAdapter->mlmepriv;
 
 	pMptCtx->bMptDrvUnload = _FALSE;
 	pMptCtx->bMassProdTest = _FALSE;
@@ -637,8 +637,8 @@ static void disable_dm(PADAPTER padapter)
 #ifndef CONFIG_RTL8723A
 	u8 v8;
 #endif
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-	struct dm_priv	*pdmpriv = &pHalData->dmpriv;
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
+	//struct dm_priv	*pdmpriv = &pHalData->dmpriv;
 
 
 	//3 1. disable firmware dynamic mechanism
@@ -1046,9 +1046,9 @@ void	SetAntennaPathPower(PADAPTER pAdapter)
 
 int SetTxPower(PADAPTER pAdapter)
 {
-	HAL_DATA_TYPE	*pHalData	= GET_HAL_DATA(pAdapter);
+	//HAL_DATA_TYPE	*pHalData	= GET_HAL_DATA(pAdapter);
 	u1Byte			CurrChannel;
-	BOOLEAN 		bResult = _TRUE;
+	//BOOLEAN 		bResult = _TRUE;
 	PMPT_CONTEXT	pMptCtx = &(pAdapter->mppriv.MptCtx);
 	u1Byte			rf, TxPower[2];
 
@@ -1383,7 +1383,7 @@ void fill_tx_desc_8812a(PADAPTER padapter)
 
 	u32	pkt_size = pattrib->last_txcmdsz;
 	s32 bmcast = IS_MCAST(pattrib->ra);
-	u8 data_rate,pwr_status,offset;
+	u8 offset;
 
 	SET_TX_DESC_FIRST_SEG_8812(pDesc, 1);
 	SET_TX_DESC_LAST_SEG_8812(pDesc, 1);
@@ -1536,8 +1536,8 @@ static void Rtw_MPSetMacTxEDCA(PADAPTER padapter)
 
 void SetPacketTx(PADAPTER padapter)
 {
-	u8 *ptr, *pkt_start, *pkt_end,*fctrl;
-	u32 pkt_size,offset,startPlace,i;
+	u8 *ptr, *pkt_start, *pkt_end;
+	u32 pkt_size,i;
 	struct rtw_ieee80211_hdr *hdr;
 	u8 payload;
 	s32 bmcast;
@@ -2146,14 +2146,14 @@ mpt_ProQueryCalTxPower_8188E(
 )
 {
 	HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(pAdapter);
-	u1Byte				TxCount=TX_1S, i = 0;	//default set to 1S
+	u1Byte				TxCount=TX_1S;	//default set to 1S
 	//PMGNT_INFO			pMgntInfo = &(pAdapter->MgntInfo);
-	ULONG				TxPower = 1, PwrGroup=0, PowerDiffByRate=0;
-	ULONG				TxPowerCCK = 1, TxPowerOFDM = 1, TxPowerBW20 = 1, TxPowerBW40 = 1 ;
+	ULONG				TxPower = 1, PowerDiffByRate=0;
+	//ULONG				TxPowerCCK = 1, TxPowerOFDM = 1, TxPowerBW20 = 1, TxPowerBW40 = 1 ;
 	PMPT_CONTEXT		pMptCtx = &(pAdapter->mppriv.MptCtx);
 	u1Byte				CurrChannel = pHalData->CurrentChannel;
 	u1Byte				index = (CurrChannel -1);
-	u1Byte				rf_path=(RfPath), rfPath;
+	u1Byte				rf_path=(RfPath);
 	u1Byte				limit = 0, rate = 0;
 
 	if(HAL_IsLegalChannel(pAdapter, CurrChannel) == FALSE) {
@@ -2450,8 +2450,9 @@ ULONG mpt_ProQueryCalTxPower(
 {
 
 	HAL_DATA_TYPE	*pHalData	= GET_HAL_DATA(pAdapter);
-	ULONG			TxPower = 1, PwrGroup=0, PowerDiffByRate=0;
-	u1Byte			limit = 0, rate = 0;
+	//ULONG			TxPower = 1, PwrGroup=0, PowerDiffByRate=0;
+	ULONG			TxPower = 1;
+	u1Byte			rate = 0;
 
 #if 0// defined(CONFIG_RTL8192D) ||defined(CONFIG_RTL8192C)
 	if(IS_HARDWARE_TYPE_8188E_before(pAdapter))
@@ -2510,7 +2511,7 @@ ULONG mpt_ProQueryCalTxPower(
 
 void Hal_ProSetCrystalCap (PADAPTER pAdapter , u32 CrystalCap)
 {
-	HAL_DATA_TYPE		*pHalData	= GET_HAL_DATA(pAdapter);
+	//HAL_DATA_TYPE		*pHalData	= GET_HAL_DATA(pAdapter);
 
 	CrystalCap = CrystalCap & 0x3F;
 
