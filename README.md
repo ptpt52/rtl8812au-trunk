@@ -1,6 +1,14 @@
-# rtl8812AU_8821AU_linux
+# rtl8812au
 
-rtl8812AU_8821AU linux kernel driver for AC1200 (801.11ac) Wireless Dual-Band USB Adapter
+rtl8812au driver base on RTL8812AU_linux_v4.3.8_12175.20140902.zip
+
+for AC1200 (801.11ac) Wireless Dual-Band USB Adapter
+
+## Known Supported Devices:
+
+```
+* COMFAST 1200Mbps USB Wireless Adapter(Model: CF-912AC)
+```
 
 ## Compiling with DKMS
 
