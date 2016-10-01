@@ -94,7 +94,7 @@ CheckPositive(
 		return FALSE;
 	}
 }
-static BOOLEAN
+static inline BOOLEAN
 CheckNegative(
     IN  PDM_ODM_T     pDM_Odm,
     IN  const u4Byte  Condition1,

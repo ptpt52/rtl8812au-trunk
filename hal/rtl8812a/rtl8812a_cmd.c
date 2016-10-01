@@ -1325,7 +1325,7 @@ int reset_tsf(PADAPTER Adapter, u8 reset_port )
 
 #endif	// CONFIG_TSF_RESET_OFFLOAD
 
-static void rtl8812_set_FwRsvdPage_cmd(PADAPTER padapter, PRSVDPAGE_LOC rsvdpageloc)
+static inline void rtl8812_set_FwRsvdPage_cmd(PADAPTER padapter, PRSVDPAGE_LOC rsvdpageloc)
 {
 	u8 u1H2CRsvdPageParm[H2C_RSVDPAGE_LOC_LEN]= {0};
 

@@ -359,7 +359,7 @@ odm_RSSIMonitorCheckMP(
 //
 //sherry move from DUSC to here 20110517
 //
-static VOID
+static inline VOID
 FindMinimumRSSI_Dmsp(
     IN	PADAPTER	pAdapter
 )

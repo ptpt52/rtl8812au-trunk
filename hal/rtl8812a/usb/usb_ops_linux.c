@@ -215,7 +215,7 @@ static u32 usb_read_interrupt(struct intf_hdl *pintfhdl, u32 addr)
 }
 #endif
 
-static s32 pre_recv_entry(union recv_frame *precvframe, u8 *pphy_status)
+static inline s32 pre_recv_entry(union recv_frame *precvframe, u8 *pphy_status)
 {
 	s32 ret=_SUCCESS;
 #ifdef CONFIG_CONCURRENT_MODE
