@@ -39,26 +39,25 @@ odm_PathDiversity(
 #define dm_PathDiv_RSSI_Check	ODM_PathDivChkPerPktRssi
 #define PathDivCheckBeforeLink8192C	ODM_PathDiversityBeforeLink92C
 
-typedef struct _PathDiv_Parameter_define_
-{
-    u4Byte org_5g_RegE30;
-    u4Byte org_5g_RegC14;
-    u4Byte org_5g_RegCA0;
-    u4Byte swt_5g_RegE30;
-    u4Byte swt_5g_RegC14;
-    u4Byte swt_5g_RegCA0;
-    //for 2G IQK information
-    u4Byte org_2g_RegC80;
-    u4Byte org_2g_RegC4C;
-    u4Byte org_2g_RegC94;
-    u4Byte org_2g_RegC14;
-    u4Byte org_2g_RegCA0;
+typedef struct _PathDiv_Parameter_define_ {
+	u4Byte org_5g_RegE30;
+	u4Byte org_5g_RegC14;
+	u4Byte org_5g_RegCA0;
+	u4Byte swt_5g_RegE30;
+	u4Byte swt_5g_RegC14;
+	u4Byte swt_5g_RegCA0;
+	//for 2G IQK information
+	u4Byte org_2g_RegC80;
+	u4Byte org_2g_RegC4C;
+	u4Byte org_2g_RegC94;
+	u4Byte org_2g_RegC14;
+	u4Byte org_2g_RegCA0;
 
-    u4Byte swt_2g_RegC80;
-    u4Byte swt_2g_RegC4C;
-    u4Byte swt_2g_RegC94;
-    u4Byte swt_2g_RegC14;
-    u4Byte swt_2g_RegCA0;
+	u4Byte swt_2g_RegC80;
+	u4Byte swt_2g_RegC4C;
+	u4Byte swt_2g_RegC94;
+	u4Byte swt_2g_RegC14;
+	u4Byte swt_2g_RegCA0;
 } PATHDIV_PARA,*pPATHDIV_PARA;
 
 VOID

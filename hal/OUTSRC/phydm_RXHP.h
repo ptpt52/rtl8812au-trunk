@@ -40,21 +40,20 @@
 #define	PSD_RESCAN		4
 #define	PSD_SCAN_INTERVAL	700 //ms
 
-typedef struct _RX_High_Power_
-{
-    u1Byte		RXHP_flag;
-    u1Byte		PSD_func_trigger;
-    u1Byte		PSD_bitmap_RXHP[80];
-    u1Byte		Pre_IGI;
-    u1Byte		Cur_IGI;
-    u1Byte		Pre_pw_th;
-    u1Byte		Cur_pw_th;
-    BOOLEAN		First_time_enter;
-    BOOLEAN		RXHP_enable;
-    u1Byte		TP_Mode;
-    RT_TIMER	PSDTimer;
+typedef struct _RX_High_Power_ {
+	u1Byte		RXHP_flag;
+	u1Byte		PSD_func_trigger;
+	u1Byte		PSD_bitmap_RXHP[80];
+	u1Byte		Pre_IGI;
+	u1Byte		Cur_IGI;
+	u1Byte		Pre_pw_th;
+	u1Byte		Cur_pw_th;
+	BOOLEAN		First_time_enter;
+	BOOLEAN		RXHP_enable;
+	u1Byte		TP_Mode;
+	RT_TIMER	PSDTimer;
 #if USE_WORKITEM
-    RT_WORK_ITEM		PSDTimeWorkitem;
+	RT_WORK_ITEM		PSDTimeWorkitem;
 #endif
 } RXHP_T, *pRXHP_T;
 

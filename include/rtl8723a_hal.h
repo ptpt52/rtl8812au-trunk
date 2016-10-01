@@ -144,47 +144,46 @@
 
 
 typedef struct _RT_FIRMWARE_8723A {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8*			szFwBuffer;
+	u8*			szFwBuffer;
 #else
-    u8			szFwBuffer[FW_8723A_SIZE];
+	u8			szFwBuffer[FW_8723A_SIZE];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8723A, *PRT_FIRMWARE_8723A;
 
 //
 // This structure must be cared byte-ordering
 //
 // Added by tynli. 2009.12.04.
-typedef struct _RT_8723A_FIRMWARE_HDR
-{
-    // 8-byte alinment required
+typedef struct _RT_8723A_FIRMWARE_HDR {
+	// 8-byte alinment required
 
-    //--- LONG WORD 0 ----
-    u16		Signature;	// 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut
-    u8		Category;	// AP/NIC and USB/PCI
-    u8		Function;	// Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions
-    u16		Version;		// FW Version
-    u8		Subversion;	// FW Subversion, default 0x00
-    u16		Rsvd1;
+	//--- LONG WORD 0 ----
+	u16		Signature;	// 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut
+	u8		Category;	// AP/NIC and USB/PCI
+	u8		Function;	// Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions
+	u16		Version;		// FW Version
+	u8		Subversion;	// FW Subversion, default 0x00
+	u16		Rsvd1;
 
 
-    //--- LONG WORD 1 ----
-    u8		Month;	// Release time Month field
-    u8		Date;	// Release time Date field
-    u8		Hour;	// Release time Hour field
-    u8		Minute;	// Release time Minute field
-    u16		RamCodeSize;	// The size of RAM code
-    u16		Rsvd2;
+	//--- LONG WORD 1 ----
+	u8		Month;	// Release time Month field
+	u8		Date;	// Release time Date field
+	u8		Hour;	// Release time Hour field
+	u8		Minute;	// Release time Minute field
+	u16		RamCodeSize;	// The size of RAM code
+	u16		Rsvd2;
 
-    //--- LONG WORD 2 ----
-    u32		SvnIdx;	// The SVN entry index
-    u32		Rsvd3;
+	//--- LONG WORD 2 ----
+	u32		SvnIdx;	// The SVN entry index
+	u32		Rsvd3;
 
-    //--- LONG WORD 3 ----
-    u32		Rsvd4;
-    u32		Rsvd5;
+	//--- LONG WORD 3 ----
+	u32		Rsvd4;
+	u32		Rsvd5;
 } RT_8723A_FIRMWARE_HDR, *PRT_8723A_FIRMWARE_HDR;
 
 #define DRIVER_EARLY_INT_TIME_8723A		0x05
@@ -262,141 +261,138 @@ typedef struct _RT_8723A_FIRMWARE_HDR
 
 // Description: Determine the types of C2H events that are the same in driver and Fw.
 // Fisrt constructed by tynli. 2009.10.09.
-typedef enum _RTL8192C_C2H_EVT
-{
-    C2H_DBG = 0,
-    C2H_TSF = 1,
-    C2H_AP_RPT_RSP = 2,
-    C2H_CCX_TX_RPT = 3,	// The FW notify the report of the specific tx packet.
-    C2H_BT_RSSI = 4,
-    C2H_BT_OP_MODE = 5,
-    C2H_EXT_RA_RPT = 6,
-    C2H_HW_INFO_EXCH = 10,
-    C2H_C2H_H2C_TEST = 11,
-    C2H_BT_INFO = 12,
-    C2H_BT_MP_INFO = 15,
-    MAX_C2HEVENT
+typedef enum _RTL8192C_C2H_EVT {
+	C2H_DBG = 0,
+	C2H_TSF = 1,
+	C2H_AP_RPT_RSP = 2,
+	C2H_CCX_TX_RPT = 3,	// The FW notify the report of the specific tx packet.
+	C2H_BT_RSSI = 4,
+	C2H_BT_OP_MODE = 5,
+	C2H_EXT_RA_RPT = 6,
+	C2H_HW_INFO_EXCH = 10,
+	C2H_C2H_H2C_TEST = 11,
+	C2H_BT_INFO = 12,
+	C2H_BT_MP_INFO = 15,
+	MAX_C2HEVENT
 } RTL8192C_C2H_EVT;
 
 
 #define INCLUDE_MULTI_FUNC_BT(_Adapter)		(GET_HAL_DATA(_Adapter)->MultiFunc & RT_MULTI_FUNC_BT)
 #define INCLUDE_MULTI_FUNC_GPS(_Adapter)	(GET_HAL_DATA(_Adapter)->MultiFunc & RT_MULTI_FUNC_GPS)
 
-typedef struct rxreport_8723a
-{
-    u32 pktlen:14;
-    u32 crc32:1;
-    u32 icverr:1;
-    u32 drvinfosize:4;
-    u32 security:3;
-    u32 qos:1;
-    u32 shift:2;
-    u32 physt:1;
-    u32 swdec:1;
-    u32 ls:1;
-    u32 fs:1;
-    u32 eor:1;
-    u32 own:1;
+typedef struct rxreport_8723a {
+	u32 pktlen:14;
+	u32 crc32:1;
+	u32 icverr:1;
+	u32 drvinfosize:4;
+	u32 security:3;
+	u32 qos:1;
+	u32 shift:2;
+	u32 physt:1;
+	u32 swdec:1;
+	u32 ls:1;
+	u32 fs:1;
+	u32 eor:1;
+	u32 own:1;
 
-    u32 macid:5;
-    u32 tid:4;
-    u32 hwrsvd:4;
-    u32 amsdu:1;
-    u32 paggr:1;
-    u32 faggr:1;
-    u32 a1fit:4;
-    u32 a2fit:4;
-    u32 pam:1;
-    u32 pwr:1;
-    u32 md:1;
-    u32 mf:1;
-    u32 type:2;
-    u32 mc:1;
-    u32 bc:1;
+	u32 macid:5;
+	u32 tid:4;
+	u32 hwrsvd:4;
+	u32 amsdu:1;
+	u32 paggr:1;
+	u32 faggr:1;
+	u32 a1fit:4;
+	u32 a2fit:4;
+	u32 pam:1;
+	u32 pwr:1;
+	u32 md:1;
+	u32 mf:1;
+	u32 type:2;
+	u32 mc:1;
+	u32 bc:1;
 
-    u32 seq:12;
-    u32 frag:4;
-    u32 nextpktlen:14;
-    u32 nextind:1;
-    u32 rsvd0831:1;
+	u32 seq:12;
+	u32 frag:4;
+	u32 nextpktlen:14;
+	u32 nextind:1;
+	u32 rsvd0831:1;
 
-    u32 rxmcs:6;
-    u32 rxht:1;
-    u32 gf:1;
-    u32 splcp:1;
-    u32 bw:1;
-    u32 htc:1;
-    u32 eosp:1;
-    u32 bssidfit:2;
-    u32 rsvd1214:16;
-    u32 unicastwake:1;
-    u32 magicwake:1;
+	u32 rxmcs:6;
+	u32 rxht:1;
+	u32 gf:1;
+	u32 splcp:1;
+	u32 bw:1;
+	u32 htc:1;
+	u32 eosp:1;
+	u32 bssidfit:2;
+	u32 rsvd1214:16;
+	u32 unicastwake:1;
+	u32 magicwake:1;
 
-    u32 pattern0match:1;
-    u32 pattern1match:1;
-    u32 pattern2match:1;
-    u32 pattern3match:1;
-    u32 pattern4match:1;
-    u32 pattern5match:1;
-    u32 pattern6match:1;
-    u32 pattern7match:1;
-    u32 pattern8match:1;
-    u32 pattern9match:1;
-    u32 patternamatch:1;
-    u32 patternbmatch:1;
-    u32 patterncmatch:1;
-    u32 rsvd1613:19;
+	u32 pattern0match:1;
+	u32 pattern1match:1;
+	u32 pattern2match:1;
+	u32 pattern3match:1;
+	u32 pattern4match:1;
+	u32 pattern5match:1;
+	u32 pattern6match:1;
+	u32 pattern7match:1;
+	u32 pattern8match:1;
+	u32 pattern9match:1;
+	u32 patternamatch:1;
+	u32 patternbmatch:1;
+	u32 patterncmatch:1;
+	u32 rsvd1613:19;
 
-    u32 tsfl;
+	u32 tsfl;
 
-    u32 bassn:12;
-    u32 bavld:1;
-    u32 rsvd2413:19;
+	u32 bassn:12;
+	u32 bavld:1;
+	u32 rsvd2413:19;
 } RXREPORT, *PRXREPORT;
 
-typedef struct phystatus_8723a
-{
-    u32 rxgain_a:7;
-    u32 trsw_a:1;
-    u32 rxgain_b:7;
-    u32 trsw_b:1;
-    u32 chcorr_l:16;
+typedef struct phystatus_8723a {
+	u32 rxgain_a:7;
+	u32 trsw_a:1;
+	u32 rxgain_b:7;
+	u32 trsw_b:1;
+	u32 chcorr_l:16;
 
-    u32 sigqualcck:8;
-    u32 cfo_a:8;
-    u32 cfo_b:8;
-    u32 chcorr_h:8;
+	u32 sigqualcck:8;
+	u32 cfo_a:8;
+	u32 cfo_b:8;
+	u32 chcorr_h:8;
 
-    u32 noisepwrdb_h:8;
-    u32 cfo_tail_a:8;
-    u32 cfo_tail_b:8;
-    u32 rsvd0824:8;
+	u32 noisepwrdb_h:8;
+	u32 cfo_tail_a:8;
+	u32 cfo_tail_b:8;
+	u32 rsvd0824:8;
 
-    u32 rsvd1200:8;
-    u32 rxevm_a:8;
-    u32 rxevm_b:8;
-    u32 rxsnr_a:8;
+	u32 rsvd1200:8;
+	u32 rxevm_a:8;
+	u32 rxevm_b:8;
+	u32 rxsnr_a:8;
 
-    u32 rxsnr_b:8;
-    u32 noisepwrdb_l:8;
-    u32 rsvd1616:8;
-    u32 postsnr_a:8;
+	u32 rxsnr_b:8;
+	u32 noisepwrdb_l:8;
+	u32 rsvd1616:8;
+	u32 postsnr_a:8;
 
-    u32 postsnr_b:8;
-    u32 csi_a:8;
-    u32 csi_b:8;
-    u32 targetcsi_a:8;
+	u32 postsnr_b:8;
+	u32 csi_a:8;
+	u32 csi_b:8;
+	u32 targetcsi_a:8;
 
-    u32 targetcsi_b:8;
-    u32 sigevm:8;
-    u32 maxexpwr:8;
-    u32 exintflag:1;
-    u32 sgien:1;
-    u32 rxsc:2;
-    u32 idlelong:1;
-    u32 anttrainen:1;
-    u32 antselb:1;
-    u32 antsel:1;
+	u32 targetcsi_b:8;
+	u32 sigevm:8;
+	u32 maxexpwr:8;
+	u32 exintflag:1;
+	u32 sgien:1;
+	u32 rxsc:2;
+	u32 idlelong:1;
+	u32 anttrainen:1;
+	u32 antselb:1;
+	u32 antsel:1;
 } PHYSTATUS, *PPHYSTATUS;
 
 

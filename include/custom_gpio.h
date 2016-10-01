@@ -17,12 +17,12 @@
 #endif
 
 typedef enum cust_gpio_modes {
-    WLAN_PWDN_ON,
-    WLAN_PWDN_OFF,
-    WLAN_POWER_ON,
-    WLAN_POWER_OFF,
-    WLAN_BT_PWDN_ON,
-    WLAN_BT_PWDN_OFF
+	WLAN_PWDN_ON,
+	WLAN_PWDN_OFF,
+	WLAN_POWER_ON,
+	WLAN_POWER_OFF,
+	WLAN_BT_PWDN_ON,
+	WLAN_BT_PWDN_OFF
 } cust_gpio_modes_t;
 
 extern int rtw_wifi_gpio_init(void);

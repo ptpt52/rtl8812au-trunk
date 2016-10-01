@@ -129,45 +129,43 @@
       	}
 
 
-enum oid_type
-{
-    QUERY_OID,
-    SET_OID
+enum oid_type {
+	QUERY_OID,
+	SET_OID
 };
 
 struct oid_funs_node {
-    unsigned int oid_start; //the starting number for OID
-    unsigned int oid_end; //the ending number for OID
-    struct oid_obj_priv *node_array;
-    unsigned int array_sz; //the size of node_array
-    int query_counter; //count the number of query hits for this segment
-    int set_counter; //count the number of set hits for this segment
+	unsigned int oid_start; //the starting number for OID
+	unsigned int oid_end; //the ending number for OID
+	struct oid_obj_priv *node_array;
+	unsigned int array_sz; //the size of node_array
+	int query_counter; //count the number of query hits for this segment
+	int set_counter; //count the number of set hits for this segment
 };
 
-struct oid_par_priv
-{
-    void		*adapter_context;
-    NDIS_OID	oid;
-    void		*information_buf;
-    u32		information_buf_len;
-    u32		*bytes_rw;
-    u32		*bytes_needed;
-    enum oid_type	type_of_oid;
-    u32		dbg;
+struct oid_par_priv {
+	void		*adapter_context;
+	NDIS_OID	oid;
+	void		*information_buf;
+	u32		information_buf_len;
+	u32		*bytes_rw;
+	u32		*bytes_needed;
+	enum oid_type	type_of_oid;
+	u32		dbg;
 };
 
 struct oid_obj_priv {
-    unsigned char	dbg; // 0: without OID debug message  1: with OID debug message
-    NDIS_STATUS (*oidfuns)(struct oid_par_priv *poid_par_priv);
+	unsigned char	dbg; // 0: without OID debug message  1: with OID debug message
+	NDIS_STATUS (*oidfuns)(struct oid_par_priv *poid_par_priv);
 };
 
 #if (defined(CONFIG_MP_INCLUDED) && defined(_RTW_MP_IOCTL_C_)) || \
 	(defined(PLATFORM_WINDOWS) && defined(_RTW_IOCTL_RTL_C_))
 static NDIS_STATUS oid_null_function(struct oid_par_priv* poid_par_priv)
 {
-    _func_enter_;
-    _func_exit_;
-    return NDIS_STATUS_SUCCESS;
+	_func_enter_;
+	_func_exit_;
+	return NDIS_STATUS_SUCCESS;
 }
 #endif
 

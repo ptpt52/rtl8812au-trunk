@@ -115,9 +115,9 @@ typedef struct semaphore	_mutex;
 #endif
 typedef struct timer_list _timer;
 
-struct	__queue	{
-    struct	list_head	queue;
-    _lock	lock;
+struct	__queue {
+	struct	list_head	queue;
+	_lock	lock;
 };
 
 typedef	struct sk_buff	_pkt;
@@ -153,33 +153,33 @@ typedef struct tq_struct _workitem;
 // Porting from linux kernel, for compatible with old kernel.
 static inline unsigned char *skb_tail_pointer(const struct sk_buff *skb)
 {
-    return skb->tail;
+	return skb->tail;
 }
 
 static inline void skb_reset_tail_pointer(struct sk_buff *skb)
 {
-    skb->tail = skb->data;
+	skb->tail = skb->data;
 }
 
 static inline void skb_set_tail_pointer(struct sk_buff *skb, const int offset)
 {
-    skb->tail = skb->data + offset;
+	skb->tail = skb->data + offset;
 }
 
 static inline unsigned char *skb_end_pointer(const struct sk_buff *skb)
 {
-    return skb->end;
+	return skb->end;
 }
 #endif
 
 __inline static _list *get_next(_list	*list)
 {
-    return list->next;
+	return list->next;
 }
 
 __inline static _list	*get_list_head(_queue	*queue)
 {
-    return (&(queue->queue));
+	return (&(queue->queue));
 }
 
 
@@ -189,111 +189,111 @@ __inline static _list	*get_list_head(_queue	*queue)
 
 __inline static void _enter_critical(_lock *plock, _irqL *pirqL)
 {
-    spin_lock_irqsave(plock, *pirqL);
+	spin_lock_irqsave(plock, *pirqL);
 }
 
 __inline static void _exit_critical(_lock *plock, _irqL *pirqL)
 {
-    spin_unlock_irqrestore(plock, *pirqL);
+	spin_unlock_irqrestore(plock, *pirqL);
 }
 
 __inline static void _enter_critical_ex(_lock *plock, _irqL *pirqL)
 {
-    spin_lock_irqsave(plock, *pirqL);
+	spin_lock_irqsave(plock, *pirqL);
 }
 
 __inline static void _exit_critical_ex(_lock *plock, _irqL *pirqL)
 {
-    spin_unlock_irqrestore(plock, *pirqL);
+	spin_unlock_irqrestore(plock, *pirqL);
 }
 
 __inline static void _enter_critical_bh(_lock *plock, _irqL *pirqL)
 {
-    spin_lock_bh(plock);
+	spin_lock_bh(plock);
 }
 
 __inline static void _exit_critical_bh(_lock *plock, _irqL *pirqL)
 {
-    spin_unlock_bh(plock);
+	spin_unlock_bh(plock);
 }
 
 __inline static int _enter_critical_mutex(_mutex *pmutex, _irqL *pirqL)
 {
-    int ret = 0;
+	int ret = 0;
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37))
-    //mutex_lock(pmutex);
-    ret = mutex_lock_interruptible(pmutex);
+	//mutex_lock(pmutex);
+	ret = mutex_lock_interruptible(pmutex);
 #else
-    ret = down_interruptible(pmutex);
+	ret = down_interruptible(pmutex);
 #endif
-    return ret;
+	return ret;
 }
 
 
 __inline static void _exit_critical_mutex(_mutex *pmutex, _irqL *pirqL)
 {
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37))
-    mutex_unlock(pmutex);
+	mutex_unlock(pmutex);
 #else
-    up(pmutex);
+	up(pmutex);
 #endif
 }
 
 __inline static void rtw_list_delete(_list *plist)
 {
-    list_del_init(plist);
+	list_del_init(plist);
 }
 
 #define RTW_TIMER_HDL_ARGS void *FunctionContext
 
 __inline static void _init_timer(_timer *ptimer,_nic_hdl nic_hdl,void *pfunc,void* cntx)
 {
-    //setup_timer(ptimer, pfunc,(u32)cntx);
-    ptimer->function = pfunc;
-    ptimer->data = (unsigned long)cntx;
-    init_timer(ptimer);
+	//setup_timer(ptimer, pfunc,(u32)cntx);
+	ptimer->function = pfunc;
+	ptimer->data = (unsigned long)cntx;
+	init_timer(ptimer);
 }
 
 __inline static void _set_timer(_timer *ptimer,u32 delay_time)
 {
-    mod_timer(ptimer , (jiffies+(delay_time*HZ/1000)));
+	mod_timer(ptimer , (jiffies+(delay_time*HZ/1000)));
 }
 
 __inline static void _cancel_timer(_timer *ptimer,u8 *bcancelled)
 {
-    del_timer_sync(ptimer);
-    *bcancelled=  _TRUE;//TRUE ==1; FALSE==0
+	del_timer_sync(ptimer);
+	*bcancelled=  _TRUE;//TRUE ==1; FALSE==0
 }
 
 
 __inline static void _init_workitem(_workitem *pwork, void *pfunc, PVOID cntx)
 {
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,20))
-    INIT_WORK(pwork, pfunc);
+	INIT_WORK(pwork, pfunc);
 #elif (LINUX_VERSION_CODE > KERNEL_VERSION(2,5,41))
-    INIT_WORK(pwork, pfunc,pwork);
+	INIT_WORK(pwork, pfunc,pwork);
 #else
-    INIT_TQUEUE(pwork, pfunc,pwork);
+	INIT_TQUEUE(pwork, pfunc,pwork);
 #endif
 }
 
 __inline static void _set_workitem(_workitem *pwork)
 {
 #if (LINUX_VERSION_CODE > KERNEL_VERSION(2,5,41))
-    schedule_work(pwork);
+	schedule_work(pwork);
 #else
-    schedule_task(pwork);
+	schedule_task(pwork);
 #endif
 }
 
 __inline static void _cancel_workitem_sync(_workitem *pwork)
 {
 #if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,22))
-    cancel_work_sync(pwork);
+	cancel_work_sync(pwork);
 #elif (LINUX_VERSION_CODE > KERNEL_VERSION(2,5,41))
-    flush_scheduled_work();
+	flush_scheduled_work();
 #else
-    flush_scheduled_tasks();
+	flush_scheduled_tasks();
 #endif
 }
 //
@@ -317,47 +317,47 @@ __inline static void _cancel_workitem_sync(_workitem *pwork)
 static inline int rtw_netif_queue_stopped(struct net_device *pnetdev)
 {
 #if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,35))
-    return (netif_tx_queue_stopped(netdev_get_tx_queue(pnetdev, 0)) &&
-            netif_tx_queue_stopped(netdev_get_tx_queue(pnetdev, 1)) &&
-            netif_tx_queue_stopped(netdev_get_tx_queue(pnetdev, 2)) &&
-            netif_tx_queue_stopped(netdev_get_tx_queue(pnetdev, 3)) );
+	return (netif_tx_queue_stopped(netdev_get_tx_queue(pnetdev, 0)) &&
+	        netif_tx_queue_stopped(netdev_get_tx_queue(pnetdev, 1)) &&
+	        netif_tx_queue_stopped(netdev_get_tx_queue(pnetdev, 2)) &&
+	        netif_tx_queue_stopped(netdev_get_tx_queue(pnetdev, 3)) );
 #else
-    return netif_queue_stopped(pnetdev);
+	return netif_queue_stopped(pnetdev);
 #endif
 }
 
 static inline void rtw_netif_wake_queue(struct net_device *pnetdev)
 {
 #if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,35))
-    netif_tx_wake_all_queues(pnetdev);
+	netif_tx_wake_all_queues(pnetdev);
 #else
-    netif_wake_queue(pnetdev);
+	netif_wake_queue(pnetdev);
 #endif
 }
 
 static inline void rtw_netif_start_queue(struct net_device *pnetdev)
 {
 #if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,35))
-    netif_tx_start_all_queues(pnetdev);
+	netif_tx_start_all_queues(pnetdev);
 #else
-    netif_start_queue(pnetdev);
+	netif_start_queue(pnetdev);
 #endif
 }
 
 static inline void rtw_netif_stop_queue(struct net_device *pnetdev)
 {
 #if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,35))
-    netif_tx_stop_all_queues(pnetdev);
+	netif_tx_stop_all_queues(pnetdev);
 #else
-    netif_stop_queue(pnetdev);
+	netif_stop_queue(pnetdev);
 #endif
 }
 
 static inline void rtw_merge_string(char *dst, int dst_len, char *src1, char *src2)
 {
-    int	len = 0;
-    len += snprintf(dst+len, dst_len - len, "%s", src1);
-    len += snprintf(dst+len, dst_len - len, "%s", src2);
+	int	len = 0;
+	len += snprintf(dst+len, dst_len - len, "%s", src1);
+	len += snprintf(dst+len, dst_len - len, "%s", src2);
 }
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,27))
@@ -392,8 +392,8 @@ static inline void rtw_merge_string(char *dst, int dst_len, char *src1, char *sr
 #define FUNC_ADPT_ARG(adapter) __func__, adapter->pnetdev->name
 
 struct rtw_netdev_priv_indicator {
-    void *priv;
-    u32 sizeof_priv;
+	void *priv;
+	u32 sizeof_priv;
 };
 struct net_device *rtw_alloc_etherdev_with_old_priv(int sizeof_priv, void *old_priv);
 extern struct net_device * rtw_alloc_etherdev(int sizeof_priv);

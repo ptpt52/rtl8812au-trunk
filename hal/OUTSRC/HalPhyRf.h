@@ -22,14 +22,14 @@
 #define __HAL_PHY_RF_H__
 
 typedef enum _SPUR_CAL_METHOD {
-    PLL_RESET,
-    AFE_PHASE_SEL
+	PLL_RESET,
+	AFE_PHASE_SEL
 } SPUR_CAL_METHOD;
 
 typedef enum _PWRTRACK_CONTROL_METHOD {
-    BBSWING,
-    TXAGC,
-    MIX_MODE
+	BBSWING,
+	TXAGC,
+	MIX_MODE
 } PWRTRACK_METHOD;
 
 typedef VOID 	(*FuncSetPwr)(PDM_ODM_T, PWRTRACK_METHOD, u1Byte, u1Byte);
@@ -38,16 +38,16 @@ typedef VOID 	(*FuncLCK)(PDM_ODM_T);
 typedef VOID  	(*FuncSwing)(PDM_ODM_T, pu1Byte*, pu1Byte*, pu1Byte*, pu1Byte*);
 
 typedef struct _TXPWRTRACK_CFG {
-    u1Byte 		SwingTableSize_CCK;
-    u1Byte 		SwingTableSize_OFDM;
-    u1Byte 		Threshold_IQK;
-    u1Byte 		AverageThermalNum;
-    u1Byte 		RfPathCount;
-    u4Byte 		ThermalRegAddr;
-    FuncSetPwr 	ODM_TxPwrTrackSetPwr;
-    FuncIQK 	DoIQK;
-    FuncLCK		PHY_LCCalibrate;
-    FuncSwing	GetDeltaSwingTable;
+	u1Byte 		SwingTableSize_CCK;
+	u1Byte 		SwingTableSize_OFDM;
+	u1Byte 		Threshold_IQK;
+	u1Byte 		AverageThermalNum;
+	u1Byte 		RfPathCount;
+	u4Byte 		ThermalRegAddr;
+	FuncSetPwr 	ODM_TxPwrTrackSetPwr;
+	FuncIQK 	DoIQK;
+	FuncLCK		PHY_LCCalibrate;
+	FuncSwing	GetDeltaSwingTable;
 } TXPWRTRACK_CFG, *PTXPWRTRACK_CFG;
 
 void ConfigureTxpowerTrack(

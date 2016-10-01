@@ -83,13 +83,13 @@
 
 
 typedef struct _RT_FIRMWARE_8192E {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8*			szFwBuffer;
+	u8*			szFwBuffer;
 #else
-    u8			szFwBuffer[FW_SIZE_8192E];
+	u8			szFwBuffer[FW_SIZE_8192E];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8192E, *PRT_FIRMWARE_8192E;
 
 //

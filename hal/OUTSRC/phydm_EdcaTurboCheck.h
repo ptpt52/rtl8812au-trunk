@@ -23,13 +23,12 @@
 
 #define EDCATURBO_VERSION	"1.0"
 
-typedef struct _EDCA_TURBO_
-{
-    BOOLEAN bCurrentTurboEDCA;
-    BOOLEAN bIsCurRDLState;
+typedef struct _EDCA_TURBO_ {
+	BOOLEAN bCurrentTurboEDCA;
+	BOOLEAN bIsCurRDLState;
 
 #if(DM_ODM_SUPPORT_TYPE == ODM_CE	)
-    u4Byte	prv_traffic_idx; // edca turbo
+	u4Byte	prv_traffic_idx; // edca turbo
 #endif
 
 } EDCA_T,*pEDCA_T;
@@ -55,26 +54,24 @@ static u4Byte edca_setting_DL_GMode[HT_IOT_PEER_MAX] =
 #elif (DM_ODM_SUPPORT_TYPE &ODM_ADSL)
 enum qos_prio { BK, BE, VI, VO, VI_AG, VO_AG };
 
-static const struct ParaRecord rtl_ap_EDCA[] =
-{
+static const struct ParaRecord rtl_ap_EDCA[] = {
 //ACM,AIFSN, ECWmin, ECWmax, TXOplimit
-    {0,     7,      4,      10,     0},            //BK
-    {0,     3,      4,      6,      0},             //BE
-    {0,     1,      3,      4,      188},         //VI
-    {0,     1,      2,      3,      102},         //VO
-    {0,     1,      3,      4,      94},          //VI_AG
-    {0,     1,      2,      3,      47},          //VO_AG
+	{0,     7,      4,      10,     0},            //BK
+	{0,     3,      4,      6,      0},             //BE
+	{0,     1,      3,      4,      188},         //VI
+	{0,     1,      2,      3,      102},         //VO
+	{0,     1,      3,      4,      94},          //VI_AG
+	{0,     1,      2,      3,      47},          //VO_AG
 };
 
-static const struct ParaRecord rtl_sta_EDCA[] =
-{
+static const struct ParaRecord rtl_sta_EDCA[] = {
 //ACM,AIFSN, ECWmin, ECWmax, TXOplimit
-    {0,     7,      4,      10,     0},
-    {0,     3,      4,      10,     0},
-    {0,     2,      3,      4,      188},
-    {0,     2,      2,      3,      102},
-    {0,     2,      3,      4,      94},
-    {0,     2,      2,      3,      47},
+	{0,     7,      4,      10,     0},
+	{0,     3,      4,      10,     0},
+	{0,     2,      3,      4,      188},
+	{0,     2,      2,      3,      102},
+	{0,     2,      3,      4,      94},
+	{0,     2,      2,      3,      47},
 };
 #endif
 

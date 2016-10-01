@@ -29,12 +29,11 @@
 
 #ifdef PLATFORM_OS_XP
 #include <sdio_ops_xp.h>
-struct async_context
-{
-    PMDL pmdl;
-    PSDBUS_REQUEST_PACKET sdrp;
-    unsigned char* r_buf;
-    unsigned char* padapter;
+struct async_context {
+	PMDL pmdl;
+	PSDBUS_REQUEST_PACKET sdrp;
+	unsigned char* r_buf;
+	unsigned char* padapter;
 };
 #endif
 

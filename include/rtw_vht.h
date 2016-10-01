@@ -96,22 +96,21 @@
 #define SET_EXT_CAPABILITY_ELE_OP_MODE_NOTIF(_pEleStart, _val)			SET_BITS_TO_LE_1BYTE((_pEleStart)+7, 6, 1, _val)
 #define GET_EXT_CAPABILITY_ELE_OP_MODE_NOTIF(_pEleStart)				LE_BITS_TO_1BYTE((_pEleStart)+7, 6, 1)
 
-struct vht_priv
-{
-    u8	vht_option;
+struct vht_priv {
+	u8	vht_option;
 
-    u8	ldpc_cap;
-    u8	stbc_cap;
-    u8	beamform_cap;
+	u8	ldpc_cap;
+	u8	stbc_cap;
+	u8	beamform_cap;
 
-    u8	sgi_80m;//short GI
-    u8	ampdu_len;
+	u8	sgi_80m;//short GI
+	u8	ampdu_len;
 
-    u8	vht_op_mode_notify;
-    u8	vht_highest_rate;
-    u8	vht_mcs_map[2];
+	u8	vht_op_mode_notify;
+	u8	vht_highest_rate;
+	u8	vht_mcs_map[2];
 
-    u8	vht_cap[32];
+	u8	vht_cap[32];
 };
 
 u8	rtw_get_vht_highest_rate(u8 *pvht_mcs_map);

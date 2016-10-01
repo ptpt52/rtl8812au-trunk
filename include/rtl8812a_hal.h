@@ -105,13 +105,13 @@
 
 
 typedef struct _RT_FIRMWARE_8812 {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8*			szFwBuffer;
+	u8*			szFwBuffer;
 #else
-    u8			szFwBuffer[FW_SIZE_8812];
+	u8			szFwBuffer[FW_SIZE_8812];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8812, *PRT_FIRMWARE_8812;
 
 //
@@ -254,10 +254,10 @@ typedef struct _RT_FIRMWARE_8812 {
 #define EFUSE_PROTECT_BYTES_BANK_JAGUAR		16
 // Added for different registry settings to adjust TxPwr index. added by Roger, 2010.03.09.
 typedef enum _TX_PWR_PERCENTAGE {
-    TX_PWR_PERCENTAGE_0 = 0x01, // 12.5%
-    TX_PWR_PERCENTAGE_1 = 0x02, // 25%
-    TX_PWR_PERCENTAGE_2 = 0x04, // 50%
-    TX_PWR_PERCENTAGE_3 = 0x08, //100%, default target output power.
+	TX_PWR_PERCENTAGE_0 = 0x01, // 12.5%
+	TX_PWR_PERCENTAGE_1 = 0x02, // 25%
+	TX_PWR_PERCENTAGE_2 = 0x04, // 50%
+	TX_PWR_PERCENTAGE_3 = 0x08, //100%, default target output power.
 } TX_PWR_PERCENTAGE;
 
 #define INCLUDE_MULTI_FUNC_BT(_Adapter)	(GET_HAL_DATA(_Adapter)->MultiFunc & RT_MULTI_FUNC_BT)

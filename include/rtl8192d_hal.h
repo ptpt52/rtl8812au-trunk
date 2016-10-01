@@ -202,41 +202,41 @@
 
 
 typedef struct _RT_FIRMWARE_8192D {
-    FIRMWARE_SOURCE	eFWSource;
-    u8*			szFwBuffer;
-    u32			ulFwLength;
+	FIRMWARE_SOURCE	eFWSource;
+	u8*			szFwBuffer;
+	u32			ulFwLength;
 } RT_FIRMWARE_8192D, *PRT_FIRMWARE_8192D;
 
 //
 // This structure must be cared byte-ordering
 //
 // Added by tynli. 2009.12.04.
-typedef struct _RT_8192D_FIRMWARE_HDR {//8-byte alinment required
+typedef struct _RT_8192D_FIRMWARE_HDR { //8-byte alinment required
 
-    //--- LONG WORD 0 ----
-    u16		Signature;	// 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut
-    u8		Category;	// AP/NIC and USB/PCI
-    u8		Function;	// Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions
-    u16		Version;		// FW Version
-    u8		Subversion;	// FW Subversion, default 0x00
-    u8		Rsvd1;
+	//--- LONG WORD 0 ----
+	u16		Signature;	// 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut
+	u8		Category;	// AP/NIC and USB/PCI
+	u8		Function;	// Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions
+	u16		Version;		// FW Version
+	u8		Subversion;	// FW Subversion, default 0x00
+	u8		Rsvd1;
 
 
-    //--- LONG WORD 1 ----
-    u8		Month;	// Release time Month field
-    u8		Date;	// Release time Date field
-    u8		Hour;	// Release time Hour field
-    u8		Minute;	// Release time Minute field
-    u16		RamCodeSize;	// The size of RAM code
-    u16		Rsvd2;
+	//--- LONG WORD 1 ----
+	u8		Month;	// Release time Month field
+	u8		Date;	// Release time Date field
+	u8		Hour;	// Release time Hour field
+	u8		Minute;	// Release time Minute field
+	u16		RamCodeSize;	// The size of RAM code
+	u16		Rsvd2;
 
-    //--- LONG WORD 2 ----
-    u32		SvnIdx;	// The SVN entry index
-    u32		Rsvd3;
+	//--- LONG WORD 2 ----
+	u32		SvnIdx;	// The SVN entry index
+	u32		Rsvd3;
 
-    //--- LONG WORD 3 ----
-    u32		Rsvd4;
-    u32		Rsvd5;
+	//--- LONG WORD 3 ----
+	u32		Rsvd4;
+	u32		Rsvd5;
 
 } RT_8192D_FIRMWARE_HDR, *PRT_8192D_FIRMWARE_HDR;
 
@@ -244,34 +244,34 @@ typedef struct _RT_8192D_FIRMWARE_HDR {//8-byte alinment required
 #define BCN_DMA_ATIME_INT_TIME_8192D		0x02
 
 typedef	enum _BT_CurState {
-    BT_OFF		= 0,
-    BT_ON		= 1,
+	BT_OFF		= 0,
+	BT_ON		= 1,
 } BT_CurState, *PBT_CurState;
 
 typedef	enum _BT_ServiceType {
-    BT_SCO			= 0,
-    BT_A2DP			= 1,
-    BT_HID			= 2,
-    BT_HID_Idle		= 3,
-    BT_Scan			= 4,
-    BT_Idle			= 5,
-    BT_OtherAction	= 6,
-    BT_Busy			= 7,
-    BT_OtherBusy		= 8,
+	BT_SCO			= 0,
+	BT_A2DP			= 1,
+	BT_HID			= 2,
+	BT_HID_Idle		= 3,
+	BT_Scan			= 4,
+	BT_Idle			= 5,
+	BT_OtherAction	= 6,
+	BT_Busy			= 7,
+	BT_OtherBusy		= 8,
 } BT_ServiceType, *PBT_ServiceType;
 
 typedef struct _BT_COEXIST_STR {
-    u8					BluetoothCoexist;
-    u8					BT_Ant_Num;
-    u8					BT_CoexistType;
-    u8					BT_State;
-    u8					BT_CUR_State;		//0:on, 1:off
-    u8					BT_Ant_isolation;	//0:good, 1:bad
-    u8					BT_PapeCtrl;		//0:SW, 1:SW/HW dynamic
-    u8					BT_Service;
-    u8					BT_RadioSharedType;
-    u8					Ratio_Tx;
-    u8					Ratio_PRI;
+	u8					BluetoothCoexist;
+	u8					BT_Ant_Num;
+	u8					BT_CoexistType;
+	u8					BT_State;
+	u8					BT_CUR_State;		//0:on, 1:off
+	u8					BT_Ant_isolation;	//0:good, 1:bad
+	u8					BT_PapeCtrl;		//0:SW, 1:SW/HW dynamic
+	u8					BT_Service;
+	u8					BT_RadioSharedType;
+	u8					Ratio_Tx;
+	u8					Ratio_PRI;
 } BT_COEXIST_STR, *PBT_COEXIST_STR;
 
 
@@ -347,25 +347,25 @@ typedef struct _BT_COEXIST_STR {
 #define EFUSE_OOB_PROTECT_BYTES 	18 // PG data exclude header, dummy 7 bytes frome CP test and reserved 1byte.
 
 typedef enum _PA_MODE {
-    PA_MODE_EXTERNAL = 0x00,
-    PA_MODE_INTERNAL_SP3T = 0x01,
-    PA_MODE_INTERNAL_SPDT = 0x02
+	PA_MODE_EXTERNAL = 0x00,
+	PA_MODE_INTERNAL_SP3T = 0x01,
+	PA_MODE_INTERNAL_SPDT = 0x02
 } PA_MODE;
 
 /* Copy from rtl8192c */
 enum c2h_id_8192d {
-    C2H_DBG = 0,
-    C2H_TSF = 1,
-    C2H_AP_RPT_RSP = 2,
-    C2H_CCX_TX_RPT = 3,
-    C2H_BT_RSSI = 4,
-    C2H_BT_OP_MODE = 5,
-    C2H_EXT_RA_RPT = 6,
-    C2H_HW_INFO_EXCH = 10,
-    C2H_C2H_H2C_TEST = 11,
-    C2H_BT_INFO = 12,
-    C2H_BT_MP_INFO = 15,
-    MAX_C2HEVENT
+	C2H_DBG = 0,
+	C2H_TSF = 1,
+	C2H_AP_RPT_RSP = 2,
+	C2H_CCX_TX_RPT = 3,
+	C2H_BT_RSSI = 4,
+	C2H_BT_OP_MODE = 5,
+	C2H_EXT_RA_RPT = 6,
+	C2H_HW_INFO_EXCH = 10,
+	C2H_C2H_H2C_TEST = 11,
+	C2H_BT_INFO = 12,
+	C2H_BT_MP_INFO = 15,
+	MAX_C2HEVENT
 };
 
 #ifdef CONFIG_PCI_HCI

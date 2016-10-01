@@ -175,18 +175,18 @@
 
 
 enum {
-    UP_LINK,
-    DOWN_LINK,
+	UP_LINK,
+	DOWN_LINK,
 };
 typedef enum _RT_MEDIA_STATUS {
-    RT_MEDIA_DISCONNECT = 0,
-    RT_MEDIA_CONNECT       = 1
+	RT_MEDIA_DISCONNECT = 0,
+	RT_MEDIA_CONNECT       = 1
 } RT_MEDIA_STATUS;
 
 #define MAX_DLFW_PAGE_SIZE			4096	// @ page : 4k bytes
 typedef enum _FIRMWARE_SOURCE {
-    FW_SOURCE_IMG_FILE = 0,
-    FW_SOURCE_HEADER_FILE = 1,		//from header file
+	FW_SOURCE_IMG_FILE = 0,
+	FW_SOURCE_HEADER_FILE = 1,		//from header file
 } FIRMWARE_SOURCE, *PFIRMWARE_SOURCE;
 
 //
@@ -364,12 +364,11 @@ void SetHalODMVar(
     BOOLEAN					bSet);
 
 #ifdef CONFIG_BACKGROUND_NOISE_MONITOR
-struct noise_info
-{
-    u8 		bPauseDIG;
-    u8 		IGIValue;
-    u32 	max_time;//ms
-    u8		chan;
+struct noise_info {
+	u8 		bPauseDIG;
+	u8 		IGIValue;
+	u32 	max_time;//ms
+	u8		chan;
 };
 #endif
 

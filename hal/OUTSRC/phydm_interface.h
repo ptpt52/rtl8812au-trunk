@@ -97,14 +97,13 @@ ODM_REG(DIG,_pDM_Odm)
 #define ODM_REG(_name, _pDM_Odm)	_cat(_name, _pDM_Odm->SupportICType, _reg)
 #define ODM_BIT(_name, _pDM_Odm)	_cat(_name, _pDM_Odm->SupportICType, _bit)
 #endif
-typedef enum _ODM_H2C_CMD
-{
-    ODM_H2C_RSSI_REPORT = 0,
-    ODM_H2C_PSD_RESULT=1,
-    ODM_H2C_PathDiv = 2,
-    ODM_H2C_WIFI_CALIBRATION = 3,
-    ODM_H2C_IQ_CALIBRATION = 4,
-    ODM_MAX_H2CCMD
+typedef enum _ODM_H2C_CMD {
+	ODM_H2C_RSSI_REPORT = 0,
+	ODM_H2C_PSD_RESULT=1,
+	ODM_H2C_PathDiv = 2,
+	ODM_H2C_WIFI_CALIBRATION = 3,
+	ODM_H2C_IQ_CALIBRATION = 4,
+	ODM_MAX_H2CCMD
 } ODM_H2C_CMD;
 
 
@@ -120,17 +119,16 @@ typedef VOID (*RT_WORKITEM_CALL_BACK)(PVOID pContext);
 #if 0
 typedef struct tasklet_struct RT_WORKITEM_HANDLE, *PRT_WORKITEM_HANDLE;
 
-typedef struct _RT_WORK_ITEM
-{
+typedef struct _RT_WORK_ITEM {
 
-    RT_WORKITEM_HANDLE			Handle;			// Platform-dependent handle for this workitem, e.g. Ndis Workitem object.
-    PVOID						Adapter;		// Pointer to Adapter object.
-    PVOID						pContext;		// Parameter to passed to CallBackFunc().
-    RT_WORKITEM_CALL_BACK		CallbackFunc;	// Callback function of the workitem.
-    u1Byte						RefCount;		// 0: driver is going to unload, 1: No such workitem scheduled, 2: one workitem is schedueled.
-    PVOID						pPlatformExt;	// Pointer to platform-dependent extension.
-    BOOLEAN						bFree;
-    char						szID[36];		// An identity string of this workitem.
+	RT_WORKITEM_HANDLE			Handle;			// Platform-dependent handle for this workitem, e.g. Ndis Workitem object.
+	PVOID						Adapter;		// Pointer to Adapter object.
+	PVOID						pContext;		// Parameter to passed to CallBackFunc().
+	RT_WORKITEM_CALL_BACK		CallbackFunc;	// Callback function of the workitem.
+	u1Byte						RefCount;		// 0: driver is going to unload, 1: No such workitem scheduled, 2: one workitem is schedueled.
+	PVOID						pPlatformExt;	// Pointer to platform-dependent extension.
+	BOOLEAN						bFree;
+	char						szID[36];		// An identity string of this workitem.
 } RT_WORK_ITEM, *PRT_WORK_ITEM;
 
 #endif

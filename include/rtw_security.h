@@ -48,12 +48,12 @@ const char *security_type_str(u8 value);
 #define RTW_REPLAY_CTR_LEN 8
 
 typedef enum {
-    ENCRYP_PROTOCOL_OPENSYS,   //open system
-    ENCRYP_PROTOCOL_WEP,       //WEP
-    ENCRYP_PROTOCOL_WPA,       //WPA
-    ENCRYP_PROTOCOL_WPA2,      //WPA2
-    ENCRYP_PROTOCOL_WAPI,      //WAPI: Not support in this version
-    ENCRYP_PROTOCOL_MAX
+	ENCRYP_PROTOCOL_OPENSYS,   //open system
+	ENCRYP_PROTOCOL_WEP,       //WEP
+	ENCRYP_PROTOCOL_WPA,       //WPA
+	ENCRYP_PROTOCOL_WPA2,      //WPA2
+	ENCRYP_PROTOCOL_WAPI,      //WAPI: Not support in this version
+	ENCRYP_PROTOCOL_MAX
 } ENCRYP_PROTOCOL_E;
 
 
@@ -65,180 +65,178 @@ typedef enum {
 #define Ndis802_11AuthModeWPA2PSK (Ndis802_11AuthModeWPANone + 2)
 #endif
 
-union pn48	{
+union pn48 {
 
-    u64	val;
+	u64	val;
 
 #ifdef CONFIG_LITTLE_ENDIAN
 
-    struct {
-        u8 TSC0;
-        u8 TSC1;
-        u8 TSC2;
-        u8 TSC3;
-        u8 TSC4;
-        u8 TSC5;
-        u8 TSC6;
-        u8 TSC7;
-    } _byte_;
+	struct {
+		u8 TSC0;
+		u8 TSC1;
+		u8 TSC2;
+		u8 TSC3;
+		u8 TSC4;
+		u8 TSC5;
+		u8 TSC6;
+		u8 TSC7;
+	} _byte_;
 
 #elif defined(CONFIG_BIG_ENDIAN)
 
-    struct {
-        u8 TSC7;
-        u8 TSC6;
-        u8 TSC5;
-        u8 TSC4;
-        u8 TSC3;
-        u8 TSC2;
-        u8 TSC1;
-        u8 TSC0;
-    } _byte_;
+	struct {
+		u8 TSC7;
+		u8 TSC6;
+		u8 TSC5;
+		u8 TSC4;
+		u8 TSC3;
+		u8 TSC2;
+		u8 TSC1;
+		u8 TSC0;
+	} _byte_;
 
 #endif
 
 };
 
 union Keytype {
-    u8   skey[16];
-    u32    lkey[4];
+	u8   skey[16];
+	u32    lkey[4];
 };
 
 
-typedef struct _RT_PMKID_LIST
-{
-    u8						bUsed;
-    u8 						Bssid[6];
-    u8						PMKID[16];
-    u8						SsidBuf[33];
-    u8*						ssid_octet;
-    u16 						ssid_length;
+typedef struct _RT_PMKID_LIST {
+	u8						bUsed;
+	u8 						Bssid[6];
+	u8						PMKID[16];
+	u8						SsidBuf[33];
+	u8*						ssid_octet;
+	u16 						ssid_length;
 } RT_PMKID_LIST, *PRT_PMKID_LIST;
 
 
-struct security_priv
-{
-    u32	  dot11AuthAlgrthm;		// 802.11 auth, could be open, shared, 8021x and authswitch
-    u32	  dot11PrivacyAlgrthm;	// This specify the privacy for shared auth. algorithm.
+struct security_priv {
+	u32	  dot11AuthAlgrthm;		// 802.11 auth, could be open, shared, 8021x and authswitch
+	u32	  dot11PrivacyAlgrthm;	// This specify the privacy for shared auth. algorithm.
 
-    /* WEP */
-    u32	  dot11PrivacyKeyIndex;	// this is only valid for legendary wep, 0~3 for key id. (tx key index)
-    union Keytype dot11DefKey[4];			// this is only valid for def. key
-    u32 	dot11DefKeylen[4];
-    u8 	key_mask; /* use to restore wep key after hal_init */
+	/* WEP */
+	u32	  dot11PrivacyKeyIndex;	// this is only valid for legendary wep, 0~3 for key id. (tx key index)
+	union Keytype dot11DefKey[4];			// this is only valid for def. key
+	u32 	dot11DefKeylen[4];
+	u8 	key_mask; /* use to restore wep key after hal_init */
 
-    u32 dot118021XGrpPrivacy;	// This specify the privacy algthm. used for Grp key
-    u32	dot118021XGrpKeyid;		// key id used for Grp Key ( tx key index)
-    union Keytype	dot118021XGrpKey[4];	// 802.1x Group Key, for inx0 and inx1
-    union Keytype	dot118021XGrptxmickey[4];
-    union Keytype	dot118021XGrprxmickey[4];
-    union pn48		dot11Grptxpn;			// PN48 used for Grp Key xmit.
-    union pn48		dot11Grprxpn;			// PN48 used for Grp Key recv.
+	u32 dot118021XGrpPrivacy;	// This specify the privacy algthm. used for Grp key
+	u32	dot118021XGrpKeyid;		// key id used for Grp Key ( tx key index)
+	union Keytype	dot118021XGrpKey[4];	// 802.1x Group Key, for inx0 and inx1
+	union Keytype	dot118021XGrptxmickey[4];
+	union Keytype	dot118021XGrprxmickey[4];
+	union pn48		dot11Grptxpn;			// PN48 used for Grp Key xmit.
+	union pn48		dot11Grprxpn;			// PN48 used for Grp Key recv.
 #ifdef CONFIG_IEEE80211W
-    u32	dot11wBIPKeyid;						// key id used for BIP Key ( tx key index)
-    union Keytype	dot11wBIPKey[6];		// BIP Key, for index4 and index5
-    union pn48		dot11wBIPtxpn;			// PN48 used for Grp Key xmit.
-    union pn48		dot11wBIPrxpn;			// PN48 used for Grp Key recv.
+	u32	dot11wBIPKeyid;						// key id used for BIP Key ( tx key index)
+	union Keytype	dot11wBIPKey[6];		// BIP Key, for index4 and index5
+	union pn48		dot11wBIPtxpn;			// PN48 used for Grp Key xmit.
+	union pn48		dot11wBIPrxpn;			// PN48 used for Grp Key recv.
 #endif //CONFIG_IEEE80211W
 #ifdef CONFIG_AP_MODE
-    //extend security capabilities for AP_MODE
-    unsigned int dot8021xalg;//0:disable, 1:psk, 2:802.1x
-    unsigned int wpa_psk;//0:disable, bit(0): WPA, bit(1):WPA2
-    unsigned int wpa_group_cipher;
-    unsigned int wpa2_group_cipher;
-    unsigned int wpa_pairwise_cipher;
-    unsigned int wpa2_pairwise_cipher;
+	//extend security capabilities for AP_MODE
+	unsigned int dot8021xalg;//0:disable, 1:psk, 2:802.1x
+	unsigned int wpa_psk;//0:disable, bit(0): WPA, bit(1):WPA2
+	unsigned int wpa_group_cipher;
+	unsigned int wpa2_group_cipher;
+	unsigned int wpa_pairwise_cipher;
+	unsigned int wpa2_pairwise_cipher;
 #endif
 
-    u8 wps_ie[MAX_WPS_IE_LEN];//added in assoc req
-    int wps_ie_len;
+	u8 wps_ie[MAX_WPS_IE_LEN];//added in assoc req
+	int wps_ie_len;
 
 
-    u8	binstallGrpkey;
+	u8	binstallGrpkey;
 #ifdef CONFIG_GTK_OL
-    u8	binstallKCK_KEK;
+	u8	binstallKCK_KEK;
 #endif //CONFIG_GTK_OL
 #ifdef CONFIG_IEEE80211W
-    u8	binstallBIPkey;
+	u8	binstallBIPkey;
 #endif //CONFIG_IEEE80211W
-    u8	busetkipkey;
-    //_timer tkip_timer;
-    u8	bcheck_grpkey;
-    u8	bgrpkey_handshake;
+	u8	busetkipkey;
+	//_timer tkip_timer;
+	u8	bcheck_grpkey;
+	u8	bgrpkey_handshake;
 
-    //u8	packet_cnt;//unused, removed
+	//u8	packet_cnt;//unused, removed
 
-    s32	sw_encrypt;//from registry_priv
-    s32	sw_decrypt;//from registry_priv
+	s32	sw_encrypt;//from registry_priv
+	s32	sw_decrypt;//from registry_priv
 
-    s32 	hw_decrypted;//if the rx packets is hw_decrypted==_FALSE, it means the hw has not been ready.
+	s32 	hw_decrypted;//if the rx packets is hw_decrypted==_FALSE, it means the hw has not been ready.
 
 
-    //keeps the auth_type & enc_status from upper layer ioctl(wpa_supplicant or wzc)
-    u32 ndisauthtype;	// NDIS_802_11_AUTHENTICATION_MODE
-    u32 ndisencryptstatus;	// NDIS_802_11_ENCRYPTION_STATUS
+	//keeps the auth_type & enc_status from upper layer ioctl(wpa_supplicant or wzc)
+	u32 ndisauthtype;	// NDIS_802_11_AUTHENTICATION_MODE
+	u32 ndisencryptstatus;	// NDIS_802_11_ENCRYPTION_STATUS
 
-    WLAN_BSSID_EX sec_bss;  //for joinbss (h2c buffer) usage
+	WLAN_BSSID_EX sec_bss;  //for joinbss (h2c buffer) usage
 
-    NDIS_802_11_WEP ndiswep;
+	NDIS_802_11_WEP ndiswep;
 #ifdef PLATFORM_WINDOWS
-    u8 KeyMaterial[16];// variable length depending on above field.
+	u8 KeyMaterial[16];// variable length depending on above field.
 #endif
 
-    u8 assoc_info[600];
-    u8 szofcapability[256]; //for wpa2 usage
-    u8 oidassociation[512]; //for wpa/wpa2 usage
-    u8 authenticator_ie[256];  //store ap security information element
-    u8 supplicant_ie[256];  //store sta security information element
+	u8 assoc_info[600];
+	u8 szofcapability[256]; //for wpa2 usage
+	u8 oidassociation[512]; //for wpa/wpa2 usage
+	u8 authenticator_ie[256];  //store ap security information element
+	u8 supplicant_ie[256];  //store sta security information element
 
 
-    //for tkip countermeasure
-    u32 last_mic_err_time;
-    u8	btkip_countermeasure;
-    u8	btkip_wait_report;
-    u32 btkip_countermeasure_time;
+	//for tkip countermeasure
+	u32 last_mic_err_time;
+	u8	btkip_countermeasure;
+	u8	btkip_wait_report;
+	u32 btkip_countermeasure_time;
 
-    //---------------------------------------------------------------------------
-    // For WPA2 Pre-Authentication.
-    //---------------------------------------------------------------------------
-    //u8				RegEnablePreAuth;				// Default value: Pre-Authentication enabled or not, from registry "EnablePreAuth". Added by Annie, 2005-11-01.
-    //u8				EnablePreAuthentication;			// Current Value: Pre-Authentication enabled or not.
-    RT_PMKID_LIST		PMKIDList[NUM_PMKID_CACHE];	// Renamed from PreAuthKey[NUM_PRE_AUTH_KEY]. Annie, 2006-10-13.
-    u8				PMKIDIndex;
-    //u32				PMKIDCount;						// Added by Annie, 2006-10-13.
-    //u8				szCapability[256];				// For WPA2-PSK using zero-config, by Annie, 2005-09-20.
+	//---------------------------------------------------------------------------
+	// For WPA2 Pre-Authentication.
+	//---------------------------------------------------------------------------
+	//u8				RegEnablePreAuth;				// Default value: Pre-Authentication enabled or not, from registry "EnablePreAuth". Added by Annie, 2005-11-01.
+	//u8				EnablePreAuthentication;			// Current Value: Pre-Authentication enabled or not.
+	RT_PMKID_LIST		PMKIDList[NUM_PMKID_CACHE];	// Renamed from PreAuthKey[NUM_PRE_AUTH_KEY]. Annie, 2006-10-13.
+	u8				PMKIDIndex;
+	//u32				PMKIDCount;						// Added by Annie, 2006-10-13.
+	//u8				szCapability[256];				// For WPA2-PSK using zero-config, by Annie, 2005-09-20.
 
-    u8 bWepDefaultKeyIdxSet;
+	u8 bWepDefaultKeyIdxSet;
 
 #define DBG_SW_SEC_CNT
 #ifdef DBG_SW_SEC_CNT
-    u64 wep_sw_enc_cnt_bc;
-    u64 wep_sw_enc_cnt_mc;
-    u64 wep_sw_enc_cnt_uc;
-    u64 wep_sw_dec_cnt_bc;
-    u64 wep_sw_dec_cnt_mc;
-    u64 wep_sw_dec_cnt_uc;
+	u64 wep_sw_enc_cnt_bc;
+	u64 wep_sw_enc_cnt_mc;
+	u64 wep_sw_enc_cnt_uc;
+	u64 wep_sw_dec_cnt_bc;
+	u64 wep_sw_dec_cnt_mc;
+	u64 wep_sw_dec_cnt_uc;
 
-    u64 tkip_sw_enc_cnt_bc;
-    u64 tkip_sw_enc_cnt_mc;
-    u64 tkip_sw_enc_cnt_uc;
-    u64 tkip_sw_dec_cnt_bc;
-    u64 tkip_sw_dec_cnt_mc;
-    u64 tkip_sw_dec_cnt_uc;
+	u64 tkip_sw_enc_cnt_bc;
+	u64 tkip_sw_enc_cnt_mc;
+	u64 tkip_sw_enc_cnt_uc;
+	u64 tkip_sw_dec_cnt_bc;
+	u64 tkip_sw_dec_cnt_mc;
+	u64 tkip_sw_dec_cnt_uc;
 
-    u64 aes_sw_enc_cnt_bc;
-    u64 aes_sw_enc_cnt_mc;
-    u64 aes_sw_enc_cnt_uc;
-    u64 aes_sw_dec_cnt_bc;
-    u64 aes_sw_dec_cnt_mc;
-    u64 aes_sw_dec_cnt_uc;
+	u64 aes_sw_enc_cnt_bc;
+	u64 aes_sw_enc_cnt_mc;
+	u64 aes_sw_enc_cnt_uc;
+	u64 aes_sw_dec_cnt_bc;
+	u64 aes_sw_dec_cnt_mc;
+	u64 aes_sw_dec_cnt_uc;
 #endif /* DBG_SW_SEC_CNT */
 };
 
 struct sha256_state {
-    u64 length;
-    u32 state[8], curlen;
-    u8 buf[64];
+	u64 length;
+	u32 state[8], curlen;
+	u8 buf[64];
 };
 
 #define GET_ENCRY_ALGO(psecuritypriv, psta, encry_algo, bmcst)\
@@ -307,12 +305,11 @@ do{\
 #define ROL32( A, n )	( ((A) << (n)) | ( ((A)>>(32-(n)))  & ( (1UL << (n)) - 1 ) ) )
 #define ROR32( A, n ) 	ROL32( (A), 32-(n) )
 
-struct mic_data
-{
-    u32  K0, K1;         // Key
-    u32  L, R;           // Current state
-    u32  M;              // Message accumulator (single word)
-    u32     nBytesInM;      // # bytes in M
+struct mic_data {
+	u32  K0, K1;         // Key
+	u32  L, R;           // Current state
+	u32  M;              // Message accumulator (single word)
+	u32     nBytesInM;      // # bytes in M
 };
 
 extern const u32 Te0[256];
@@ -333,7 +330,7 @@ extern const u8 rcons[10];
 
 static inline u32 rotr(u32 val, int bits)
 {
-    return (val >> bits) | (val << (32 - bits));
+	return (val >> bits) | (val << (32 - bits));
 }
 
 #define TE0(i) Te0[((i) >> 24) & 0xff]
@@ -406,19 +403,19 @@ static inline u32 rotr(u32 val, int bits)
 
 /* the K array */
 static const unsigned long K[64] = {
-    0x428a2f98UL, 0x71374491UL, 0xb5c0fbcfUL, 0xe9b5dba5UL, 0x3956c25bUL,
-    0x59f111f1UL, 0x923f82a4UL, 0xab1c5ed5UL, 0xd807aa98UL, 0x12835b01UL,
-    0x243185beUL, 0x550c7dc3UL, 0x72be5d74UL, 0x80deb1feUL, 0x9bdc06a7UL,
-    0xc19bf174UL, 0xe49b69c1UL, 0xefbe4786UL, 0x0fc19dc6UL, 0x240ca1ccUL,
-    0x2de92c6fUL, 0x4a7484aaUL, 0x5cb0a9dcUL, 0x76f988daUL, 0x983e5152UL,
-    0xa831c66dUL, 0xb00327c8UL, 0xbf597fc7UL, 0xc6e00bf3UL, 0xd5a79147UL,
-    0x06ca6351UL, 0x14292967UL, 0x27b70a85UL, 0x2e1b2138UL, 0x4d2c6dfcUL,
-    0x53380d13UL, 0x650a7354UL, 0x766a0abbUL, 0x81c2c92eUL, 0x92722c85UL,
-    0xa2bfe8a1UL, 0xa81a664bUL, 0xc24b8b70UL, 0xc76c51a3UL, 0xd192e819UL,
-    0xd6990624UL, 0xf40e3585UL, 0x106aa070UL, 0x19a4c116UL, 0x1e376c08UL,
-    0x2748774cUL, 0x34b0bcb5UL, 0x391c0cb3UL, 0x4ed8aa4aUL, 0x5b9cca4fUL,
-    0x682e6ff3UL, 0x748f82eeUL, 0x78a5636fUL, 0x84c87814UL, 0x8cc70208UL,
-    0x90befffaUL, 0xa4506cebUL, 0xbef9a3f7UL, 0xc67178f2UL
+	0x428a2f98UL, 0x71374491UL, 0xb5c0fbcfUL, 0xe9b5dba5UL, 0x3956c25bUL,
+	0x59f111f1UL, 0x923f82a4UL, 0xab1c5ed5UL, 0xd807aa98UL, 0x12835b01UL,
+	0x243185beUL, 0x550c7dc3UL, 0x72be5d74UL, 0x80deb1feUL, 0x9bdc06a7UL,
+	0xc19bf174UL, 0xe49b69c1UL, 0xefbe4786UL, 0x0fc19dc6UL, 0x240ca1ccUL,
+	0x2de92c6fUL, 0x4a7484aaUL, 0x5cb0a9dcUL, 0x76f988daUL, 0x983e5152UL,
+	0xa831c66dUL, 0xb00327c8UL, 0xbf597fc7UL, 0xc6e00bf3UL, 0xd5a79147UL,
+	0x06ca6351UL, 0x14292967UL, 0x27b70a85UL, 0x2e1b2138UL, 0x4d2c6dfcUL,
+	0x53380d13UL, 0x650a7354UL, 0x766a0abbUL, 0x81c2c92eUL, 0x92722c85UL,
+	0xa2bfe8a1UL, 0xa81a664bUL, 0xc24b8b70UL, 0xc76c51a3UL, 0xd192e819UL,
+	0xd6990624UL, 0xf40e3585UL, 0x106aa070UL, 0x19a4c116UL, 0x1e376c08UL,
+	0x2748774cUL, 0x34b0bcb5UL, 0x391c0cb3UL, 0x4ed8aa4aUL, 0x5b9cca4fUL,
+	0x682e6ff3UL, 0x748f82eeUL, 0x78a5636fUL, 0x84c87814UL, 0x8cc70208UL,
+	0x90befffaUL, 0xa4506cebUL, 0xbef9a3f7UL, 0xc67178f2UL
 };
 
 

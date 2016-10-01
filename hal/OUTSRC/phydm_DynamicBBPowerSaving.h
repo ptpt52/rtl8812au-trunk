@@ -23,18 +23,17 @@
 
 #define DYNAMIC_BBPWRSAV_VERSION	"1.0"
 
-typedef struct _Dynamic_Power_Saving_
-{
-    u1Byte		PreCCAState;
-    u1Byte		CurCCAState;
+typedef struct _Dynamic_Power_Saving_ {
+	u1Byte		PreCCAState;
+	u1Byte		CurCCAState;
 
-    u1Byte		PreRFState;
-    u1Byte		CurRFState;
+	u1Byte		PreRFState;
+	u1Byte		CurRFState;
 
-    int		    Rssi_val_min;
+	int		    Rssi_val_min;
 
-    u1Byte		initialize;
-    u4Byte		Reg874,RegC70,Reg85C,RegA74;
+	u1Byte		initialize;
+	u4Byte		Reg874,RegC70,Reg85C,RegA74;
 
 } PS_T,*pPS_T;
 

@@ -104,31 +104,31 @@ extern int RTW_STATUS_CODE(int error_code);
 
 /* flags used for rtw_mstat_update() */
 enum mstat_f {
-    /* type: 0x00ff */
-    MSTAT_TYPE_VIR = 0x00,
-    MSTAT_TYPE_PHY= 0x01,
-    MSTAT_TYPE_SKB = 0x02,
-    MSTAT_TYPE_USB = 0x03,
-    MSTAT_TYPE_MAX = 0x04,
+	/* type: 0x00ff */
+	MSTAT_TYPE_VIR = 0x00,
+	MSTAT_TYPE_PHY= 0x01,
+	MSTAT_TYPE_SKB = 0x02,
+	MSTAT_TYPE_USB = 0x03,
+	MSTAT_TYPE_MAX = 0x04,
 
-    /* func: 0xff00 */
-    MSTAT_FUNC_UNSPECIFIED = 0x00<<8,
-    MSTAT_FUNC_IO = 0x01<<8,
-    MSTAT_FUNC_TX_IO = 0x02<<8,
-    MSTAT_FUNC_RX_IO = 0x03<<8,
-    MSTAT_FUNC_TX = 0x04<<8,
-    MSTAT_FUNC_RX = 0x05<<8,
-    MSTAT_FUNC_CFG_VENDOR = 0x06<<8,
-    MSTAT_FUNC_MAX = 0x07<<8,
+	/* func: 0xff00 */
+	MSTAT_FUNC_UNSPECIFIED = 0x00<<8,
+	MSTAT_FUNC_IO = 0x01<<8,
+	MSTAT_FUNC_TX_IO = 0x02<<8,
+	MSTAT_FUNC_RX_IO = 0x03<<8,
+	MSTAT_FUNC_TX = 0x04<<8,
+	MSTAT_FUNC_RX = 0x05<<8,
+	MSTAT_FUNC_CFG_VENDOR = 0x06<<8,
+	MSTAT_FUNC_MAX = 0x07<<8,
 };
 
 #define mstat_tf_idx(flags) ((flags)&0xff)
 #define mstat_ff_idx(flags) (((flags)&0xff00) >> 8)
 
 typedef enum mstat_status {
-    MSTAT_ALLOC_SUCCESS = 0,
-    MSTAT_ALLOC_FAIL,
-    MSTAT_FREE
+	MSTAT_ALLOC_SUCCESS = 0,
+	MSTAT_ALLOC_FAIL,
+	MSTAT_FREE
 } MSTAT_STATUS;
 
 #ifdef DBG_MEM_ALLOC
@@ -319,18 +319,18 @@ extern void rtw_init_timer(_timer *ptimer, void *padapter, void *pfunc);
 __inline static unsigned char _cancel_timer_ex(_timer *ptimer)
 {
 #ifdef PLATFORM_LINUX
-    return del_timer_sync(ptimer);
+	return del_timer_sync(ptimer);
 #endif
 #ifdef PLATFORM_FREEBSD
-    _cancel_timer(ptimer,0);
-    return 0;
+	_cancel_timer(ptimer,0);
+	return 0;
 #endif
 #ifdef PLATFORM_WINDOWS
-    u8 bcancelled;
+	u8 bcancelled;
 
-    _cancel_timer(ptimer, &bcancelled);
+	_cancel_timer(ptimer, &bcancelled);
 
-    return bcancelled;
+	return bcancelled;
 #endif
 }
 
@@ -338,22 +338,21 @@ static __inline void thread_enter(char *name)
 {
 #ifdef PLATFORM_LINUX
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 8, 0))
-    daemonize("%s", name);
+	daemonize("%s", name);
 #endif
-    allow_signal(SIGTERM);
+	allow_signal(SIGTERM);
 #endif
 #ifdef PLATFORM_FREEBSD
-    printf("%s", "RTKTHREAD_enter");
+	printf("%s", "RTKTHREAD_enter");
 #endif
 }
 
 __inline static void flush_signals_thread(void)
 {
 #ifdef PLATFORM_LINUX
-    if (signal_pending (current))
-    {
-        flush_signals(current);
-    }
+	if (signal_pending (current)) {
+		flush_signals(current);
+	}
 #endif
 }
 
@@ -361,15 +360,15 @@ __inline static _OS_STATUS res_to_status(sint res)
 {
 
 #if defined (PLATFORM_LINUX) || defined (PLATFORM_MPIXEL) || defined (PLATFORM_FREEBSD)
-    return res;
+	return res;
 #endif
 
 #ifdef PLATFORM_WINDOWS
 
-    if (res == _SUCCESS)
-        return NDIS_STATUS_SUCCESS;
-    else
-        return NDIS_STATUS_FAILURE;
+	if (res == _SUCCESS)
+		return NDIS_STATUS_SUCCESS;
+	else
+		return NDIS_STATUS_FAILURE;
 
 #endif
 
@@ -378,7 +377,7 @@ __inline static _OS_STATUS res_to_status(sint res)
 __inline static void rtw_dump_stack(void)
 {
 #ifdef PLATFORM_LINUX
-    dump_stack();
+	dump_stack();
 #endif
 }
 
@@ -390,20 +389,19 @@ __inline static void rtw_dump_stack(void)
 
 __inline static int rtw_bug_check(void *parg1, void *parg2, void *parg3, void *parg4)
 {
-    int ret = _TRUE;
+	int ret = _TRUE;
 
 #ifdef PLATFORM_WINDOWS
-    if ( ((uint)parg1) <= 0x7fffffff ||
-            ((uint)parg2) <= 0x7fffffff ||
-            ((uint)parg3) <= 0x7fffffff ||
-            ((uint)parg4) <= 0x7fffffff)
-    {
-        ret = _FALSE;
-        KeBugCheckEx(0x87110000, (ULONG_PTR)parg1, (ULONG_PTR)parg2, (ULONG_PTR)parg3, (ULONG_PTR)parg4);
-    }
+	if ( ((uint)parg1) <= 0x7fffffff ||
+	     ((uint)parg2) <= 0x7fffffff ||
+	     ((uint)parg3) <= 0x7fffffff ||
+	     ((uint)parg4) <= 0x7fffffff) {
+		ret = _FALSE;
+		KeBugCheckEx(0x87110000, (ULONG_PTR)parg1, (ULONG_PTR)parg2, (ULONG_PTR)parg3, (ULONG_PTR)parg4);
+	}
 #endif
 
-    return ret;
+	return ret;
 
 }
 
@@ -413,66 +411,66 @@ __inline static int rtw_bug_check(void *parg1, void *parg2, void *parg3, void *p
 __inline static u32 _RND4(u32 sz)
 {
 
-    u32	val;
+	u32	val;
 
-    val = ((sz >> 2) + ((sz & 3) ? 1: 0)) << 2;
+	val = ((sz >> 2) + ((sz & 3) ? 1: 0)) << 2;
 
-    return val;
+	return val;
 
 }
 
 __inline static u32 _RND8(u32 sz)
 {
 
-    u32	val;
+	u32	val;
 
-    val = ((sz >> 3) + ((sz & 7) ? 1: 0)) << 3;
+	val = ((sz >> 3) + ((sz & 7) ? 1: 0)) << 3;
 
-    return val;
+	return val;
 
 }
 
 __inline static u32 _RND128(u32 sz)
 {
 
-    u32	val;
+	u32	val;
 
-    val = ((sz >> 7) + ((sz & 127) ? 1: 0)) << 7;
+	val = ((sz >> 7) + ((sz & 127) ? 1: 0)) << 7;
 
-    return val;
+	return val;
 
 }
 
 __inline static u32 _RND256(u32 sz)
 {
 
-    u32	val;
+	u32	val;
 
-    val = ((sz >> 8) + ((sz & 255) ? 1: 0)) << 8;
+	val = ((sz >> 8) + ((sz & 255) ? 1: 0)) << 8;
 
-    return val;
+	return val;
 
 }
 
 __inline static u32 _RND512(u32 sz)
 {
 
-    u32	val;
+	u32	val;
 
-    val = ((sz >> 9) + ((sz & 511) ? 1: 0)) << 9;
+	val = ((sz >> 9) + ((sz & 511) ? 1: 0)) << 9;
 
-    return val;
+	return val;
 
 }
 
 __inline static u32 bitshift(u32 bitmask)
 {
-    u32 i;
+	u32 i;
 
-    for (i = 0; i <= 31; i++)
-        if (((bitmask>>i) &  0x1) == 1) break;
+	for (i = 0; i <= 31; i++)
+		if (((bitmask>>i) &  0x1) == 1) break;
 
-    return i;
+	return i;
 }
 
 #define rtw_min(a, b) ((a>b)?b:a)
@@ -597,10 +595,10 @@ void rtw_buf_free(u8 **buf, u32 *buf_len);
 void rtw_buf_update(u8 **buf, u32 *buf_len, u8 *src, u32 src_len);
 
 struct rtw_cbuf {
-    u32 write;
-    u32 read;
-    u32 size;
-    void *bufs[0];
+	u32 write;
+	u32 read;
+	u32 size;
+	void *bufs[0];
 };
 
 bool rtw_cbuf_full(struct rtw_cbuf *cbuf);

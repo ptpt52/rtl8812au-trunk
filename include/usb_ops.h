@@ -27,8 +27,8 @@
 #define REALTEK_USB_VENQT_CMD_IDX	0x00
 
 enum {
-    VENDOR_WRITE = 0x00,
-    VENDOR_READ = 0x01,
+	VENDOR_WRITE = 0x00,
+	VENDOR_READ = 0x01,
 };
 #define ALIGNMENT_UNIT				16
 #define MAX_VENDOR_REQ_CMD_SIZE	254		//8188cu SIE Support
@@ -104,10 +104,10 @@ void rtl8723bu_xmit_tasklet(void *priv);
 
 
 enum RTW_USB_SPEED {
-    RTW_USB_SPEED_UNKNOWN	= 0,
-    RTW_USB_SPEED_1_1	= 1,
-    RTW_USB_SPEED_2		= 2,
-    RTW_USB_SPEED_3		= 3,
+	RTW_USB_SPEED_UNKNOWN	= 0,
+	RTW_USB_SPEED_1_1	= 1,
+	RTW_USB_SPEED_2		= 2,
+	RTW_USB_SPEED_3		= 3,
 };
 
 #define IS_FULL_SPEED_USB(Adapter)	(adapter_to_dvobj(Adapter)->usb_speed == RTW_USB_SPEED_1_1)
@@ -120,15 +120,15 @@ enum RTW_USB_SPEED {
 
 static inline u8 rtw_usb_bulk_size_boundary(_adapter * padapter,int buf_len)
 {
-    u8 rst = _TRUE;
+	u8 rst = _TRUE;
 
-    if (IS_SUPER_SPEED_USB(padapter))
-        rst = (0 == (buf_len) % USB_SUPER_SPEED_BULK_SIZE)?_TRUE:_FALSE;
-    if (IS_HIGH_SPEED_USB(padapter))
-        rst = (0 == (buf_len) % USB_HIGH_SPEED_BULK_SIZE)?_TRUE:_FALSE;
-    else
-        rst = (0 == (buf_len) % USB_FULL_SPEED_BULK_SIZE)?_TRUE:_FALSE;
-    return rst;
+	if (IS_SUPER_SPEED_USB(padapter))
+		rst = (0 == (buf_len) % USB_SUPER_SPEED_BULK_SIZE)?_TRUE:_FALSE;
+	if (IS_HIGH_SPEED_USB(padapter))
+		rst = (0 == (buf_len) % USB_HIGH_SPEED_BULK_SIZE)?_TRUE:_FALSE;
+	else
+		rst = (0 == (buf_len) % USB_FULL_SPEED_BULK_SIZE)?_TRUE:_FALSE;
+	return rst;
 }
 
 

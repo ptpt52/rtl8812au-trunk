@@ -22,12 +22,12 @@
 
 
 struct pkt_file {
-    _pkt *pkt;
-    SIZE_T pkt_len;	 //the remainder length of the open_file
-    _buffer *cur_buffer;
-    u8 *buf_start;
-    u8 *cur_addr;
-    SIZE_T buf_len;
+	_pkt *pkt;
+	SIZE_T pkt_len;	 //the remainder length of the open_file
+	_buffer *cur_buffer;
+	u8 *buf_start;
+	u8 *cur_addr;
+	SIZE_T buf_len;
 };
 
 #ifdef PLATFORM_WINDOWS

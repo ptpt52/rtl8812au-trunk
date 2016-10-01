@@ -62,23 +62,22 @@
 
 
 
-struct phy_stat
-{
-    unsigned int phydw0;
+struct phy_stat {
+	unsigned int phydw0;
 
-    unsigned int phydw1;
+	unsigned int phydw1;
 
-    unsigned int phydw2;
+	unsigned int phydw2;
 
-    unsigned int phydw3;
+	unsigned int phydw3;
 
-    unsigned int phydw4;
+	unsigned int phydw4;
 
-    unsigned int phydw5;
+	unsigned int phydw5;
 
-    unsigned int phydw6;
+	unsigned int phydw6;
 
-    unsigned int phydw7;
+	unsigned int phydw7;
 };
 
 // Rx smooth factor
@@ -87,13 +86,13 @@ struct phy_stat
 
 #ifdef CONFIG_USB_HCI
 typedef struct _INTERRUPT_MSG_FORMAT_EX {
-    unsigned int C2H_MSG0;
-    unsigned int C2H_MSG1;
-    unsigned int C2H_MSG2;
-    unsigned int C2H_MSG3;
-    unsigned int HISR; // from HISR Reg0x124, read to clear
-    unsigned int HISRE;// from HISRE Reg0x12c, read to clear
-    unsigned int  MSG_EX;
+	unsigned int C2H_MSG0;
+	unsigned int C2H_MSG1;
+	unsigned int C2H_MSG2;
+	unsigned int C2H_MSG3;
+	unsigned int HISR; // from HISR Reg0x124, read to clear
+	unsigned int HISRE;// from HISRE Reg0x12c, read to clear
+	unsigned int  MSG_EX;
 } INTERRUPT_MSG_FORMAT_EX,*PINTERRUPT_MSG_FORMAT_EX;
 
 void rtl8192cu_init_recvbuf(_adapter *padapter, struct recv_buf *precvbuf);

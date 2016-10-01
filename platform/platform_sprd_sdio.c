@@ -31,59 +31,59 @@ extern int sdhci_device_attached(void);
  */
 int platform_wifi_power_on(void)
 {
-    int ret = 0;
+	int ret = 0;
 
 
 #ifdef CONFIG_RTL8188E
-    rtw_wifi_gpio_wlan_ctrl(WLAN_POWER_ON);
+	rtw_wifi_gpio_wlan_ctrl(WLAN_POWER_ON);
 #endif // CONFIG_RTL8188E
 
-    /* Pull up pwd pin, make wifi leave power down mode. */
-    rtw_wifi_gpio_init();
-    rtw_wifi_gpio_wlan_ctrl(WLAN_PWDN_ON);
+	/* Pull up pwd pin, make wifi leave power down mode. */
+	rtw_wifi_gpio_init();
+	rtw_wifi_gpio_wlan_ctrl(WLAN_PWDN_ON);
 
 #if (MP_DRIVER == 1) && (defined(CONFIG_RTL8723A)||defined(CONFIG_RTL8723B))
-    // Pull up BT reset pin.
-    rtw_wifi_gpio_wlan_ctrl(WLAN_BT_PWDN_ON);
+	// Pull up BT reset pin.
+	rtw_wifi_gpio_wlan_ctrl(WLAN_BT_PWDN_ON);
 #endif
-    rtw_mdelay_os(5);
+	rtw_mdelay_os(5);
 
-    sdhci_bus_scan();
+	sdhci_bus_scan();
 #ifdef CONFIG_RTL8723B
-    //YJ,test,130305
-    rtw_mdelay_os(1000);
+	//YJ,test,130305
+	rtw_mdelay_os(1000);
 #endif
 #ifdef ANDROID_2X
-    rtw_mdelay_os(200);
+	rtw_mdelay_os(200);
 #else // !ANDROID_2X
-    if (1) {
-        int i = 0;
+	if (1) {
+		int i = 0;
 
-        for (i = 0; i <= 50; i++) {
-            msleep(10);
-            if (sdhci_device_attached())
-                break;
-            printk("%s delay times:%d\n", __func__, i);
-        }
-    }
+		for (i = 0; i <= 50; i++) {
+			msleep(10);
+			if (sdhci_device_attached())
+				break;
+			printk("%s delay times:%d\n", __func__, i);
+		}
+	}
 #endif // !ANDROID_2X
 
-    return ret;
+	return ret;
 }
 
 void platform_wifi_power_off(void)
 {
-    /* Pull down pwd pin, make wifi enter power down mode. */
-    rtw_wifi_gpio_wlan_ctrl(WLAN_PWDN_OFF);
-    rtw_mdelay_os(5);
-    rtw_wifi_gpio_deinit();
+	/* Pull down pwd pin, make wifi enter power down mode. */
+	rtw_wifi_gpio_wlan_ctrl(WLAN_PWDN_OFF);
+	rtw_mdelay_os(5);
+	rtw_wifi_gpio_deinit();
 
 #ifdef CONFIG_RTL8188E
-    rtw_wifi_gpio_wlan_ctrl(WLAN_POWER_OFF);
+	rtw_wifi_gpio_wlan_ctrl(WLAN_POWER_OFF);
 #endif // CONFIG_RTL8188E
 
 #ifdef CONFIG_WOWLAN
-    if(mmc_host)
-        mmc_host->pm_flags &= ~MMC_PM_KEEP_POWER;
+	if(mmc_host)
+		mmc_host->pm_flags &= ~MMC_PM_KEEP_POWER;
 #endif // CONFIG_WOWLAN
 }

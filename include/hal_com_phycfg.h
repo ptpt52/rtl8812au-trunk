@@ -26,59 +26,59 @@
 #define		PathD                     			0x3
 
 typedef enum _RATE_SECTION {
-    CCK = 0,
-    OFDM,
-    HT_MCS0_MCS7,
-    HT_MCS8_MCS15,
-    HT_MCS16_MCS23,
-    HT_MCS24_MCS31,
-    VHT_1SSMCS0_1SSMCS9,
-    VHT_2SSMCS0_2SSMCS9,
-    VHT_3SSMCS0_3SSMCS9,
-    VHT_4SSMCS0_4SSMCS9,
+	CCK = 0,
+	OFDM,
+	HT_MCS0_MCS7,
+	HT_MCS8_MCS15,
+	HT_MCS16_MCS23,
+	HT_MCS24_MCS31,
+	VHT_1SSMCS0_1SSMCS9,
+	VHT_2SSMCS0_2SSMCS9,
+	VHT_3SSMCS0_3SSMCS9,
+	VHT_4SSMCS0_4SSMCS9,
 } RATE_SECTION;
 
 typedef enum _RF_TX_NUM {
-    RF_1TX = 0,
-    RF_2TX,
-    RF_3TX,
-    RF_4TX,
-    RF_MAX_TX_NUM,
-    RF_TX_NUM_NONIMPLEMENT,
+	RF_1TX = 0,
+	RF_2TX,
+	RF_3TX,
+	RF_4TX,
+	RF_MAX_TX_NUM,
+	RF_TX_NUM_NONIMPLEMENT,
 } RF_TX_NUM;
 
 #define MAX_POWER_INDEX 		0x3F
 
 typedef enum _REGULATION_TXPWR_LMT {
-    TXPWR_LMT_FCC = 0,
-    TXPWR_LMT_MKK = 1,
-    TXPWR_LMT_ETSI = 2,
-    TXPWR_LMT_WW = 3,
+	TXPWR_LMT_FCC = 0,
+	TXPWR_LMT_MKK = 1,
+	TXPWR_LMT_ETSI = 2,
+	TXPWR_LMT_WW = 3,
 
-    TXPWR_LMT_MAX_REGULATION_NUM = 4
+	TXPWR_LMT_MAX_REGULATION_NUM = 4
 } REGULATION_TXPWR_LMT;
 
 /*------------------------------Define structure----------------------------*/
 typedef struct _BB_REGISTER_DEFINITION {
-    u32 rfintfs;			// set software control:
-    //		0x870~0x877[8 bytes]
+	u32 rfintfs;			// set software control:
+	//		0x870~0x877[8 bytes]
 
-    u32 rfintfo; 			// output data:
-    //		0x860~0x86f [16 bytes]
+	u32 rfintfo; 			// output data:
+	//		0x860~0x86f [16 bytes]
 
-    u32 rfintfe; 			// output enable:
-    //		0x860~0x86f [16 bytes]
+	u32 rfintfe; 			// output enable:
+	//		0x860~0x86f [16 bytes]
 
-    u32 rf3wireOffset;	// LSSI data:
-    //		0x840~0x84f [16 bytes]
+	u32 rf3wireOffset;	// LSSI data:
+	//		0x840~0x84f [16 bytes]
 
-    u32 rfHSSIPara2; 	// wire parameter control2 :
-    //		0x824~0x827,0x82c~0x82f, 0x834~0x837, 0x83c~0x83f [16 bytes]
+	u32 rfHSSIPara2; 	// wire parameter control2 :
+	//		0x824~0x827,0x82c~0x82f, 0x834~0x837, 0x83c~0x83f [16 bytes]
 
-    u32 rfLSSIReadBack; 	//LSSI RF readback data SI mode
-    //		0x8a0~0x8af [16 bytes]
+	u32 rfLSSIReadBack; 	//LSSI RF readback data SI mode
+	//		0x8a0~0x8af [16 bytes]
 
-    u32 rfLSSIReadBackPi; 	//LSSI RF readback data PI mode 0x8b8-8bc for Path A and B
+	u32 rfLSSIReadBackPi; 	//LSSI RF readback data PI mode 0x8b8-8bc for Path A and B
 
 } BB_REGISTER_DEFINITION_T, *PBB_REGISTER_DEFINITION_T;
 

@@ -75,45 +75,44 @@
 #define IS_FW_HEADER_EXIST_8723B(_pFwHdr)	((le16_to_cpu(_pFwHdr->Signature)&0xFFF0) == 0x5300)
 
 typedef struct _RT_FIRMWARE {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8*			szFwBuffer;
+	u8*			szFwBuffer;
 #else
-    u8			szFwBuffer[FW_8723B_SIZE];
+	u8			szFwBuffer[FW_8723B_SIZE];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8723B, *PRT_FIRMWARE_8723B;
 
 //
 // This structure must be cared byte-ordering
 //
 // Added by tynli. 2009.12.04.
-typedef struct _RT_8723B_FIRMWARE_HDR
-{
-    // 8-byte alinment required
+typedef struct _RT_8723B_FIRMWARE_HDR {
+	// 8-byte alinment required
 
-    //--- LONG WORD 0 ----
-    u16		Signature;	// 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut
-    u8		Category;	// AP/NIC and USB/PCI
-    u8		Function;	// Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions
-    u16		Version;		// FW Version
-    u16		Subversion;	// FW Subversion, default 0x00
+	//--- LONG WORD 0 ----
+	u16		Signature;	// 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut
+	u8		Category;	// AP/NIC and USB/PCI
+	u8		Function;	// Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions
+	u16		Version;		// FW Version
+	u16		Subversion;	// FW Subversion, default 0x00
 
-    //--- LONG WORD 1 ----
-    u8		Month;	// Release time Month field
-    u8		Date;	// Release time Date field
-    u8		Hour;	// Release time Hour field
-    u8		Minute;	// Release time Minute field
-    u16		RamCodeSize;	// The size of RAM code
-    u16		Rsvd2;
+	//--- LONG WORD 1 ----
+	u8		Month;	// Release time Month field
+	u8		Date;	// Release time Date field
+	u8		Hour;	// Release time Hour field
+	u8		Minute;	// Release time Minute field
+	u16		RamCodeSize;	// The size of RAM code
+	u16		Rsvd2;
 
-    //--- LONG WORD 2 ----
-    u32		SvnIdx;	// The SVN entry index
-    u32		Rsvd3;
+	//--- LONG WORD 2 ----
+	u32		SvnIdx;	// The SVN entry index
+	u32		Rsvd3;
 
-    //--- LONG WORD 3 ----
-    u32		Rsvd4;
-    u32		Rsvd5;
+	//--- LONG WORD 3 ----
+	u32		Rsvd4;
+	u32		Rsvd5;
 } RT_8723B_FIRMWARE_HDR, *PRT_8723B_FIRMWARE_HDR;
 
 #define DRIVER_EARLY_INT_TIME_8723B		0x05
@@ -215,38 +214,35 @@ typedef struct _RT_8723B_FIRMWARE_HDR
 
 // Description: Determine the types of C2H events that are the same in driver and Fw.
 // Fisrt constructed by tynli. 2009.10.09.
-typedef enum _C2H_EVT
-{
-    C2H_DBG = 0,
-    C2H_TSF = 1,
-    C2H_AP_RPT_RSP = 2,
-    C2H_CCX_TX_RPT = 3,	// The FW notify the report of the specific tx packet.
-    C2H_BT_RSSI = 4,
-    C2H_BT_OP_MODE = 5,
-    C2H_EXT_RA_RPT = 6,
-    C2H_8723B_BT_INFO = 9,
-    C2H_HW_INFO_EXCH = 10,
-    C2H_8723B_BT_MP_INFO = 11,
+typedef enum _C2H_EVT {
+	C2H_DBG = 0,
+	C2H_TSF = 1,
+	C2H_AP_RPT_RSP = 2,
+	C2H_CCX_TX_RPT = 3,	// The FW notify the report of the specific tx packet.
+	C2H_BT_RSSI = 4,
+	C2H_BT_OP_MODE = 5,
+	C2H_EXT_RA_RPT = 6,
+	C2H_8723B_BT_INFO = 9,
+	C2H_HW_INFO_EXCH = 10,
+	C2H_8723B_BT_MP_INFO = 11,
 #ifdef CONFIG_FW_C2H_DEBUG
-    C2H_8723B_FW_DEBUG = 0xff,
+	C2H_8723B_FW_DEBUG = 0xff,
 #endif //CONFIG_FW_C2H_DEBUG
-    MAX_C2HEVENT
+	MAX_C2HEVENT
 } C2H_EVT;
 
-typedef struct _C2H_EVT_HDR
-{
-    u8	CmdID;
-    u8	CmdLen;
-    u8	CmdSeq;
+typedef struct _C2H_EVT_HDR {
+	u8	CmdID;
+	u8	CmdLen;
+	u8	CmdSeq;
 } __attribute__((__packed__)) C2H_EVT_HDR, *PC2H_EVT_HDR;
 
-typedef enum tag_Package_Definition
-{
-    PACKAGE_DEFAULT,
-    PACKAGE_QFN68,
-    PACKAGE_TFBGA90,
-    PACKAGE_TFBGA80,
-    PACKAGE_TFBGA79
+typedef enum tag_Package_Definition {
+	PACKAGE_DEFAULT,
+	PACKAGE_QFN68,
+	PACKAGE_TFBGA90,
+	PACKAGE_TFBGA80,
+	PACKAGE_TFBGA79
 } PACKAGE_TYPE_E;
 
 #define INCLUDE_MULTI_FUNC_BT(_Adapter)		(GET_HAL_DATA(_Adapter)->MultiFunc & RT_MULTI_FUNC_BT)

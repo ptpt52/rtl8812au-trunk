@@ -27,20 +27,19 @@
 #define		CFO_TH_XTAL_LOW			10			// kHz
 #define		CFO_TH_ATC					80			// kHz
 
-typedef struct _CFO_TRACKING_
-{
-    BOOLEAN			bATCStatus;
-    BOOLEAN			largeCFOHit;
-    BOOLEAN			bAdjust;
-    u1Byte			CrystalCap;
-    u1Byte			DefXCap;
-    int				CFO_tail[2];
-    int				CFO_ave_pre;
-    u4Byte			packetCount;
-    u4Byte			packetCount_pre;
+typedef struct _CFO_TRACKING_ {
+	BOOLEAN			bATCStatus;
+	BOOLEAN			largeCFOHit;
+	BOOLEAN			bAdjust;
+	u1Byte			CrystalCap;
+	u1Byte			DefXCap;
+	int				CFO_tail[2];
+	int				CFO_ave_pre;
+	u4Byte			packetCount;
+	u4Byte			packetCount_pre;
 
-    BOOLEAN			bForceXtalCap;
-    BOOLEAN			bReset;
+	BOOLEAN			bForceXtalCap;
+	BOOLEAN			bReset;
 } CFO_TRACKING, *PCFO_TRACKING;
 
 VOID

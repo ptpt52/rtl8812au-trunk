@@ -88,48 +88,47 @@
 #define IS_FW_HEADER_EXIST_88E(_pFwHdr)	((le16_to_cpu(_pFwHdr->Signature)&0xFFF0) == 0x88E0)
 
 typedef struct _RT_FIRMWARE_8188E {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8*			szFwBuffer;
+	u8*			szFwBuffer;
 #else
-    u8			szFwBuffer[MAX_FW_8188E_SIZE];
+	u8			szFwBuffer[MAX_FW_8188E_SIZE];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8188E, *PRT_FIRMWARE_8188E;
 
 //
 // This structure must be cared byte-ordering
 //
 
-typedef struct _RT_8188E_FIRMWARE_HDR
-{
-    // 8-byte alinment required
+typedef struct _RT_8188E_FIRMWARE_HDR {
+	// 8-byte alinment required
 
-    //--- LONG WORD 0 ----
-    u16		Signature;	// 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut
-    u8		Category;	// AP/NIC and USB/PCI
-    u8		Function;	// Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions
-    u16		Version;		// FW Version
-    u8		Subversion;	// FW Subversion, default 0x00
-    u16		Rsvd1;
+	//--- LONG WORD 0 ----
+	u16		Signature;	// 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut
+	u8		Category;	// AP/NIC and USB/PCI
+	u8		Function;	// Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions
+	u16		Version;		// FW Version
+	u8		Subversion;	// FW Subversion, default 0x00
+	u16		Rsvd1;
 
 
-    //--- LONG WORD 1 ----
-    u8		Month;	// Release time Month field
-    u8		Date;	// Release time Date field
-    u8		Hour;	// Release time Hour field
-    u8		Minute;	// Release time Minute field
-    u16		RamCodeSize;	// The size of RAM code
-    u8		Foundry;
-    u8		Rsvd2;
+	//--- LONG WORD 1 ----
+	u8		Month;	// Release time Month field
+	u8		Date;	// Release time Date field
+	u8		Hour;	// Release time Hour field
+	u8		Minute;	// Release time Minute field
+	u16		RamCodeSize;	// The size of RAM code
+	u8		Foundry;
+	u8		Rsvd2;
 
-    //--- LONG WORD 2 ----
-    u32		SvnIdx;	// The SVN entry index
-    u32		Rsvd3;
+	//--- LONG WORD 2 ----
+	u32		SvnIdx;	// The SVN entry index
+	u32		Rsvd3;
 
-    //--- LONG WORD 3 ----
-    u32		Rsvd4;
-    u32		Rsvd5;
+	//--- LONG WORD 3 ----
+	u32		Rsvd4;
+	u32		Rsvd5;
 } RT_8188E_FIRMWARE_HDR, *PRT_8188E_FIRMWARE_HDR;
 #endif // download firmware related data structure
 

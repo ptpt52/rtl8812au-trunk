@@ -26,13 +26,12 @@
 #define ODM_MAX_CHANNEL_2G			14
 #define ODM_MAX_CHANNEL_5G			24
 
-typedef struct _ACS_
-{
-    BOOLEAN		bForceACSResult;
-    u1Byte		CleanChannel_2G;
-    u1Byte		CleanChannel_5G;
-    u2Byte		Channel_Info_2G[2][ODM_MAX_CHANNEL_2G];		//Channel_Info[1]: Channel Score, Channel_Info[2]:Channel_Scan_Times
-    u2Byte		Channel_Info_5G[2][ODM_MAX_CHANNEL_5G];
+typedef struct _ACS_ {
+	BOOLEAN		bForceACSResult;
+	u1Byte		CleanChannel_2G;
+	u1Byte		CleanChannel_5G;
+	u2Byte		Channel_Info_2G[2][ODM_MAX_CHANNEL_2G];		//Channel_Info[1]: Channel Score, Channel_Info[2]:Channel_Scan_Times
+	u2Byte		Channel_Info_5G[2][ODM_MAX_CHANNEL_5G];
 } ACS, *PACS;
 
 

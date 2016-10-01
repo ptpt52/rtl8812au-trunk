@@ -39,13 +39,13 @@
 #define	EFUSE_BT				1
 
 enum _EFUSE_DEF_TYPE {
-    TYPE_EFUSE_MAX_SECTION				= 0,
-    TYPE_EFUSE_REAL_CONTENT_LEN			= 1,
-    TYPE_AVAILABLE_EFUSE_BYTES_BANK		= 2,
-    TYPE_AVAILABLE_EFUSE_BYTES_TOTAL	= 3,
-    TYPE_EFUSE_MAP_LEN					= 4,
-    TYPE_EFUSE_PROTECT_BYTES_BANK		= 5,
-    TYPE_EFUSE_CONTENT_LEN_BANK			= 6,
+	TYPE_EFUSE_MAX_SECTION				= 0,
+	TYPE_EFUSE_REAL_CONTENT_LEN			= 1,
+	TYPE_AVAILABLE_EFUSE_BYTES_BANK		= 2,
+	TYPE_AVAILABLE_EFUSE_BYTES_TOTAL	= 3,
+	TYPE_EFUSE_MAP_LEN					= 4,
+	TYPE_EFUSE_PROTECT_BYTES_BANK		= 5,
+	TYPE_EFUSE_CONTENT_LEN_BANK			= 6,
 };
 
 #define		EFUSE_MAX_MAP_LEN		512
@@ -71,30 +71,30 @@ enum _EFUSE_DEF_TYPE {
 
 /*------------------------------Define structure----------------------------*/
 typedef struct PG_PKT_STRUCT_A {
-    u8 offset;
-    u8 word_en;
-    u8 data[8];
-    u8 word_cnts;
+	u8 offset;
+	u8 word_en;
+	u8 data[8];
+	u8 word_cnts;
 } PGPKT_STRUCT,*PPGPKT_STRUCT;
 
 /*------------------------------Define structure----------------------------*/
 typedef struct _EFUSE_HAL {
-    u8	fakeEfuseBank;
-    u32	fakeEfuseUsedBytes;
-    u8	fakeEfuseContent[EFUSE_MAX_HW_SIZE];
-    u8	fakeEfuseInitMap[EFUSE_MAX_MAP_LEN];
-    u8	fakeEfuseModifiedMap[EFUSE_MAX_MAP_LEN];
+	u8	fakeEfuseBank;
+	u32	fakeEfuseUsedBytes;
+	u8	fakeEfuseContent[EFUSE_MAX_HW_SIZE];
+	u8	fakeEfuseInitMap[EFUSE_MAX_MAP_LEN];
+	u8	fakeEfuseModifiedMap[EFUSE_MAX_MAP_LEN];
 
-    u16	BTEfuseUsedBytes;
-    u8	BTEfuseUsedPercentage;
-    u8	BTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
-    u8	BTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN];
-    u8	BTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN];
+	u16	BTEfuseUsedBytes;
+	u8	BTEfuseUsedPercentage;
+	u8	BTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
+	u8	BTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN];
+	u8	BTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN];
 
-    u16	fakeBTEfuseUsedBytes;
-    u8	fakeBTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
-    u8	fakeBTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN];
-    u8	fakeBTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN];
+	u16	fakeBTEfuseUsedBytes;
+	u8	fakeBTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
+	u8	fakeBTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN];
+	u8	fakeBTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN];
 } EFUSE_HAL, *PEFUSE_HAL;
 
 

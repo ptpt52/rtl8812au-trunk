@@ -23,19 +23,19 @@
 //#include <drv_types.h>
 
 enum {
-    SRESET_TGP_NULL = 0,
-    SRESET_TGP_XMIT_STATUS = 1,
-    SRESET_TGP_LINK_STATUS = 2,
+	SRESET_TGP_NULL = 0,
+	SRESET_TGP_XMIT_STATUS = 1,
+	SRESET_TGP_LINK_STATUS = 2,
 };
 
 struct sreset_priv {
-    _mutex 	silentreset_mutex;
-    u8 	silent_reset_inprogress;
-    u8	Wifi_Error_Status;
-    unsigned long last_tx_time;
-    unsigned long last_tx_complete_time;
+	_mutex 	silentreset_mutex;
+	u8 	silent_reset_inprogress;
+	u8	Wifi_Error_Status;
+	unsigned long last_tx_time;
+	unsigned long last_tx_complete_time;
 
-    s32 dbg_trigger_point;
+	s32 dbg_trigger_point;
 };
 
 

@@ -95,22 +95,20 @@
 #define	PWR_CUT_ALL_MSK			0xFF
 
 
-typedef enum _PWRSEQ_CMD_DELAY_UNIT_
-{
-    PWRSEQ_DELAY_US,
-    PWRSEQ_DELAY_MS,
+typedef enum _PWRSEQ_CMD_DELAY_UNIT_ {
+	PWRSEQ_DELAY_US,
+	PWRSEQ_DELAY_MS,
 } PWRSEQ_DELAY_UNIT;
 
-typedef struct _WL_PWR_CFG_
-{
-    u16 offset;
-    u8 cut_msk;
-    u8 fab_msk:4;
-    u8 interface_msk:4;
-    u8 base:4;
-    u8 cmd:4;
-    u8 msk;
-    u8 value;
+typedef struct _WL_PWR_CFG_ {
+	u16 offset;
+	u8 cut_msk;
+	u8 fab_msk:4;
+	u8 interface_msk:4;
+	u8 base:4;
+	u8 cmd:4;
+	u8 msk;
+	u8 value;
 } WLAN_PWR_CFG, *PWLAN_PWR_CFG;
 
 

@@ -84,11 +84,11 @@ typedef	struct mtx	_lock;
 typedef struct mtx 		_mutex;
 typedef struct timer_list _timer;
 struct list_head {
-    struct list_head *next, *prev;
+	struct list_head *next, *prev;
 };
-struct	__queue	{
-    struct	list_head	queue;
-    _lock	lock;
+struct	__queue {
+	struct	list_head	queue;
+	_lock	lock;
 };
 
 //typedef	struct sk_buff	_pkt;
@@ -140,13 +140,13 @@ typedef struct work_struct _workitem;
  */
 struct timer_list {
 
-    /* FreeBSD callout related fields */
-    struct callout callout;
+	/* FreeBSD callout related fields */
+	struct callout callout;
 
-    //timeout function
-    void (*function)(void*);
-    //argument
-    void *arg;
+	//timeout function
+	void (*function)(void*);
+	//argument
+	void *arg;
 
 };
 struct workqueue_struct;
@@ -154,16 +154,16 @@ struct work_struct;
 typedef void (*work_func_t)(struct work_struct *work);
 /* Values for the state of an item of work (work_struct) */
 typedef enum work_state {
-    WORK_STATE_UNSET = 0,
-    WORK_STATE_CALLOUT_PENDING = 1,
-    WORK_STATE_TASK_PENDING = 2,
-    WORK_STATE_WORK_CANCELLED = 3
+	WORK_STATE_UNSET = 0,
+	WORK_STATE_CALLOUT_PENDING = 1,
+	WORK_STATE_TASK_PENDING = 2,
+	WORK_STATE_WORK_CANCELLED = 3
 } work_state_t;
 
 struct work_struct {
-    struct task task; /* FreeBSD task */
-    work_state_t state; /* the pending or otherwise state of work. */
-    work_func_t func;
+	struct task task; /* FreeBSD task */
+	work_state_t state; /* the pending or otherwise state of work. */
+	work_func_t func;
 };
 #define spin_unlock_irqrestore mtx_unlock_irqrestore
 #define spin_unlock_bh mtx_unlock_irqrestore
@@ -173,15 +173,15 @@ extern void	_rtw_spinlock_init(_lock *plock);
 //modify private structure to match freebsd
 #define BITS_PER_LONG 32
 union ktime {
-    s64	tv64;
+	s64	tv64;
 #if BITS_PER_LONG != 64 && !defined(CONFIG_KTIME_SCALAR)
-    struct {
+	struct {
 #ifdef __BIG_ENDIAN
-        s32	sec, nsec;
+		s32	sec, nsec;
 #else
-        s32	nsec, sec;
+		s32	nsec, sec;
 #endif
-    } tv;
+	} tv;
 #endif
 };
 #define kmemcheck_bitfield_begin(name)
@@ -251,208 +251,208 @@ void rtw_mtx_unlock(_lock *plock);
  */
 
 struct sk_buff {
-    /* These two members must be first. */
-    struct sk_buff		*next;
-    struct sk_buff		*prev;
+	/* These two members must be first. */
+	struct sk_buff		*next;
+	struct sk_buff		*prev;
 
-    ktime_t			tstamp;
+	ktime_t			tstamp;
 
-    struct sock		*sk;
-    //struct net_device	*dev;
-    struct ifnet *dev;
+	struct sock		*sk;
+	//struct net_device	*dev;
+	struct ifnet *dev;
 
-    /*
-     * This is the control buffer. It is free to use for every
-     * layer. Please put your private variables there. If you
-     * want to keep them across layers you have to do a skb_clone()
-     * first. This is owned by whoever has the skb queued ATM.
-     */
-    char			cb[48] __aligned(8);
+	/*
+	 * This is the control buffer. It is free to use for every
+	 * layer. Please put your private variables there. If you
+	 * want to keep them across layers you have to do a skb_clone()
+	 * first. This is owned by whoever has the skb queued ATM.
+	 */
+	char			cb[48] __aligned(8);
 
-    unsigned long		_skb_refdst;
+	unsigned long		_skb_refdst;
 #ifdef CONFIG_XFRM
-    struct	sec_path	*sp;
+	struct	sec_path	*sp;
 #endif
-    unsigned int		len,
-                   data_len;
-    u16			mac_len,
-                hdr_len;
-    union {
-        u32		csum;
-        struct {
-            u16	csum_start;
-            u16	csum_offset;
-        } smbol2;
-    } smbol1;
-    u32			priority;
-    kmemcheck_bitfield_begin(flags1);
-    u8			local_df:1,
-           cloned:1,
-           ip_summed:2,
-           nohdr:1,
-           nfctinfo:3;
-    u8			pkt_type:3,
-           fclone:2,
-           ipvs_property:1,
-           peeked:1,
-           nf_trace:1;
-    kmemcheck_bitfield_end(flags1);
-    u16			protocol;
+	unsigned int		len,
+	               data_len;
+	u16			mac_len,
+	            hdr_len;
+	union {
+		u32		csum;
+		struct {
+			u16	csum_start;
+			u16	csum_offset;
+		} smbol2;
+	} smbol1;
+	u32			priority;
+	kmemcheck_bitfield_begin(flags1);
+	u8			local_df:1,
+	       cloned:1,
+	       ip_summed:2,
+	       nohdr:1,
+	       nfctinfo:3;
+	u8			pkt_type:3,
+	       fclone:2,
+	       ipvs_property:1,
+	       peeked:1,
+	       nf_trace:1;
+	kmemcheck_bitfield_end(flags1);
+	u16			protocol;
 
-    void			(*destructor)(struct sk_buff *skb);
+	void			(*destructor)(struct sk_buff *skb);
 #if defined(CONFIG_NF_CONNTRACK) || defined(CONFIG_NF_CONNTRACK_MODULE)
-    struct nf_conntrack	*nfct;
-    struct sk_buff		*nfct_reasm;
+	struct nf_conntrack	*nfct;
+	struct sk_buff		*nfct_reasm;
 #endif
 #ifdef CONFIG_BRIDGE_NETFILTER
-    struct nf_bridge_info	*nf_bridge;
+	struct nf_bridge_info	*nf_bridge;
 #endif
 
-    int			skb_iif;
+	int			skb_iif;
 #ifdef CONFIG_NET_SCHED
-    u16			tc_index;	/* traffic control index */
+	u16			tc_index;	/* traffic control index */
 #ifdef CONFIG_NET_CLS_ACT
-    u16			tc_verd;	/* traffic control verdict */
+	u16			tc_verd;	/* traffic control verdict */
 #endif
 #endif
 
-    u32			rxhash;
+	u32			rxhash;
 
-    kmemcheck_bitfield_begin(flags2);
-    u16			queue_mapping:16;
+	kmemcheck_bitfield_begin(flags2);
+	u16			queue_mapping:16;
 #ifdef CONFIG_IPV6_NDISC_NODETYPE
-    u8			ndisc_nodetype:2,
-           deliver_no_wcard:1;
+	u8			ndisc_nodetype:2,
+	       deliver_no_wcard:1;
 #else
-    u8			deliver_no_wcard:1;
+	u8			deliver_no_wcard:1;
 #endif
-    kmemcheck_bitfield_end(flags2);
+	kmemcheck_bitfield_end(flags2);
 
-    /* 0/14 bit hole */
+	/* 0/14 bit hole */
 
 #ifdef CONFIG_NET_DMA
-    dma_cookie_t		dma_cookie;
+	dma_cookie_t		dma_cookie;
 #endif
 #ifdef CONFIG_NETWORK_SECMARK
-    u32			secmark;
+	u32			secmark;
 #endif
-    union {
-        u32		mark;
-        u32		dropcount;
-    } symbol3;
+	union {
+		u32		mark;
+		u32		dropcount;
+	} symbol3;
 
-    u16			vlan_tci;
+	u16			vlan_tci;
 
-    sk_buff_data_t		transport_header;
-    sk_buff_data_t		network_header;
-    sk_buff_data_t		mac_header;
-    /* These elements must be at the end, see alloc_skb() for details.  */
-    sk_buff_data_t		tail;
-    sk_buff_data_t		end;
-    unsigned char		*head,
-                  *data;
-    unsigned int		truesize;
-    atomic_t		users;
+	sk_buff_data_t		transport_header;
+	sk_buff_data_t		network_header;
+	sk_buff_data_t		mac_header;
+	/* These elements must be at the end, see alloc_skb() for details.  */
+	sk_buff_data_t		tail;
+	sk_buff_data_t		end;
+	unsigned char		*head,
+	              *data;
+	unsigned int		truesize;
+	atomic_t		users;
 };
 struct sk_buff_head {
-    /* These two members must be first. */
-    struct sk_buff	*next;
-    struct sk_buff	*prev;
+	/* These two members must be first. */
+	struct sk_buff	*next;
+	struct sk_buff	*prev;
 
-    u32		qlen;
-    _lock	lock;
+	u32		qlen;
+	_lock	lock;
 };
 #define skb_tail_pointer(skb)	skb->tail
 static inline unsigned char *skb_put(struct sk_buff *skb, unsigned int len)
 {
-    unsigned char *tmp = skb_tail_pointer(skb);
-    //SKB_LINEAR_ASSERT(skb);
-    skb->tail += len;
-    skb->len  += len;
-    return tmp;
+	unsigned char *tmp = skb_tail_pointer(skb);
+	//SKB_LINEAR_ASSERT(skb);
+	skb->tail += len;
+	skb->len  += len;
+	return tmp;
 }
 
 static inline unsigned char *__skb_pull(struct sk_buff *skb, unsigned int len)
 {
-    skb->len -= len;
-    if(skb->len < skb->data_len)
-        printf("%s(),%d,error!\n",__FUNCTION__,__LINE__);
-    return skb->data += len;
+	skb->len -= len;
+	if(skb->len < skb->data_len)
+		printf("%s(),%d,error!\n",__FUNCTION__,__LINE__);
+	return skb->data += len;
 }
 static inline unsigned char *skb_pull(struct sk_buff *skb, unsigned int len)
 {
 #ifdef PLATFORM_FREEBSD
-    return __skb_pull(skb, len);
+	return __skb_pull(skb, len);
 #else
-    return unlikely(len > skb->len) ? NULL : __skb_pull(skb, len);
+	return unlikely(len > skb->len) ? NULL : __skb_pull(skb, len);
 #endif //PLATFORM_FREEBSD
 }
 static inline u32 skb_queue_len(const struct sk_buff_head *list_)
 {
-    return list_->qlen;
+	return list_->qlen;
 }
 static inline void __skb_insert(struct sk_buff *newsk,
                                 struct sk_buff *prev, struct sk_buff *next,
                                 struct sk_buff_head *list)
 {
-    newsk->next = next;
-    newsk->prev = prev;
-    next->prev  = prev->next = newsk;
-    list->qlen++;
+	newsk->next = next;
+	newsk->prev = prev;
+	next->prev  = prev->next = newsk;
+	list->qlen++;
 }
 static inline void __skb_queue_before(struct sk_buff_head *list,
                                       struct sk_buff *next,
                                       struct sk_buff *newsk)
 {
-    __skb_insert(newsk, next->prev, next, list);
+	__skb_insert(newsk, next->prev, next, list);
 }
 static inline void skb_queue_tail(struct sk_buff_head *list,
                                   struct sk_buff *newsk)
 {
-    mtx_lock(&list->lock);
-    __skb_queue_before(list, (struct sk_buff *)list, newsk);
-    mtx_unlock(&list->lock);
+	mtx_lock(&list->lock);
+	__skb_queue_before(list, (struct sk_buff *)list, newsk);
+	mtx_unlock(&list->lock);
 }
 static inline struct sk_buff *skb_peek(struct sk_buff_head *list_)
 {
-    struct sk_buff *list = ((struct sk_buff *)list_)->next;
-    if (list == (struct sk_buff *)list_)
-        list = NULL;
-    return list;
+	struct sk_buff *list = ((struct sk_buff *)list_)->next;
+	if (list == (struct sk_buff *)list_)
+		list = NULL;
+	return list;
 }
 static inline void __skb_unlink(struct sk_buff *skb, struct sk_buff_head *list)
 {
-    struct sk_buff *next, *prev;
+	struct sk_buff *next, *prev;
 
-    list->qlen--;
-    next	   = skb->next;
-    prev	   = skb->prev;
-    skb->next  = skb->prev = NULL;
-    next->prev = prev;
-    prev->next = next;
+	list->qlen--;
+	next	   = skb->next;
+	prev	   = skb->prev;
+	skb->next  = skb->prev = NULL;
+	next->prev = prev;
+	prev->next = next;
 }
 
 static inline struct sk_buff *skb_dequeue(struct sk_buff_head *list)
 {
-    mtx_lock(&list->lock);
+	mtx_lock(&list->lock);
 
-    struct sk_buff *skb = skb_peek(list);
-    if (skb)
-        __skb_unlink(skb, list);
+	struct sk_buff *skb = skb_peek(list);
+	if (skb)
+		__skb_unlink(skb, list);
 
-    mtx_unlock(&list->lock);
+	mtx_unlock(&list->lock);
 
-    return skb;
+	return skb;
 }
 static inline void skb_reserve(struct sk_buff *skb, int len)
 {
-    skb->data += len;
-    skb->tail += len;
+	skb->data += len;
+	skb->tail += len;
 }
 static inline void __skb_queue_head_init(struct sk_buff_head *list)
 {
-    list->prev = list->next = (struct sk_buff *)list;
-    list->qlen = 0;
+	list->prev = list->next = (struct sk_buff *)list;
+	list->qlen = 0;
 }
 /*
  * This function creates a split out lock class for each invocation;
@@ -464,8 +464,8 @@ static inline void __skb_queue_head_init(struct sk_buff_head *list)
  */
 static inline void skb_queue_head_init(struct sk_buff_head *list)
 {
-    _rtw_spinlock_init(&list->lock);
-    __skb_queue_head_init(list);
+	_rtw_spinlock_init(&list->lock);
+	__skb_queue_head_init(list);
 }
 unsigned long copy_from_user(void *to, const void *from, unsigned long n);
 unsigned long copy_to_user(void *to, const void *from, unsigned long n);
@@ -524,13 +524,13 @@ int usb_deregister(struct usb_driver *driver);
 static inline struct usb_device *
 usb_get_dev(struct usb_device *dev)
 {
-    return dev;
+	return dev;
 }
 
 static inline void
 usb_put_dev(struct usb_device *dev)
 {
-    return;
+	return;
 }
 
 
@@ -601,12 +601,12 @@ typedef unsigned gfp_t;
 
 __inline static _list *get_next(_list	*list)
 {
-    return list->next;
+	return list->next;
 }
 
 __inline static _list	*get_list_head(_queue	*queue)
 {
-    return (&(queue->queue));
+	return (&(queue->queue));
 }
 
 
@@ -616,38 +616,38 @@ __inline static _list	*get_list_head(_queue	*queue)
 
 __inline static void _enter_critical(_lock *plock, _irqL *pirqL)
 {
-    spin_lock_irqsave(plock, *pirqL);
+	spin_lock_irqsave(plock, *pirqL);
 }
 
 __inline static void _exit_critical(_lock *plock, _irqL *pirqL)
 {
-    spin_unlock_irqrestore(plock, *pirqL);
+	spin_unlock_irqrestore(plock, *pirqL);
 }
 
 __inline static void _enter_critical_ex(_lock *plock, _irqL *pirqL)
 {
-    spin_lock_irqsave(plock, *pirqL);
+	spin_lock_irqsave(plock, *pirqL);
 }
 
 __inline static void _exit_critical_ex(_lock *plock, _irqL *pirqL)
 {
-    spin_unlock_irqrestore(plock, *pirqL);
+	spin_unlock_irqrestore(plock, *pirqL);
 }
 
 __inline static void _enter_critical_bh(_lock *plock, _irqL *pirqL)
 {
-    spin_lock_bh(plock, *pirqL);
+	spin_lock_bh(plock, *pirqL);
 }
 
 __inline static void _exit_critical_bh(_lock *plock, _irqL *pirqL)
 {
-    spin_unlock_bh(plock, *pirqL);
+	spin_unlock_bh(plock, *pirqL);
 }
 
 __inline static void _enter_critical_mutex(_mutex *pmutex, _irqL *pirqL)
 {
 
-    mtx_lock(pmutex);
+	mtx_lock(pmutex);
 
 }
 
@@ -655,59 +655,59 @@ __inline static void _enter_critical_mutex(_mutex *pmutex, _irqL *pirqL)
 __inline static void _exit_critical_mutex(_mutex *pmutex, _irqL *pirqL)
 {
 
-    mtx_unlock(pmutex);
+	mtx_unlock(pmutex);
 
 }
 static inline void __list_del(struct list_head * prev, struct list_head * next)
 {
-    next->prev = prev;
-    prev->next = next;
+	next->prev = prev;
+	prev->next = next;
 }
 static inline void INIT_LIST_HEAD(struct list_head *list)
 {
-    list->next = list;
-    list->prev = list;
+	list->next = list;
+	list->prev = list;
 }
 __inline static void rtw_list_delete(_list *plist)
 {
-    __list_del(plist->prev, plist->next);
-    INIT_LIST_HEAD(plist);
+	__list_del(plist->prev, plist->next);
+	INIT_LIST_HEAD(plist);
 }
 
 __inline static void _init_timer(_timer *ptimer,_nic_hdl padapter,void *pfunc,void* cntx)
 {
-    ptimer->function = pfunc;
-    ptimer->arg = cntx;
-    callout_init(&ptimer->callout, CALLOUT_MPSAFE);
+	ptimer->function = pfunc;
+	ptimer->arg = cntx;
+	callout_init(&ptimer->callout, CALLOUT_MPSAFE);
 }
 
 __inline static void _set_timer(_timer *ptimer,u32 delay_time)
 {
-    //	mod_timer(ptimer , (jiffies+(delay_time*HZ/1000)));
-    if(ptimer->function && ptimer->arg) {
-        rtw_mtx_lock(NULL);
-        callout_reset(&ptimer->callout, delay_time,ptimer->function, ptimer->arg);
-        rtw_mtx_unlock(NULL);
-    }
+	//	mod_timer(ptimer , (jiffies+(delay_time*HZ/1000)));
+	if(ptimer->function && ptimer->arg) {
+		rtw_mtx_lock(NULL);
+		callout_reset(&ptimer->callout, delay_time,ptimer->function, ptimer->arg);
+		rtw_mtx_unlock(NULL);
+	}
 }
 
 __inline static void _cancel_timer(_timer *ptimer,u8 *bcancelled)
 {
-    //	del_timer_sync(ptimer);
-    //	*bcancelled=  _TRUE;//TRUE ==1; FALSE==0
-    rtw_mtx_lock(NULL);
-    callout_drain(&ptimer->callout);
-    rtw_mtx_unlock(NULL);
+	//	del_timer_sync(ptimer);
+	//	*bcancelled=  _TRUE;//TRUE ==1; FALSE==0
+	rtw_mtx_lock(NULL);
+	callout_drain(&ptimer->callout);
+	rtw_mtx_unlock(NULL);
 }
 
 __inline static void _init_workitem(_workitem *pwork, void *pfunc, PVOID cntx)
 {
-    printf("%s Not implement yet! \n",__FUNCTION__);
+	printf("%s Not implement yet! \n",__FUNCTION__);
 }
 
 __inline static void _set_workitem(_workitem *pwork)
 {
-    printf("%s Not implement yet! \n",__FUNCTION__);
+	printf("%s Not implement yet! \n",__FUNCTION__);
 //	schedule_work(pwork);
 }
 

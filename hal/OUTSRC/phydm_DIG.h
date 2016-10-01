@@ -23,106 +23,104 @@
 
 #define DIG_VERSION	"1.0"
 
-typedef struct _Dynamic_Initial_Gain_Threshold_
-{
-    BOOLEAN		bStopDIG;		// for debug
-    BOOLEAN		bPauseDIG;
-    BOOLEAN		bIgnoreDIG;
-    BOOLEAN		bPSDInProgress;
+typedef struct _Dynamic_Initial_Gain_Threshold_ {
+	BOOLEAN		bStopDIG;		// for debug
+	BOOLEAN		bPauseDIG;
+	BOOLEAN		bIgnoreDIG;
+	BOOLEAN		bPSDInProgress;
 
-    u1Byte		Dig_Enable_Flag;
-    u1Byte		Dig_Ext_Port_Stage;
+	u1Byte		Dig_Enable_Flag;
+	u1Byte		Dig_Ext_Port_Stage;
 
-    int		   	RssiLowThresh;
-    int		    	RssiHighThresh;
+	int		   	RssiLowThresh;
+	int		    	RssiHighThresh;
 
-    u4Byte		FALowThresh;
-    u4Byte		FAHighThresh;
+	u4Byte		FALowThresh;
+	u4Byte		FAHighThresh;
 
-    u1Byte		CurSTAConnectState;
-    u1Byte		PreSTAConnectState;
-    u1Byte		CurMultiSTAConnectState;
+	u1Byte		CurSTAConnectState;
+	u1Byte		PreSTAConnectState;
+	u1Byte		CurMultiSTAConnectState;
 
-    u1Byte		PreIGValue;
-    u1Byte		CurIGValue;
-    u1Byte		BackupIGValue;		//MP DIG
-    u1Byte		BT30_CurIGI;
-    u1Byte		IGIBackup;
+	u1Byte		PreIGValue;
+	u1Byte		CurIGValue;
+	u1Byte		BackupIGValue;		//MP DIG
+	u1Byte		BT30_CurIGI;
+	u1Byte		IGIBackup;
 
-    s1Byte		BackoffVal;
-    s1Byte		BackoffVal_range_max;
-    s1Byte		BackoffVal_range_min;
-    u1Byte		rx_gain_range_max;
-    u1Byte		rx_gain_range_min;
-    u1Byte		Rssi_val_min;
+	s1Byte		BackoffVal;
+	s1Byte		BackoffVal_range_max;
+	s1Byte		BackoffVal_range_min;
+	u1Byte		rx_gain_range_max;
+	u1Byte		rx_gain_range_min;
+	u1Byte		Rssi_val_min;
 
-    u1Byte		PreCCK_CCAThres;
-    u1Byte		CurCCK_CCAThres;
-    u1Byte		PreCCKPDState;
-    u1Byte		CurCCKPDState;
-    u1Byte		CCKPDBackup;
+	u1Byte		PreCCK_CCAThres;
+	u1Byte		CurCCK_CCAThres;
+	u1Byte		PreCCKPDState;
+	u1Byte		CurCCKPDState;
+	u1Byte		CCKPDBackup;
 
-    u1Byte		LargeFAHit;
-    u1Byte		ForbiddenIGI;
-    u4Byte		Recover_cnt;
+	u1Byte		LargeFAHit;
+	u1Byte		ForbiddenIGI;
+	u4Byte		Recover_cnt;
 
-    u1Byte		DIG_Dynamic_MIN_0;
-    u1Byte		DIG_Dynamic_MIN_1;
-    BOOLEAN		bMediaConnect_0;
-    BOOLEAN		bMediaConnect_1;
+	u1Byte		DIG_Dynamic_MIN_0;
+	u1Byte		DIG_Dynamic_MIN_1;
+	BOOLEAN		bMediaConnect_0;
+	BOOLEAN		bMediaConnect_1;
 
-    u4Byte		AntDiv_RSSI_max;
-    u4Byte		RSSI_max;
+	u4Byte		AntDiv_RSSI_max;
+	u4Byte		RSSI_max;
 
-    u1Byte		*pbP2pLinkInProgress;
+	u1Byte		*pbP2pLinkInProgress;
 
 #if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
-    BOOLEAN		bTpTarget;
-    BOOLEAN		bNoiseEst;
-    u4Byte		TpTrainTH_min;
-    u1Byte		IGIOffset_A;
-    u1Byte		IGIOffset_B;
+	BOOLEAN		bTpTarget;
+	BOOLEAN		bNoiseEst;
+	u4Byte		TpTrainTH_min;
+	u1Byte		IGIOffset_A;
+	u1Byte		IGIOffset_B;
 #endif
 } DIG_T,*pDIG_T;
 
 typedef struct _FALSE_ALARM_STATISTICS {
-    u4Byte	Cnt_Parity_Fail;
-    u4Byte	Cnt_Rate_Illegal;
-    u4Byte	Cnt_Crc8_fail;
-    u4Byte	Cnt_Mcs_fail;
-    u4Byte	Cnt_Ofdm_fail;
-    u4Byte	Cnt_Ofdm_fail_pre;	//For RTL8881A
-    u4Byte	Cnt_Cck_fail;
-    u4Byte	Cnt_all;
-    u4Byte	Cnt_Fast_Fsync;
-    u4Byte	Cnt_SB_Search_fail;
-    u4Byte	Cnt_OFDM_CCA;
-    u4Byte	Cnt_CCK_CCA;
-    u4Byte	Cnt_CCA_all;
-    u4Byte	Cnt_BW_USC;	//Gary
-    u4Byte	Cnt_BW_LSC;	//Gary
+	u4Byte	Cnt_Parity_Fail;
+	u4Byte	Cnt_Rate_Illegal;
+	u4Byte	Cnt_Crc8_fail;
+	u4Byte	Cnt_Mcs_fail;
+	u4Byte	Cnt_Ofdm_fail;
+	u4Byte	Cnt_Ofdm_fail_pre;	//For RTL8881A
+	u4Byte	Cnt_Cck_fail;
+	u4Byte	Cnt_all;
+	u4Byte	Cnt_Fast_Fsync;
+	u4Byte	Cnt_SB_Search_fail;
+	u4Byte	Cnt_OFDM_CCA;
+	u4Byte	Cnt_CCK_CCA;
+	u4Byte	Cnt_CCA_all;
+	u4Byte	Cnt_BW_USC;	//Gary
+	u4Byte	Cnt_BW_LSC;	//Gary
 } FALSE_ALARM_STATISTICS, *PFALSE_ALARM_STATISTICS;
 
-typedef enum tag_Dynamic_Init_Gain_Operation_Type_Definition
-{
-    DIG_TYPE_THRESH_HIGH	= 0,
-    DIG_TYPE_THRESH_LOW	= 1,
-    DIG_TYPE_BACKOFF		= 2,
-    DIG_TYPE_RX_GAIN_MIN	= 3,
-    DIG_TYPE_RX_GAIN_MAX	= 4,
-    DIG_TYPE_ENABLE 		= 5,
-    DIG_TYPE_DISABLE 		= 6,
-    DIG_OP_TYPE_MAX
+typedef enum tag_Dynamic_Init_Gain_Operation_Type_Definition {
+	DIG_TYPE_THRESH_HIGH	= 0,
+	DIG_TYPE_THRESH_LOW	= 1,
+	DIG_TYPE_BACKOFF		= 2,
+	DIG_TYPE_RX_GAIN_MIN	= 3,
+	DIG_TYPE_RX_GAIN_MAX	= 4,
+	DIG_TYPE_ENABLE 		= 5,
+	DIG_TYPE_DISABLE 		= 6,
+	DIG_OP_TYPE_MAX
 } DM_DIG_OP_E;
 
 typedef enum tag_ODM_PauseDIG_Type {
-    ODM_PAUSE_DIG    		= 	BIT0,
-    ODM_RESUME_DIG  		= 	BIT1
+	ODM_PAUSE_DIG    		= 	BIT0,
+	ODM_RESUME_DIG  		= 	BIT1
 } ODM_Pause_DIG_TYPE;
 
 typedef enum tag_ODM_PauseCCKPD_Type {
-    ODM_PAUSE_CCKPD    	= 	BIT0,
-    ODM_RESUME_CCKPD  	= 	BIT1
+	ODM_PAUSE_CCKPD    	= 	BIT0,
+	ODM_RESUME_CCKPD  	= 	BIT1
 } ODM_Pause_CCKPD_TYPE;
 
 /*

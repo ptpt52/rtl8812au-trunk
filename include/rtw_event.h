@@ -28,8 +28,8 @@
 Used to report a bss has been scanned
 
 */
-struct survey_event	{
-    WLAN_BSSID_EX bss;
+struct survey_event {
+	WLAN_BSSID_EX bss;
 };
 
 /*
@@ -40,7 +40,7 @@ bss_cnt indicates the number of bss that has been reported.
 
 */
 struct surveydone_event {
-    unsigned int	bss_cnt;
+	unsigned int	bss_cnt;
 
 };
 
@@ -55,7 +55,7 @@ join_res:
 
 */
 struct joinbss_event {
-    struct	wlan_network	network;
+	struct	wlan_network	network;
 };
 
 /*
@@ -65,38 +65,36 @@ It is used in AP/Ad-HoC(M) mode.
 
 */
 struct stassoc_event {
-    unsigned char macaddr[6];
-    unsigned char rsvd[2];
-    int    cam_id;
+	unsigned char macaddr[6];
+	unsigned char rsvd[2];
+	int    cam_id;
 
 };
 
 struct stadel_event {
-    unsigned char macaddr[6];
-    unsigned char rsvd[2]; //for reason
-    int mac_id;
+	unsigned char macaddr[6];
+	unsigned char rsvd[2]; //for reason
+	int mac_id;
 };
 
-struct addba_event
-{
-    unsigned int tid;
+struct addba_event {
+	unsigned int tid;
 };
 
-struct wmm_event
-{
-    unsigned char wmm;
+struct wmm_event {
+	unsigned char wmm;
 };
 
 #ifdef CONFIG_H2CLBK
 struct c2hlbk_event {
-    unsigned char mac[6];
-    unsigned short	s0;
-    unsigned short	s1;
-    unsigned int	w0;
-    unsigned char	b0;
-    unsigned short  s2;
-    unsigned char	b1;
-    unsigned int	w1;
+	unsigned char mac[6];
+	unsigned short	s0;
+	unsigned short	s1;
+	unsigned int	w0;
+	unsigned char	b0;
+	unsigned short  s2;
+	unsigned char	b1;
+	unsigned int	w1;
 };
 #endif//CONFIG_H2CLBK
 
@@ -105,34 +103,34 @@ struct c2hlbk_event {
 
 
 struct fwevent {
-    u32	parmsize;
-    void (*event_callback)(_adapter *dev, u8 *pbuf);
+	u32	parmsize;
+	void (*event_callback)(_adapter *dev, u8 *pbuf);
 };
 
 
 #define C2HEVENT_SZ			32
 
 struct event_node {
-    unsigned char *node;
-    unsigned char evt_code;
-    unsigned short evt_sz;
-    volatile int	*caller_ff_tail;
-    int	caller_ff_sz;
+	unsigned char *node;
+	unsigned char evt_code;
+	unsigned short evt_sz;
+	volatile int	*caller_ff_tail;
+	int	caller_ff_sz;
 };
 
 struct c2hevent_queue {
-    volatile int	head;
-    volatile int	tail;
-    struct	event_node	nodes[C2HEVENT_SZ];
-    unsigned char	seq;
+	volatile int	head;
+	volatile int	tail;
+	struct	event_node	nodes[C2HEVENT_SZ];
+	unsigned char	seq;
 };
 
 #define NETWORK_QUEUE_SZ	4
 
 struct network_queue {
-    volatile int	head;
-    volatile int	tail;
-    WLAN_BSSID_EX networks[NETWORK_QUEUE_SZ];
+	volatile int	head;
+	volatile int	tail;
+	WLAN_BSSID_EX networks[NETWORK_QUEUE_SZ];
 };
 
 

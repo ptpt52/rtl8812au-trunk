@@ -35,23 +35,23 @@ int rtw_IOL_append_END_cmd(struct xmit_frame *xmit_frame);
 #define IOREG_CMD_END_LEN	4
 
 struct ioreg_cfg {
-    u8 	length;
-    u8 	cmd_id;
-    u16 	address;
-    u32	data;
-    u32  mask;
+	u8 	length;
+	u8 	cmd_id;
+	u16 	address;
+	u32	data;
+	u32  mask;
 };
 enum ioreg_cmd {
-    IOREG_CMD_LLT 			= 0x01,
-    IOREG_CMD_REFUSE 		= 0x02,
-    IOREG_CMD_EFUSE_PATH = 0x03,
-    IOREG_CMD_WB_REG		= 0x04,
-    IOREG_CMD_WW_REG	= 0x05,
-    IOREG_CMD_WD_REG 	= 0x06,
-    IOREG_CMD_W_RF 		= 0x07,
-    IOREG_CMD_DELAY_US 	= 0x10,
-    IOREG_CMD_DELAY_MS	= 0x11,
-    IOREG_CMD_END 		= 0xFF,
+	IOREG_CMD_LLT 			= 0x01,
+	IOREG_CMD_REFUSE 		= 0x02,
+	IOREG_CMD_EFUSE_PATH = 0x03,
+	IOREG_CMD_WB_REG		= 0x04,
+	IOREG_CMD_WW_REG	= 0x05,
+	IOREG_CMD_WD_REG 	= 0x06,
+	IOREG_CMD_W_RF 		= 0x07,
+	IOREG_CMD_DELAY_US 	= 0x10,
+	IOREG_CMD_DELAY_MS	= 0x11,
+	IOREG_CMD_END 		= 0xFF,
 };
 void read_efuse_from_txpktbuf(ADAPTER *adapter, int bcnhead, u8 *content, u16 *size);
 
@@ -69,18 +69,18 @@ void  rtw_IOL_cmd_buf_dump(ADAPTER *Adapter,int buf_len,u8 *pbuf);
 
 #ifdef CONFIG_IOL_IOREG_CFG_DBG
 struct cmd_cmp {
-    u16 addr;
-    u32 value;
+	u16 addr;
+	u32 value;
 };
 #endif
 
 #else //CONFIG_IOL_NEW_GENERATION
 
 typedef struct _io_offload_cmd {
-    u8 rsvd0;
-    u8 cmd;
-    u16 address;
-    u32 value;
+	u8 rsvd0;
+	u8 cmd;
+	u16 address;
+	u32 value;
 } IO_OFFLOAD_CMD, IOL_CMD;
 
 #define IOL_CMD_LLT			0x00

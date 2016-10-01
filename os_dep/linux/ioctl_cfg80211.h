@@ -26,14 +26,14 @@
 #endif
 
 struct rtw_wdev_invit_info {
-    u8 state; /* 0: req, 1:rep */
-    u8 peer_mac[ETH_ALEN];
-    u8 active;
-    u8 token;
-    u8 flags;
-    u8 status;
-    u8 req_op_ch;
-    u8 rsp_op_ch;
+	u8 state; /* 0: req, 1:rep */
+	u8 peer_mac[ETH_ALEN];
+	u8 active;
+	u8 token;
+	u8 flags;
+	u8 status;
+	u8 req_op_ch;
+	u8 rsp_op_ch;
 };
 
 #define rtw_wdev_invit_info_init(invit_info) \
@@ -49,17 +49,17 @@ struct rtw_wdev_invit_info {
 	} while (0)
 
 struct rtw_wdev_nego_info {
-    u8 state; /* 0: req, 1:rep, 2:conf */
-    u8 peer_mac[ETH_ALEN];
-    u8 active;
-    u8 token;
-    u8 status;
-    u8 req_intent;
-    u8 req_op_ch;
-    u8 req_listen_ch;
-    u8 rsp_intent;
-    u8 rsp_op_ch;
-    u8 conf_op_ch;
+	u8 state; /* 0: req, 1:rep, 2:conf */
+	u8 peer_mac[ETH_ALEN];
+	u8 active;
+	u8 token;
+	u8 status;
+	u8 req_intent;
+	u8 req_op_ch;
+	u8 req_listen_ch;
+	u8 rsp_intent;
+	u8 rsp_op_ch;
+	u8 conf_op_ch;
 };
 
 #define rtw_wdev_nego_info_init(nego_info) \
@@ -77,32 +77,31 @@ struct rtw_wdev_nego_info {
 		(nego_info)->conf_op_ch = 0; \
 	} while (0)
 
-struct rtw_wdev_priv
-{
-    struct wireless_dev *rtw_wdev;
+struct rtw_wdev_priv {
+	struct wireless_dev *rtw_wdev;
 
-    _adapter *padapter;
+	_adapter *padapter;
 
-    struct cfg80211_scan_request *scan_request;
-    _lock scan_req_lock;
+	struct cfg80211_scan_request *scan_request;
+	_lock scan_req_lock;
 
-    struct net_device *pmon_ndev;//for monitor interface
-    char ifname_mon[IFNAMSIZ + 1]; //interface name for monitor interface
+	struct net_device *pmon_ndev;//for monitor interface
+	char ifname_mon[IFNAMSIZ + 1]; //interface name for monitor interface
 
-    u8 p2p_enabled;
+	u8 p2p_enabled;
 
-    u8 provdisc_req_issued;
+	u8 provdisc_req_issued;
 
-    struct rtw_wdev_invit_info invit_info;
-    struct rtw_wdev_nego_info nego_info;
+	struct rtw_wdev_invit_info invit_info;
+	struct rtw_wdev_nego_info nego_info;
 
-    u8 bandroid_scan;
-    bool block;
-    bool power_mgmt;
+	u8 bandroid_scan;
+	bool block;
+	bool power_mgmt;
 
 #ifdef CONFIG_CONCURRENT_MODE
-    ATOMIC_T ro_ch_to;
-    ATOMIC_T switch_ch_to;
+	ATOMIC_T ro_ch_to;
+	ATOMIC_T switch_ch_to;
 #endif
 
 };

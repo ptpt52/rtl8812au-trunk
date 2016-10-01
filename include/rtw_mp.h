@@ -57,83 +57,79 @@
 #define MAX_MP_XMITBUF_SZ 	2048
 #define NR_MP_XMITFRAME		8
 
-struct mp_xmit_frame
-{
-    _list	list;
+struct mp_xmit_frame {
+	_list	list;
 
-    struct pkt_attrib attrib;
+	struct pkt_attrib attrib;
 
-    _pkt *pkt;
+	_pkt *pkt;
 
-    int frame_tag;
+	int frame_tag;
 
-    _adapter *padapter;
+	_adapter *padapter;
 
 #ifdef CONFIG_USB_HCI
 
-    //insert urb, irp, and irpcnt info below...
-    //max frag_cnt = 8
+	//insert urb, irp, and irpcnt info below...
+	//max frag_cnt = 8
 
-    u8 *mem_addr;
-    u32 sz[8];
+	u8 *mem_addr;
+	u32 sz[8];
 
 #if defined(PLATFORM_OS_XP) || defined(PLATFORM_LINUX)
-    PURB pxmit_urb[8];
+	PURB pxmit_urb[8];
 #endif
 
 #ifdef PLATFORM_OS_XP
-    PIRP pxmit_irp[8];
+	PIRP pxmit_irp[8];
 #endif
 
-    u8 bpending[8];
-    sint ac_tag[8];
-    sint last[8];
-    uint irpcnt;
-    uint fragcnt;
+	u8 bpending[8];
+	sint ac_tag[8];
+	sint last[8];
+	uint irpcnt;
+	uint fragcnt;
 #endif /* CONFIG_USB_HCI */
 
-    uint mem[(MAX_MP_XMITBUF_SZ >> 2)];
+	uint mem[(MAX_MP_XMITBUF_SZ >> 2)];
 };
 
-struct mp_wiparam
-{
-    u32 bcompleted;
-    u32 act_type;
-    u32 io_offset;
-    u32 io_value;
+struct mp_wiparam {
+	u32 bcompleted;
+	u32 act_type;
+	u32 io_offset;
+	u32 io_value;
 };
 
 typedef void(*wi_act_func)(void* padapter);
 
 #ifdef PLATFORM_WINDOWS
-struct mp_wi_cntx
-{
-    u8 bmpdrv_unload;
+struct mp_wi_cntx {
+	u8 bmpdrv_unload;
 
-    // Work Item
-    NDIS_WORK_ITEM mp_wi;
-    NDIS_EVENT mp_wi_evt;
-    _lock mp_wi_lock;
-    u8 bmp_wi_progress;
-    wi_act_func curractfunc;
-    // Variable needed in each implementation of CurrActFunc.
-    struct mp_wiparam param;
+	// Work Item
+	NDIS_WORK_ITEM mp_wi;
+	NDIS_EVENT mp_wi_evt;
+	_lock mp_wi_lock;
+	u8 bmp_wi_progress;
+	wi_act_func curractfunc;
+	// Variable needed in each implementation of CurrActFunc.
+	struct mp_wiparam param;
 };
 #endif
 
-struct mp_tx
-{
-    u8 stop;
-    u32 count, sended;
-    u8 payload;
-    struct pkt_attrib attrib;
-    //struct tx_desc desc;
-    //u8 resvdtx[7];
-    u8 desc[TXDESC_SIZE];
-    u8 *pallocated_buf;
-    u8 *buf;
-    u32 buf_size, write_size;
-    _thread_hdl_ PktTxThread;
+struct mp_tx {
+	u8 stop;
+	u32 count, sended;
+	u8 payload;
+	struct pkt_attrib attrib;
+	//struct tx_desc desc;
+	//u8 resvdtx[7];
+	u8 desc[TXDESC_SIZE];
+	u8 *pallocated_buf;
+	u8 *buf;
+	u32 buf_size, write_size;
+	_thread_hdl_ PktTxThread;
 };
 
 #if defined(CONFIG_RTL8192C) || defined(CONFIG_RTL8192D) || defined(CONFIG_RTL8723A) || defined(CONFIG_RTL8188E) || defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8821A) ||defined(CONFIG_RTL8192E) || defined(CONFIG_RTL8723B)
@@ -177,107 +173,106 @@ struct mp_tx
 
 
 typedef VOID (*MPT_WORK_ITEM_HANDLER)(IN PVOID Adapter);
-typedef struct _MPT_CONTEXT
-{
-    // Indicate if we have started Mass Production Test.
-    BOOLEAN			bMassProdTest;
+typedef struct _MPT_CONTEXT {
+	// Indicate if we have started Mass Production Test.
+	BOOLEAN			bMassProdTest;
 
-    // Indicate if the driver is unloading or unloaded.
-    BOOLEAN			bMptDrvUnload;
+	// Indicate if the driver is unloading or unloaded.
+	BOOLEAN			bMptDrvUnload;
 
-    _sema			MPh2c_Sema;
-    _timer			MPh2c_timeout_timer;
+	_sema			MPh2c_Sema;
+	_timer			MPh2c_timeout_timer;
 // Event used to sync H2c for BT control
 
-    BOOLEAN		MptH2cRspEvent;
-    BOOLEAN		MptBtC2hEvent;
-    BOOLEAN		bMPh2c_timeout;
+	BOOLEAN		MptH2cRspEvent;
+	BOOLEAN		MptBtC2hEvent;
+	BOOLEAN		bMPh2c_timeout;
 
-    /* 8190 PCI does not support NDIS_WORK_ITEM. */
-    // Work Item for Mass Production Test.
-    //NDIS_WORK_ITEM	MptWorkItem;
+	/* 8190 PCI does not support NDIS_WORK_ITEM. */
+	// Work Item for Mass Production Test.
+	//NDIS_WORK_ITEM	MptWorkItem;
 //	RT_WORK_ITEM		MptWorkItem;
-    // Event used to sync the case unloading driver and MptWorkItem is still in progress.
+	// Event used to sync the case unloading driver and MptWorkItem is still in progress.
 //	NDIS_EVENT		MptWorkItemEvent;
-    // To protect the following variables.
+	// To protect the following variables.
 //	NDIS_SPIN_LOCK		MptWorkItemSpinLock;
-    // Indicate a MptWorkItem is scheduled and not yet finished.
-    BOOLEAN			bMptWorkItemInProgress;
-    // An instance which implements function and context of MptWorkItem.
-    MPT_WORK_ITEM_HANDLER	CurrMptAct;
+	// Indicate a MptWorkItem is scheduled and not yet finished.
+	BOOLEAN			bMptWorkItemInProgress;
+	// An instance which implements function and context of MptWorkItem.
+	MPT_WORK_ITEM_HANDLER	CurrMptAct;
 
-    // 1=Start, 0=Stop from UI.
-    ULONG			MptTestStart;
-    // _TEST_MODE, defined in MPT_Req2.h
-    ULONG			MptTestItem;
-    // Variable needed in each implementation of CurrMptAct.
-    ULONG			MptActType; 	// Type of action performed in CurrMptAct.
-    // The Offset of IO operation is depend of MptActType.
-    ULONG			MptIoOffset;
-    // The Value of IO operation is depend of MptActType.
-    ULONG			MptIoValue;
-    // The RfPath of IO operation is depend of MptActType.
-    ULONG			MptRfPath;
+	// 1=Start, 0=Stop from UI.
+	ULONG			MptTestStart;
+	// _TEST_MODE, defined in MPT_Req2.h
+	ULONG			MptTestItem;
+	// Variable needed in each implementation of CurrMptAct.
+	ULONG			MptActType; 	// Type of action performed in CurrMptAct.
+	// The Offset of IO operation is depend of MptActType.
+	ULONG			MptIoOffset;
+	// The Value of IO operation is depend of MptActType.
+	ULONG			MptIoValue;
+	// The RfPath of IO operation is depend of MptActType.
+	ULONG			MptRfPath;
 
-    WIRELESS_MODE		MptWirelessModeToSw;	// Wireless mode to switch.
-    u8			MptChannelToSw; 	// Channel to switch.
-    u8			MptInitGainToSet; 	// Initial gain to set.
-    //ULONG			bMptAntennaA; 		// TRUE if we want to use antenna A.
-    ULONG			MptBandWidth;		// bandwidth to switch.
-    ULONG			MptRateIndex;		// rate index.
-    // Register value kept for Single Carrier Tx test.
-    u8			btMpCckTxPower;
-    // Register value kept for Single Carrier Tx test.
-    u8			btMpOfdmTxPower;
-    // For MP Tx Power index
-    u8			TxPwrLevel[2];	// rf-A, rf-B
-    u32			RegTxPwrLimit;
-    // Content of RCR Regsiter for Mass Production Test.
-    ULONG			MptRCR;
-    // TRUE if we only receive packets with specific pattern.
-    BOOLEAN			bMptFilterPattern;
-    // Rx OK count, statistics used in Mass Production Test.
-    ULONG			MptRxOkCnt;
-    // Rx CRC32 error count, statistics used in Mass Production Test.
-    ULONG			MptRxCrcErrCnt;
+	WIRELESS_MODE		MptWirelessModeToSw;	// Wireless mode to switch.
+	u8			MptChannelToSw; 	// Channel to switch.
+	u8			MptInitGainToSet; 	// Initial gain to set.
+	//ULONG			bMptAntennaA; 		// TRUE if we want to use antenna A.
+	ULONG			MptBandWidth;		// bandwidth to switch.
+	ULONG			MptRateIndex;		// rate index.
+	// Register value kept for Single Carrier Tx test.
+	u8			btMpCckTxPower;
+	// Register value kept for Single Carrier Tx test.
+	u8			btMpOfdmTxPower;
+	// For MP Tx Power index
+	u8			TxPwrLevel[2];	// rf-A, rf-B
+	u32			RegTxPwrLimit;
+	// Content of RCR Regsiter for Mass Production Test.
+	ULONG			MptRCR;
+	// TRUE if we only receive packets with specific pattern.
+	BOOLEAN			bMptFilterPattern;
+	// Rx OK count, statistics used in Mass Production Test.
+	ULONG			MptRxOkCnt;
+	// Rx CRC32 error count, statistics used in Mass Production Test.
+	ULONG			MptRxCrcErrCnt;
 
-    BOOLEAN			bCckContTx;	// TRUE if we are in CCK Continuous Tx test.
-    BOOLEAN			bOfdmContTx;	// TRUE if we are in OFDM Continuous Tx test.
-    BOOLEAN			bStartContTx; 	// TRUE if we have start Continuous Tx test.
-    // TRUE if we are in Single Carrier Tx test.
-    BOOLEAN			bSingleCarrier;
-    // TRUE if we are in Carrier Suppression Tx Test.
-    BOOLEAN			bCarrierSuppression;
-    //TRUE if we are in Single Tone Tx test.
-    BOOLEAN			bSingleTone;
+	BOOLEAN			bCckContTx;	// TRUE if we are in CCK Continuous Tx test.
+	BOOLEAN			bOfdmContTx;	// TRUE if we are in OFDM Continuous Tx test.
+	BOOLEAN			bStartContTx; 	// TRUE if we have start Continuous Tx test.
+	// TRUE if we are in Single Carrier Tx test.
+	BOOLEAN			bSingleCarrier;
+	// TRUE if we are in Carrier Suppression Tx Test.
+	BOOLEAN			bCarrierSuppression;
+	//TRUE if we are in Single Tone Tx test.
+	BOOLEAN			bSingleTone;
 
-    // ACK counter asked by K.Y..
-    BOOLEAN			bMptEnableAckCounter;
-    ULONG			MptAckCounter;
+	// ACK counter asked by K.Y..
+	BOOLEAN			bMptEnableAckCounter;
+	ULONG			MptAckCounter;
 
-    // SD3 Willis For 8192S to save 1T/2T RF table for ACUT	Only fro ACUT delete later ~~~!
-    //s1Byte		BufOfLines[2][MAX_LINES_HWCONFIG_TXT][MAX_BYTES_LINE_HWCONFIG_TXT];
-    //s1Byte			BufOfLines[2][MP_MAX_LINES][MP_MAX_LINES_BYTES];
-    //s4Byte			RfReadLine[2];
+	// SD3 Willis For 8192S to save 1T/2T RF table for ACUT	Only fro ACUT delete later ~~~!
+	//s1Byte		BufOfLines[2][MAX_LINES_HWCONFIG_TXT][MAX_BYTES_LINE_HWCONFIG_TXT];
+	//s1Byte			BufOfLines[2][MP_MAX_LINES][MP_MAX_LINES_BYTES];
+	//s4Byte			RfReadLine[2];
 
-    u8		APK_bound[2];	//for APK	path A/path B
-    BOOLEAN		bMptIndexEven;
+	u8		APK_bound[2];	//for APK	path A/path B
+	BOOLEAN		bMptIndexEven;
 
-    u8		backup0xc50;
-    u8		backup0xc58;
-    u8		backup0xc30;
-    u8 		backup0x52_RF_A;
-    u8 		backup0x52_RF_B;
+	u8		backup0xc50;
+	u8		backup0xc58;
+	u8		backup0xc30;
+	u8 		backup0x52_RF_A;
+	u8 		backup0x52_RF_B;
 
-    u4Byte			backup0x58_RF_A;
-    u4Byte			backup0x58_RF_B;
+	u4Byte			backup0x58_RF_A;
+	u4Byte			backup0x58_RF_B;
 
-    u1Byte			h2cReqNum;
-    u1Byte			c2hBuf[32];
+	u1Byte			h2cReqNum;
+	u1Byte			c2hBuf[32];
 
-    u1Byte          btInBuf[100];
-    ULONG			mptOutLen;
-    u1Byte          mptOutBuf[100];
+	u1Byte          btInBuf[100];
+	ULONG			mptOutLen;
+	u1Byte          mptOutBuf[100];
 
 } MPT_CONTEXT, *PMPT_CONTEXT;
 #endif
@@ -317,163 +312,162 @@ typedef struct _MPT_CONTEXT
 
 //#define RTPRIV_IOCTL_MP 					( SIOCIWFIRSTPRIV + 0x17)
 enum {
-    WRITE_REG = 1,
-    READ_REG,
-    WRITE_RF,
-    READ_RF,
-    MP_START,
-    MP_STOP,
-    MP_RATE,
-    MP_CHANNEL,
-    MP_BANDWIDTH,
-    MP_TXPOWER,
-    MP_ANT_TX,
-    MP_ANT_RX,
-    MP_CTX,
-    MP_QUERY,
-    MP_ARX,
-    MP_PSD,
-    MP_PWRTRK,
-    MP_THER,
-    MP_IOCTL,
-    EFUSE_GET,
-    EFUSE_SET,
-    MP_RESET_STATS,
-    MP_DUMP,
-    MP_PHYPARA,
-    MP_SetRFPathSwh,
-    MP_QueryDrvStats,
-    MP_SetBT,
-    CTA_TEST,
-    MP_DISABLE_BT_COEXIST,
-    MP_PwrCtlDM,
+	WRITE_REG = 1,
+	READ_REG,
+	WRITE_RF,
+	READ_RF,
+	MP_START,
+	MP_STOP,
+	MP_RATE,
+	MP_CHANNEL,
+	MP_BANDWIDTH,
+	MP_TXPOWER,
+	MP_ANT_TX,
+	MP_ANT_RX,
+	MP_CTX,
+	MP_QUERY,
+	MP_ARX,
+	MP_PSD,
+	MP_PWRTRK,
+	MP_THER,
+	MP_IOCTL,
+	EFUSE_GET,
+	EFUSE_SET,
+	MP_RESET_STATS,
+	MP_DUMP,
+	MP_PHYPARA,
+	MP_SetRFPathSwh,
+	MP_QueryDrvStats,
+	MP_SetBT,
+	CTA_TEST,
+	MP_DISABLE_BT_COEXIST,
+	MP_PwrCtlDM,
 #ifdef CONFIG_WOWLAN
-    MP_WOW_ENABLE,
+	MP_WOW_ENABLE,
 #endif
 #ifdef CONFIG_AP_WOWLAN
-    MP_AP_WOW_ENABLE,
+	MP_AP_WOW_ENABLE,
 #endif
-    MP_NULL,
-    MP_GET_TXPOWER_INX,
+	MP_NULL,
+	MP_GET_TXPOWER_INX,
 };
 
-struct mp_priv
-{
-    _adapter *papdater;
+struct mp_priv {
+	_adapter *papdater;
 
-    //Testing Flag
-    u32 mode;//0 for normal type packet, 1 for loopback packet (16bytes TXCMD)
+	//Testing Flag
+	u32 mode;//0 for normal type packet, 1 for loopback packet (16bytes TXCMD)
 
-    u32 prev_fw_state;
+	u32 prev_fw_state;
 
-    //OID cmd handler
-    struct mp_wiparam workparam;
+	//OID cmd handler
+	struct mp_wiparam workparam;
 //	u8 act_in_progress;
 
-    //Tx Section
-    u8 TID;
-    u32 tx_pktcount;
-    u32 pktInterval;
-    struct mp_tx tx;
+	//Tx Section
+	u8 TID;
+	u32 tx_pktcount;
+	u32 pktInterval;
+	struct mp_tx tx;
 
-    //Rx Section
-    u32 rx_bssidpktcount;
-    u32 rx_pktcount;
-    u32 rx_pktcount_filter_out;
-    u32 rx_crcerrpktcount;
-    u32 rx_pktloss;
-    BOOLEAN  rx_bindicatePkt;
-    struct recv_stat rxstat;
+	//Rx Section
+	u32 rx_bssidpktcount;
+	u32 rx_pktcount;
+	u32 rx_pktcount_filter_out;
+	u32 rx_crcerrpktcount;
+	u32 rx_pktloss;
+	BOOLEAN  rx_bindicatePkt;
+	struct recv_stat rxstat;
 
-    //RF/BB relative
-    u8 channel;
-    u8 bandwidth;
-    u8 prime_channel_offset;
-    u8 txpoweridx;
-    u8 txpoweridx_b;
-    u8 rateidx;
-    u32 preamble;
+	//RF/BB relative
+	u8 channel;
+	u8 bandwidth;
+	u8 prime_channel_offset;
+	u8 txpoweridx;
+	u8 txpoweridx_b;
+	u8 rateidx;
+	u32 preamble;
 //	u8 modem;
-    u32 CrystalCap;
+	u32 CrystalCap;
 //	u32 curr_crystalcap;
 
-    u16 antenna_tx;
-    u16 antenna_rx;
+	u16 antenna_tx;
+	u16 antenna_rx;
 //	u8 curr_rfpath;
 
-    u8 check_mp_pkt;
+	u8 check_mp_pkt;
 
-    u8 bSetTxPower;
+	u8 bSetTxPower;
 //	uint ForcedDataRate;
-    u8 mp_dm;
-    u8 mac_filter[ETH_ALEN];
-    u8 bmac_filter;
+	u8 mp_dm;
+	u8 mac_filter[ETH_ALEN];
+	u8 bmac_filter;
 
-    struct wlan_network mp_network;
-    NDIS_802_11_MAC_ADDRESS network_macaddr;
+	struct wlan_network mp_network;
+	NDIS_802_11_MAC_ADDRESS network_macaddr;
 
 #ifdef PLATFORM_WINDOWS
-    u32 rx_testcnt;
-    u32 rx_testcnt1;
-    u32 rx_testcnt2;
-    u32 tx_testcnt;
-    u32 tx_testcnt1;
+	u32 rx_testcnt;
+	u32 rx_testcnt1;
+	u32 rx_testcnt2;
+	u32 tx_testcnt;
+	u32 tx_testcnt1;
 
-    struct mp_wi_cntx wi_cntx;
+	struct mp_wi_cntx wi_cntx;
 
-    u8 h2c_result;
-    u8 h2c_seqnum;
-    u16 h2c_cmdcode;
-    u8 h2c_resp_parambuf[512];
-    _lock h2c_lock;
-    _lock wkitm_lock;
-    u32 h2c_cmdcnt;
-    NDIS_EVENT h2c_cmd_evt;
-    NDIS_EVENT c2h_set;
-    NDIS_EVENT h2c_clr;
-    NDIS_EVENT cpwm_int;
+	u8 h2c_result;
+	u8 h2c_seqnum;
+	u16 h2c_cmdcode;
+	u8 h2c_resp_parambuf[512];
+	_lock h2c_lock;
+	_lock wkitm_lock;
+	u32 h2c_cmdcnt;
+	NDIS_EVENT h2c_cmd_evt;
+	NDIS_EVENT c2h_set;
+	NDIS_EVENT h2c_clr;
+	NDIS_EVENT cpwm_int;
 
-    NDIS_EVENT scsir_full_evt;
-    NDIS_EVENT scsiw_empty_evt;
+	NDIS_EVENT scsir_full_evt;
+	NDIS_EVENT scsiw_empty_evt;
 #endif
 
-    u8 *pallocated_mp_xmitframe_buf;
-    u8 *pmp_xmtframe_buf;
-    _queue free_mp_xmitqueue;
-    u32 free_mp_xmitframe_cnt;
-    BOOLEAN bSetRxBssid;
-    BOOLEAN bTxBufCkFail;
+	u8 *pallocated_mp_xmitframe_buf;
+	u8 *pmp_xmtframe_buf;
+	_queue free_mp_xmitqueue;
+	u32 free_mp_xmitframe_cnt;
+	BOOLEAN bSetRxBssid;
+	BOOLEAN bTxBufCkFail;
 
-    MPT_CONTEXT MptCtx;
+	MPT_CONTEXT MptCtx;
 
-    u8		*TXradomBuffer;
+	u8		*TXradomBuffer;
 };
 
 typedef struct _IOCMD_STRUCT_ {
-    u8	cmdclass;
-    u16	value;
-    u8	index;
+	u8	cmdclass;
+	u16	value;
+	u8	index;
 } IOCMD_STRUCT;
 
 struct rf_reg_param {
-    u32 path;
-    u32 offset;
-    u32 value;
+	u32 path;
+	u32 offset;
+	u32 value;
 };
 
 struct bb_reg_param {
-    u32 offset;
-    u32 value;
+	u32 offset;
+	u32 value;
 };
 
 typedef struct _MP_FIRMWARE {
-    FIRMWARE_SOURCE eFWSource;
+	FIRMWARE_SOURCE eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8* 		szFwBuffer;
+	u8* 		szFwBuffer;
 #else
-    u8			szFwBuffer[0x8000];
+	u8			szFwBuffer[0x8000];
 #endif
-    u32 		ulFwLength;
+	u32 		ulFwLength;
 } RT_MP_FIRMWARE, *PRT_MP_FIRMWARE;
 
 
@@ -510,15 +504,15 @@ typedef struct _MP_FIRMWARE {
 #define _LOOPBOOK_MODE_	1
 #endif
 typedef enum _MP_MODE_ {
-    MP_OFF,
-    MP_ON,
-    MP_ERR,
-    MP_CONTINUOUS_TX,
-    MP_SINGLE_CARRIER_TX,
-    MP_CARRIER_SUPPRISSION_TX,
-    MP_SINGLE_TONE_TX,
-    MP_PACKET_TX,
-    MP_PACKET_RX
+	MP_OFF,
+	MP_ON,
+	MP_ERR,
+	MP_CONTINUOUS_TX,
+	MP_SINGLE_CARRIER_TX,
+	MP_CARRIER_SUPPRISSION_TX,
+	MP_SINGLE_TONE_TX,
+	MP_PACKET_TX,
+	MP_PACKET_RX
 } MP_MODE;
 
 
@@ -528,114 +522,113 @@ typedef enum _MP_MODE_ {
 extern u8 mpdatarate[NumRates];
 
 /* MP set force data rate base on the definition. */
-typedef enum _MPT_RATE_INDEX
-{
-    /* CCK rate. */
-    MPT_RATE_1M =0 ,	/* 0 */
-    MPT_RATE_2M,
-    MPT_RATE_55M,
-    MPT_RATE_11M,	/* 3 */
+typedef enum _MPT_RATE_INDEX {
+	/* CCK rate. */
+	MPT_RATE_1M =0 ,	/* 0 */
+	MPT_RATE_2M,
+	MPT_RATE_55M,
+	MPT_RATE_11M,	/* 3 */
 
-    /* OFDM rate. */
-    MPT_RATE_6M,	/* 4 */
-    MPT_RATE_9M,
-    MPT_RATE_12M,
-    MPT_RATE_18M,
-    MPT_RATE_24M,
-    MPT_RATE_36M,
-    MPT_RATE_48M,
-    MPT_RATE_54M,	/* 11 */
+	/* OFDM rate. */
+	MPT_RATE_6M,	/* 4 */
+	MPT_RATE_9M,
+	MPT_RATE_12M,
+	MPT_RATE_18M,
+	MPT_RATE_24M,
+	MPT_RATE_36M,
+	MPT_RATE_48M,
+	MPT_RATE_54M,	/* 11 */
 
-    /* HT rate. */
-    MPT_RATE_MCS0,	/* 12 */
-    MPT_RATE_MCS1,
-    MPT_RATE_MCS2,
-    MPT_RATE_MCS3,
-    MPT_RATE_MCS4,
-    MPT_RATE_MCS5,
-    MPT_RATE_MCS6,
-    MPT_RATE_MCS7,	/* 19 */
-    MPT_RATE_MCS8,
-    MPT_RATE_MCS9,
-    MPT_RATE_MCS10,
-    MPT_RATE_MCS11,
-    MPT_RATE_MCS12,
-    MPT_RATE_MCS13,
-    MPT_RATE_MCS14,
-    MPT_RATE_MCS15,	/* 27 */
-    MPT_RATE_MCS16,
-    MPT_RATE_MCS17, // #29
-    MPT_RATE_MCS18,
-    MPT_RATE_MCS19,
-    MPT_RATE_MCS20,
-    MPT_RATE_MCS21,
-    MPT_RATE_MCS22, // #34
-    MPT_RATE_MCS23,
-    MPT_RATE_MCS24,
-    MPT_RATE_MCS25,
-    MPT_RATE_MCS26,
-    MPT_RATE_MCS27, // #39
-    MPT_RATE_MCS28, // #40
-    MPT_RATE_MCS29, // #41
-    MPT_RATE_MCS30, // #42
-    MPT_RATE_MCS31, // #43
-    /* VHT rate. Total: 20*/
-    MPT_RATE_VHT1SS_MCS0,//  #44
-    MPT_RATE_VHT1SS_MCS1, // #
-    MPT_RATE_VHT1SS_MCS2,
-    MPT_RATE_VHT1SS_MCS3,
-    MPT_RATE_VHT1SS_MCS4,
-    MPT_RATE_VHT1SS_MCS5,
-    MPT_RATE_VHT1SS_MCS6, // #
-    MPT_RATE_VHT1SS_MCS7,
-    MPT_RATE_VHT1SS_MCS8,
-    MPT_RATE_VHT1SS_MCS9, //#53
-    MPT_RATE_VHT2SS_MCS0, //#54
-    MPT_RATE_VHT2SS_MCS1,
-    MPT_RATE_VHT2SS_MCS2,
-    MPT_RATE_VHT2SS_MCS3,
-    MPT_RATE_VHT2SS_MCS4,
-    MPT_RATE_VHT2SS_MCS5,
-    MPT_RATE_VHT2SS_MCS6,
-    MPT_RATE_VHT2SS_MCS7,
-    MPT_RATE_VHT2SS_MCS8,
-    MPT_RATE_VHT2SS_MCS9, //#63
-    MPT_RATE_VHT3SS_MCS0,
-    MPT_RATE_VHT3SS_MCS1,
-    MPT_RATE_VHT3SS_MCS2,
-    MPT_RATE_VHT3SS_MCS3,
-    MPT_RATE_VHT3SS_MCS4,
-    MPT_RATE_VHT3SS_MCS5,
-    MPT_RATE_VHT3SS_MCS6, // #126
-    MPT_RATE_VHT3SS_MCS7,
-    MPT_RATE_VHT3SS_MCS8,
-    MPT_RATE_VHT3SS_MCS9,
-    MPT_RATE_VHT4SS_MCS0,
-    MPT_RATE_VHT4SS_MCS1, // #131
-    MPT_RATE_VHT4SS_MCS2,
-    MPT_RATE_VHT4SS_MCS3,
-    MPT_RATE_VHT4SS_MCS4,
-    MPT_RATE_VHT4SS_MCS5,
-    MPT_RATE_VHT4SS_MCS6, // #136
-    MPT_RATE_VHT4SS_MCS7,
-    MPT_RATE_VHT4SS_MCS8,
-    MPT_RATE_VHT4SS_MCS9,
-    MPT_RATE_LAST
+	/* HT rate. */
+	MPT_RATE_MCS0,	/* 12 */
+	MPT_RATE_MCS1,
+	MPT_RATE_MCS2,
+	MPT_RATE_MCS3,
+	MPT_RATE_MCS4,
+	MPT_RATE_MCS5,
+	MPT_RATE_MCS6,
+	MPT_RATE_MCS7,	/* 19 */
+	MPT_RATE_MCS8,
+	MPT_RATE_MCS9,
+	MPT_RATE_MCS10,
+	MPT_RATE_MCS11,
+	MPT_RATE_MCS12,
+	MPT_RATE_MCS13,
+	MPT_RATE_MCS14,
+	MPT_RATE_MCS15,	/* 27 */
+	MPT_RATE_MCS16,
+	MPT_RATE_MCS17, // #29
+	MPT_RATE_MCS18,
+	MPT_RATE_MCS19,
+	MPT_RATE_MCS20,
+	MPT_RATE_MCS21,
+	MPT_RATE_MCS22, // #34
+	MPT_RATE_MCS23,
+	MPT_RATE_MCS24,
+	MPT_RATE_MCS25,
+	MPT_RATE_MCS26,
+	MPT_RATE_MCS27, // #39
+	MPT_RATE_MCS28, // #40
+	MPT_RATE_MCS29, // #41
+	MPT_RATE_MCS30, // #42
+	MPT_RATE_MCS31, // #43
+	/* VHT rate. Total: 20*/
+	MPT_RATE_VHT1SS_MCS0,//  #44
+	MPT_RATE_VHT1SS_MCS1, // #
+	MPT_RATE_VHT1SS_MCS2,
+	MPT_RATE_VHT1SS_MCS3,
+	MPT_RATE_VHT1SS_MCS4,
+	MPT_RATE_VHT1SS_MCS5,
+	MPT_RATE_VHT1SS_MCS6, // #
+	MPT_RATE_VHT1SS_MCS7,
+	MPT_RATE_VHT1SS_MCS8,
+	MPT_RATE_VHT1SS_MCS9, //#53
+	MPT_RATE_VHT2SS_MCS0, //#54
+	MPT_RATE_VHT2SS_MCS1,
+	MPT_RATE_VHT2SS_MCS2,
+	MPT_RATE_VHT2SS_MCS3,
+	MPT_RATE_VHT2SS_MCS4,
+	MPT_RATE_VHT2SS_MCS5,
+	MPT_RATE_VHT2SS_MCS6,
+	MPT_RATE_VHT2SS_MCS7,
+	MPT_RATE_VHT2SS_MCS8,
+	MPT_RATE_VHT2SS_MCS9, //#63
+	MPT_RATE_VHT3SS_MCS0,
+	MPT_RATE_VHT3SS_MCS1,
+	MPT_RATE_VHT3SS_MCS2,
+	MPT_RATE_VHT3SS_MCS3,
+	MPT_RATE_VHT3SS_MCS4,
+	MPT_RATE_VHT3SS_MCS5,
+	MPT_RATE_VHT3SS_MCS6, // #126
+	MPT_RATE_VHT3SS_MCS7,
+	MPT_RATE_VHT3SS_MCS8,
+	MPT_RATE_VHT3SS_MCS9,
+	MPT_RATE_VHT4SS_MCS0,
+	MPT_RATE_VHT4SS_MCS1, // #131
+	MPT_RATE_VHT4SS_MCS2,
+	MPT_RATE_VHT4SS_MCS3,
+	MPT_RATE_VHT4SS_MCS4,
+	MPT_RATE_VHT4SS_MCS5,
+	MPT_RATE_VHT4SS_MCS6, // #136
+	MPT_RATE_VHT4SS_MCS7,
+	MPT_RATE_VHT4SS_MCS8,
+	MPT_RATE_VHT4SS_MCS9,
+	MPT_RATE_LAST
 } MPT_RATE_E, *PMPT_RATE_E;
 
 #define MAX_TX_PWR_INDEX_N_MODE 64	// 0x3F
 
 typedef enum _POWER_MODE_ {
-    POWER_LOW = 0,
-    POWER_NORMAL
+	POWER_LOW = 0,
+	POWER_NORMAL
 } POWER_MODE;
 
 // The following enumeration is used to define the value of Reg0xD00[30:28] or JaguarReg0x914[18:16].
 typedef enum _OFDM_TX_MODE {
-    OFDM_ALL_OFF		= 0,
-    OFDM_ContinuousTx	= 1,
-    OFDM_SingleCarrier	= 2,
-    OFDM_SingleTone 	= 4,
+	OFDM_ALL_OFF		= 0,
+	OFDM_ContinuousTx	= 1,
+	OFDM_SingleCarrier	= 2,
+	OFDM_SingleTone 	= 4,
 } OFDM_TX_MODE;
 
 
@@ -661,21 +654,20 @@ typedef enum _OFDM_TX_MODE {
 //	bit 11 : HT MPDU OK
 //	bit 12 : HT MPDU fail
 //	bit 15 : RX full drop
-typedef enum _RXPHY_BITMASK_
-{
-    OFDM_PPDU_BIT = 0,
-    OFDM_FALSE_BIT,
-    OFDM_MPDU_OK_BIT,
-    OFDM_MPDU_FAIL_BIT,
-    CCK_PPDU_BIT,
-    CCK_FALSE_BIT,
-    CCK_MPDU_OK_BIT,
-    CCK_MPDU_FAIL_BIT,
-    HT_PPDU_BIT,
-    HT_FALSE_BIT,
-    HT_MPDU_BIT,
-    HT_MPDU_OK_BIT,
-    HT_MPDU_FAIL_BIT,
+typedef enum _RXPHY_BITMASK_ {
+	OFDM_PPDU_BIT = 0,
+	OFDM_FALSE_BIT,
+	OFDM_MPDU_OK_BIT,
+	OFDM_MPDU_FAIL_BIT,
+	CCK_PPDU_BIT,
+	CCK_FALSE_BIT,
+	CCK_MPDU_OK_BIT,
+	CCK_MPDU_FAIL_BIT,
+	HT_PPDU_BIT,
+	HT_FALSE_BIT,
+	HT_MPDU_BIT,
+	HT_MPDU_OK_BIT,
+	HT_MPDU_FAIL_BIT,
 } RXPHY_BITMASK;
 #endif
 
@@ -691,16 +683,16 @@ typedef enum _RXPHY_BITMASK_
 #define Mac_DropPacket			0xA0000000
 
 typedef enum _ENCRY_CTRL_STATE_ {
-    HW_CONTROL,		//hw encryption& decryption
-    SW_CONTROL,		//sw encryption& decryption
-    HW_ENCRY_SW_DECRY,	//hw encryption & sw decryption
-    SW_ENCRY_HW_DECRY	//sw encryption & hw decryption
+	HW_CONTROL,		//hw encryption& decryption
+	SW_CONTROL,		//sw encryption& decryption
+	HW_ENCRY_SW_DECRY,	//hw encryption & sw decryption
+	SW_ENCRY_HW_DECRY	//sw encryption & hw decryption
 } ENCRY_CTRL_STATE;
 
 typedef enum	_MPT_TXPWR_DEF {
-    MPT_CCK,
-    MPT_OFDM, // L and HT OFDM
-    MPT_VHT_OFDM
+	MPT_CCK,
+	MPT_OFDM, // L and HT OFDM
+	MPT_VHT_OFDM
 } MPT_TXPWR_DEF;
 
 #ifdef CONFIG_RF_GAIN_OFFSET

@@ -64,38 +64,38 @@
 
 
 struct txrpt_ccx_8192c {
-    /* offset 0 */
-    u8 retry_cnt:6;
-    u8 rsvd_0:2;
+	/* offset 0 */
+	u8 retry_cnt:6;
+	u8 rsvd_0:2;
 
-    /* offset 1 */
-    u8 rts_retry_cnt:6;
-    u8 rsvd_1:2;
+	/* offset 1 */
+	u8 rts_retry_cnt:6;
+	u8 rsvd_1:2;
 
-    /* offset 2 */
-    u8 ccx_qtime0;
-    u8 ccx_qtime1;
+	/* offset 2 */
+	u8 ccx_qtime0;
+	u8 ccx_qtime1;
 
-    /* offset 4 */
-    u8 missed_pkt_num:5;
-    u8 rsvd_4:3;
+	/* offset 4 */
+	u8 missed_pkt_num:5;
+	u8 rsvd_4:3;
 
-    /* offset 5 */
-    u8 mac_id:5;
-    u8 des1_fragssn:3;
+	/* offset 5 */
+	u8 mac_id:5;
+	u8 des1_fragssn:3;
 
-    /* offset 6 */
-    u8 rpt_pkt_num:5;
-    u8 pkt_drop:1;
-    u8 lifetime_over:1;
-    u8 retry_over:1;
+	/* offset 6 */
+	u8 rpt_pkt_num:5;
+	u8 pkt_drop:1;
+	u8 lifetime_over:1;
+	u8 retry_over:1;
 
-    /* offset 7*/
-    u8 edca_tx_queue:4;
-    u8 rsvd_7:1;
-    u8 bmc:1;
-    u8 pkt_ok:1;
-    u8 int_ccx:1;
+	/* offset 7*/
+	u8 edca_tx_queue:4;
+	u8 rsvd_7:1;
+	u8 bmc:1;
+	u8 pkt_ok:1;
+	u8 int_ccx:1;
 };
 
 #define txrpt_ccx_qtime_8192c(txrpt_ccx) ((txrpt_ccx)->ccx_qtime0+((txrpt_ccx)->ccx_qtime1<<8))

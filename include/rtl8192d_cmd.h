@@ -51,28 +51,27 @@
 
 // Description: Determine the types of H2C commands that are the same in driver and Fw.
 // Fisrt constructed by tynli. 2009.10.09.
-typedef enum _RTL8192D_H2C_CMD
-{
-    H2C_92D_AP_OFFLOAD = 0,		/*0*/
-    H2C_SETPWRMODE = 1,		/*1*/
-    H2C_JOINBSSRPT = 2,		/*2*/
-    H2C_RSVDPAGE = 3,
-    H2C_RSSI_REPORT = 5,
-    H2C_RA_MASK = 6,
-    H2C_92D_P2P_PS_OFFLOAD = 8,
-    H2C_MAC_MODE_SEL = 9,
-    H2C_PWRM=15,
-    H2C_P2P_PS_CTW_CMD = 24,
-    H2C_PathDiv = 26,                  //PathDiv--NeilChen--2011.07.15
-    H2C_92D_TSF_SYNC=36,
-    H2C_92D_RESET_TSF = 43,
-    H2C_CMD_MAX
+typedef enum _RTL8192D_H2C_CMD {
+	H2C_92D_AP_OFFLOAD = 0,		/*0*/
+	H2C_SETPWRMODE = 1,		/*1*/
+	H2C_JOINBSSRPT = 2,		/*2*/
+	H2C_RSVDPAGE = 3,
+	H2C_RSSI_REPORT = 5,
+	H2C_RA_MASK = 6,
+	H2C_92D_P2P_PS_OFFLOAD = 8,
+	H2C_MAC_MODE_SEL = 9,
+	H2C_PWRM=15,
+	H2C_P2P_PS_CTW_CMD = 24,
+	H2C_PathDiv = 26,                  //PathDiv--NeilChen--2011.07.15
+	H2C_92D_TSF_SYNC=36,
+	H2C_92D_RESET_TSF = 43,
+	H2C_CMD_MAX
 } RTL8192D_H2C_CMD;
 
 struct cmd_msg_parm {
-    u8 eid; //element id
-    u8 sz; // sz
-    u8 buf[6];
+	u8 eid; //element id
+	u8 sz; // sz
+	u8 buf[6];
 };
 
 

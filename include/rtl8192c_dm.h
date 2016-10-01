@@ -32,54 +32,54 @@
 //============================================================
 
 typedef	enum _BT_CurState {
-    BT_OFF		= 0,
-    BT_ON		= 1,
+	BT_OFF		= 0,
+	BT_ON		= 1,
 } BT_CurState, *PBT_CurState;
 
 typedef	enum _BT_ServiceType {
-    BT_SCO		= 0,
-    BT_A2DP		= 1,
-    BT_HID		= 2,
-    BT_HID_Idle	= 3,
-    BT_Scan		= 4,
-    BT_Idle		= 5,
-    BT_OtherAction	= 6,
-    BT_Busy			= 7,
-    BT_OtherBusy		= 8,
-    BT_PAN			= 9,
+	BT_SCO		= 0,
+	BT_A2DP		= 1,
+	BT_HID		= 2,
+	BT_HID_Idle	= 3,
+	BT_Scan		= 4,
+	BT_Idle		= 5,
+	BT_OtherAction	= 6,
+	BT_Busy			= 7,
+	BT_OtherBusy		= 8,
+	BT_PAN			= 9,
 } BT_ServiceType, *PBT_ServiceType;
 
-struct btcoexist_priv	{
-    u8					BT_Coexist;
-    u8					BT_Ant_Num;
-    u8					BT_CoexistType;
-    u8					BT_State;
-    u8					BT_CUR_State;		//0:on, 1:off
-    u8					BT_Ant_isolation;	//0:good, 1:bad
-    u8					BT_PapeCtrl;		//0:SW, 1:SW/HW dynamic
-    u8					BT_Service;
-    u8					BT_Ampdu;	// 0:Disable BT control A-MPDU, 1:Enable BT control A-MPDU.
-    u8					BT_RadioSharedType;
-    u32					Ratio_Tx;
-    u32					Ratio_PRI;
-    u8					BtRfRegOrigin1E;
-    u8					BtRfRegOrigin1F;
-    u8					BtRssiState;
-    u32					BtEdcaUL;
-    u32					BtEdcaDL;
-    u32					BT_EDCA[2];
-    u8					bCOBT;
+struct btcoexist_priv {
+	u8					BT_Coexist;
+	u8					BT_Ant_Num;
+	u8					BT_CoexistType;
+	u8					BT_State;
+	u8					BT_CUR_State;		//0:on, 1:off
+	u8					BT_Ant_isolation;	//0:good, 1:bad
+	u8					BT_PapeCtrl;		//0:SW, 1:SW/HW dynamic
+	u8					BT_Service;
+	u8					BT_Ampdu;	// 0:Disable BT control A-MPDU, 1:Enable BT control A-MPDU.
+	u8					BT_RadioSharedType;
+	u32					Ratio_Tx;
+	u32					Ratio_PRI;
+	u8					BtRfRegOrigin1E;
+	u8					BtRfRegOrigin1F;
+	u8					BtRssiState;
+	u32					BtEdcaUL;
+	u32					BtEdcaDL;
+	u32					BT_EDCA[2];
+	u8					bCOBT;
 
-    u8					bInitSet;
-    u8					bBTBusyTraffic;
-    u8					bBTTrafficModeSet;
-    u8					bBTNonTrafficModeSet;
-    //BTTraffic				BT21TrafficStatistics;
-    u32					CurrentState;
-    u32					PreviousState;
-    u8					BtPreRssiState;
-    u8					bFWCoexistAllOff;
-    u8					bSWCoexistAllOff;
+	u8					bInitSet;
+	u8					bBTBusyTraffic;
+	u8					bBTTrafficModeSet;
+	u8					bBTNonTrafficModeSet;
+	//BTTraffic				BT21TrafficStatistics;
+	u32					CurrentState;
+	u32					PreviousState;
+	u8					BtPreRssiState;
+	u8					bFWCoexistAllOff;
+	u8					bSWCoexistAllOff;
 };
 
 //============================================================

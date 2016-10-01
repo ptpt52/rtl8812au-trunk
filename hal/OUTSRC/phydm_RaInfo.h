@@ -35,32 +35,31 @@
 
 #if(DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
 typedef struct _Rate_Adaptive_Table_ {
-    u1Byte		firstconnect;
+	u1Byte		firstconnect;
 #if(DM_ODM_SUPPORT_TYPE==ODM_WIN)
-    BOOLEAN		PT_collision_pre;
+	BOOLEAN		PT_collision_pre;
 #endif
 } RA_T, *pRA_T;
 #endif
 
-typedef struct _ODM_RATE_ADAPTIVE
-{
-    u1Byte				Type;				// DM_Type_ByFW/DM_Type_ByDriver
-    u1Byte				HighRSSIThresh;		// if RSSI > HighRSSIThresh	=> RATRState is DM_RATR_STA_HIGH
-    u1Byte				LowRSSIThresh;		// if RSSI <= LowRSSIThresh	=> RATRState is DM_RATR_STA_LOW
-    u1Byte				RATRState;			// Current RSSI level, DM_RATR_STA_HIGH/DM_RATR_STA_MIDDLE/DM_RATR_STA_LOW
+typedef struct _ODM_RATE_ADAPTIVE {
+	u1Byte				Type;				// DM_Type_ByFW/DM_Type_ByDriver
+	u1Byte				HighRSSIThresh;		// if RSSI > HighRSSIThresh	=> RATRState is DM_RATR_STA_HIGH
+	u1Byte				LowRSSIThresh;		// if RSSI <= LowRSSIThresh	=> RATRState is DM_RATR_STA_LOW
+	u1Byte				RATRState;			// Current RSSI level, DM_RATR_STA_HIGH/DM_RATR_STA_MIDDLE/DM_RATR_STA_LOW
 
 #if(DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
-    u1Byte				LdpcThres;			// if RSSI > LdpcThres => switch from LPDC to BCC
-    BOOLEAN				bLowerRtsRate;
+	u1Byte				LdpcThres;			// if RSSI > LdpcThres => switch from LPDC to BCC
+	BOOLEAN				bLowerRtsRate;
 #endif
 
 #if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-    u1Byte				RtsThres;
+	u1Byte				RtsThres;
 #elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
-    BOOLEAN				bUseLdpc;
+	BOOLEAN				bUseLdpc;
 #else
-    u1Byte				UltraLowRSSIThresh;
-    u4Byte				LastRATR;			// RATR Register Content
+	u1Byte				UltraLowRSSIThresh;
+	u4Byte				LastRATR;			// RATR Register Content
 #endif
 
 } ODM_RATE_ADAPTIVE, *PODM_RATE_ADAPTIVE;

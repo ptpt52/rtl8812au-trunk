@@ -21,101 +21,99 @@
 #define __RTL8188E_CMD_H__
 
 #if 0
-enum cmd_msg_element_id
-{
-    NONE_CMDMSG_EID,
-    AP_OFFLOAD_EID = 0,
-    SET_PWRMODE_EID = 1,
-    JOINBSS_RPT_EID = 2,
-    RSVD_PAGE_EID = 3,
-    RSSI_4_EID = 4,
-    RSSI_SETTING_EID = 5,
-    MACID_CONFIG_EID = 6,
-    MACID_PS_MODE_EID = 7,
-    P2P_PS_OFFLOAD_EID = 8,
-    SELECTIVE_SUSPEND_ROF_CMD = 9,
-    P2P_PS_CTW_CMD_EID = 32,
-    MAX_CMDMSG_EID
+enum cmd_msg_element_id {
+	NONE_CMDMSG_EID,
+	AP_OFFLOAD_EID = 0,
+	SET_PWRMODE_EID = 1,
+	JOINBSS_RPT_EID = 2,
+	RSVD_PAGE_EID = 3,
+	RSSI_4_EID = 4,
+	RSSI_SETTING_EID = 5,
+	MACID_CONFIG_EID = 6,
+	MACID_PS_MODE_EID = 7,
+	P2P_PS_OFFLOAD_EID = 8,
+	SELECTIVE_SUSPEND_ROF_CMD = 9,
+	P2P_PS_CTW_CMD_EID = 32,
+	MAX_CMDMSG_EID
 };
 #else
-typedef enum _RTL8188E_H2C_CMD_ID
-{
-    //Class Common
-    H2C_COM_RSVD_PAGE			=0x00,
-    H2C_COM_MEDIA_STATUS_RPT	=0x01,
-    H2C_COM_SCAN					=0x02,
-    H2C_COM_KEEP_ALIVE			=0x03,
-    H2C_COM_DISCNT_DECISION		=0x04,
+typedef enum _RTL8188E_H2C_CMD_ID {
+	//Class Common
+	H2C_COM_RSVD_PAGE			=0x00,
+	H2C_COM_MEDIA_STATUS_RPT	=0x01,
+	H2C_COM_SCAN					=0x02,
+	H2C_COM_KEEP_ALIVE			=0x03,
+	H2C_COM_DISCNT_DECISION		=0x04,
 #ifndef CONFIG_WOWLAN
-    H2C_COM_WWLAN				=0x05,
+	H2C_COM_WWLAN				=0x05,
 #endif
-    H2C_COM_INIT_OFFLOAD			=0x06,
-    H2C_COM_REMOTE_WAKE_CTL	=0x07,
-    H2C_COM_AP_OFFLOAD			=0x08,
-    H2C_COM_BCN_RSVD_PAGE		=0x09,
-    H2C_COM_PROB_RSP_RSVD_PAGE	=0x0A,
+	H2C_COM_INIT_OFFLOAD			=0x06,
+	H2C_COM_REMOTE_WAKE_CTL	=0x07,
+	H2C_COM_AP_OFFLOAD			=0x08,
+	H2C_COM_BCN_RSVD_PAGE		=0x09,
+	H2C_COM_PROB_RSP_RSVD_PAGE	=0x0A,
 
-    //Class PS
-    H2C_PS_PWR_MODE				=0x20,
-    H2C_PS_TUNE_PARA				=0x21,
-    H2C_PS_TUNE_PARA_2			=0x22,
-    H2C_PS_LPS_PARA				=0x23,
-    H2C_PS_P2P_OFFLOAD			=0x24,
+	//Class PS
+	H2C_PS_PWR_MODE				=0x20,
+	H2C_PS_TUNE_PARA				=0x21,
+	H2C_PS_TUNE_PARA_2			=0x22,
+	H2C_PS_LPS_PARA				=0x23,
+	H2C_PS_P2P_OFFLOAD			=0x24,
 
-    //Class DM
-    H2C_DM_MACID_CFG				=0x40,
-    H2C_DM_TXBF					=0x41,
-    H2C_RSSI_REPORT 				=0x42,
-    //Class BT
-    H2C_BT_COEX_MASK				=0x60,
-    H2C_BT_COEX_GPIO_MODE		=0x61,
-    H2C_BT_DAC_SWING_VAL			=0x62,
-    H2C_BT_PSD_RST				=0x63,
+	//Class DM
+	H2C_DM_MACID_CFG				=0x40,
+	H2C_DM_TXBF					=0x41,
+	H2C_RSSI_REPORT 				=0x42,
+	//Class BT
+	H2C_BT_COEX_MASK				=0x60,
+	H2C_BT_COEX_GPIO_MODE		=0x61,
+	H2C_BT_DAC_SWING_VAL			=0x62,
+	H2C_BT_PSD_RST				=0x63,
 
-    //Class Remote WakeUp
+	//Class Remote WakeUp
 #ifdef CONFIG_WOWLAN
-    H2C_COM_WWLAN				=0x80,
-    H2C_COM_REMOTE_WAKE_CTRL	=0x81,
-    H2C_COM_AOAC_GLOBAL_INFO	=0x82,
-    H2C_COM_AOAC_RSVD_PAGE		=0x83,
+	H2C_COM_WWLAN				=0x80,
+	H2C_COM_REMOTE_WAKE_CTRL	=0x81,
+	H2C_COM_AOAC_GLOBAL_INFO	=0x82,
+	H2C_COM_AOAC_RSVD_PAGE		=0x83,
 #endif
 
-    //Class
-    //H2C_RESET_TSF				=0xc0,
+	//Class
+	//H2C_RESET_TSF				=0xc0,
 } RTL8188E_H2C_CMD_ID;
 
 #endif
 
 
 struct cmd_msg_parm {
-    u8 eid; //element id
-    u8 sz; // sz
-    u8 buf[6];
+	u8 eid; //element id
+	u8 sz; // sz
+	u8 buf[6];
 };
 
 enum {
-    PWRS
+	PWRS
 };
 
 typedef struct _SETPWRMODE_PARM {
-    u8 Mode;//0:Active,1:LPS,2:WMMPS
-    //u8 RLBM:4;//0:Min,1:Max,2: User define
-    u8 SmartPS_RLBM;//LPS=0:PS_Poll,1:PS_Poll,2:NullData,WMM=0:PS_Poll,1:NullData
-    u8 AwakeInterval;	// unit: beacon interval
-    u8 bAllQueueUAPSD;
-    u8 PwrState;//AllON(0x0c),RFON(0x04),RFOFF(0x00)
+	u8 Mode;//0:Active,1:LPS,2:WMMPS
+	//u8 RLBM:4;//0:Min,1:Max,2: User define
+	u8 SmartPS_RLBM;//LPS=0:PS_Poll,1:PS_Poll,2:NullData,WMM=0:PS_Poll,1:NullData
+	u8 AwakeInterval;	// unit: beacon interval
+	u8 bAllQueueUAPSD;
+	u8 PwrState;//AllON(0x0c),RFON(0x04),RFOFF(0x00)
 } SETPWRMODE_PARM, *PSETPWRMODE_PARM;
 
 struct H2C_SS_RFOFF_PARAM {
-    u8 ROFOn; // 1: on, 0:off
-    u16 gpio_period; // unit: 1024 us
+	u8 ROFOn; // 1: on, 0:off
+	u16 gpio_period; // unit: 1024 us
 } __attribute__ ((packed));
 
 
 typedef struct JOINBSSRPT_PARM_88E {
-    u8 OpMode;	// RT_MEDIA_STATUS
+	u8 OpMode;	// RT_MEDIA_STATUS
 #ifdef CONFIG_WOWLAN
-    u8 MacID;       // MACID
+	u8 MacID;       // MACID
 #endif //CONFIG_WOWLAN
 } JOINBSSRPT_PARM_88E, *PJOINBSSRPT_PARM_88E;
 
@@ -165,16 +163,16 @@ int reset_tsf(PADAPTER Adapter, u8 reset_port );
 
 #ifdef CONFIG_WOWLAN
 typedef struct _SETWOWLAN_PARM {
-    u8		mode;
-    u8		gpio_index;
-    u8		gpio_duration;
-    u8		second_mode;
-    u8		reserve;
+	u8		mode;
+	u8		gpio_index;
+	u8		gpio_duration;
+	u8		second_mode;
+	u8		reserve;
 } SETWOWLAN_PARM, *PSETWOWLAN_PARM;
 
 typedef struct _SETAOAC_GLOBAL_INFO {
-    u8              pairwiseEncAlg;
-    u8              groupEncAlg;
+	u8              pairwiseEncAlg;
+	u8              groupEncAlg;
 } SETAOAC_GLOBAL_INFO, *PSETAOAC_GLOBAL_INFO;
 
 /* move to hal_com_h2c.h
