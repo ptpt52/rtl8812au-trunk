@@ -248,11 +248,11 @@ struct hal_ops {
 	void	(*hal_dm_watchdog_in_lps)(_adapter *padapter);
 
 
-	void	(*SetHwRegHandler)(_adapter *padapter, u8	variable,u8* val);
-	void	(*GetHwRegHandler)(_adapter *padapter, u8	variable,u8* val);
+	void	(*SetHwRegHandler)(_adapter *padapter, u8	variable, const u8* val);
+	void	(*GetHwRegHandler)(_adapter *padapter, u8	variable, u8* val);
 
 #ifdef CONFIG_C2H_PACKET_EN
-	void	(*SetHwRegHandlerWithBuf)(_adapter *padapter, u8 variable, u8* pbuf, int len);
+	void	(*SetHwRegHandlerWithBuf)(_adapter *padapter, u8 variable, const u8* pbuf, int len);
 #endif
 
 	u8	(*GetHalDefVarHandler)(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pValue);

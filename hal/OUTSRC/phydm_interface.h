@@ -253,20 +253,20 @@ VOID
 ODM_MoveMemory(
     IN 	PDM_ODM_T	pDM_Odm,
     OUT PVOID		pDest,
-    IN  PVOID		pSrc,
+    IN	const u8 *pSrc,
     IN  u4Byte		Length
 );
 
 s4Byte ODM_CompareMemory(
     IN 	PDM_ODM_T	pDM_Odm,
-    IN	PVOID           pBuf1,
-    IN	PVOID           pBuf2,
+    IN	const PVOID	pBuf1,
+    IN	const PVOID	pBuf2,
     IN	u4Byte          length
 );
 
 void ODM_Memory_Set
 (IN 	PDM_ODM_T	pDM_Odm,
- IN  PVOID	pbuf,
+ IN  PVOID pbuf,
  IN  s1Byte	value,
  IN  u4Byte	length);
 

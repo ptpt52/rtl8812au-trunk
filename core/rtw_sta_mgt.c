@@ -312,7 +312,7 @@ u32	_rtw_free_sta_priv(struct	sta_priv *pstapriv)
 
 
 //struct	sta_info *rtw_alloc_stainfo(_queue *pfree_sta_queue, unsigned char *hwaddr)
-struct	sta_info *rtw_alloc_stainfo(struct	sta_priv *pstapriv, u8 *hwaddr)
+struct	sta_info *rtw_alloc_stainfo(struct	sta_priv *pstapriv, const u8 *hwaddr)
 {
 	_irqL irqL2;
 	uint tmp_aid;
@@ -708,7 +708,7 @@ struct sta_info *rtw_get_stainfo(struct sta_priv *pstapriv, const u8 *hwaddr)
 
 	const u8 *addr;
 
-	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 
 	_func_enter_;
 
@@ -753,7 +753,7 @@ u32 rtw_init_bcmc_stainfo(_adapter* padapter)
 	struct sta_info 	*psta;
 	struct tx_servq	*ptxservq;
 	u32 res=_SUCCESS;
-	NDIS_802_11_MAC_ADDRESS	bcast_addr= {0xff,0xff,0xff,0xff,0xff,0xff};
+	const NDIS_802_11_MAC_ADDRESS	bcast_addr= {0xff,0xff,0xff,0xff,0xff,0xff};
 
 	struct	sta_priv *pstapriv = &padapter->stapriv;
 	//_queue	*pstapending = &padapter->xmitpriv.bm_pending;
@@ -790,7 +790,7 @@ struct sta_info* rtw_get_bcmc_stainfo(_adapter* padapter)
 {
 	struct sta_info 	*psta;
 	struct sta_priv 	*pstapriv = &padapter->stapriv;
-	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 	_func_enter_;
 	psta = rtw_get_stainfo(pstapriv, bc_addr);
 	_func_exit_;

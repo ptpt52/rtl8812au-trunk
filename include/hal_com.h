@@ -241,7 +241,7 @@ u8	HwRateToMRate(u8 rate);
 
 void	HalSetBrateCfg(
     IN PADAPTER		Adapter,
-    IN u8			*mBratesOS,
+    const IN u8			*mBratesOS,
     OUT u16			*pBrateCfg);
 
 BOOLEAN
@@ -264,11 +264,11 @@ void rtw_hal_update_sta_rate_mask(PADAPTER padapter, struct sta_info *psta);
 
 void hw_var_port_switch(_adapter *adapter);
 
-void SetHwReg(PADAPTER padapter, u8 variable, u8 *val);
+void SetHwReg(PADAPTER padapter, u8 variable, const u8 *val);
 void GetHwReg(PADAPTER padapter, u8 variable, u8 *val);
 void rtw_hal_check_rxfifo_full(_adapter *adapter);
 
-u8 SetHalDefVar(_adapter *adapter, HAL_DEF_VARIABLE variable, void *value);
+u8 SetHalDefVar(_adapter *adapter, HAL_DEF_VARIABLE variable, const void *value);
 u8 GetHalDefVar(_adapter *adapter, HAL_DEF_VARIABLE variable, void *value);
 
 BOOLEAN

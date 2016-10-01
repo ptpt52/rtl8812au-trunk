@@ -895,7 +895,7 @@ int nat25_db_handle(_adapter *priv, struct sk_buff *skb, int method)
 	else if((protocol == __constant_htons(ETH_P_IPX)) ||
 	        (protocol == __constant_htons(ETH_P_ATALK)) ||
 	        (protocol == __constant_htons(ETH_P_AARP))) {
-		unsigned char ipx_header[2] = {0xFF, 0xFF};
+		const unsigned char ipx_header[2] = {0xFF, 0xFF};
 		struct ipxhdr	*ipx = NULL;
 		struct elapaarp	*ea = NULL;
 		struct ddpehdr	*ddp = NULL;
@@ -913,9 +913,9 @@ int nat25_db_handle(_adapter *priv, struct sk_buff *skb, int method)
 				unsigned char snap_8022_type = 0xAA;
 
 				if(*framePtr == snap_8022_type) {
-					unsigned char ipx_snap_id[5] = {0x0, 0x0, 0x0, 0x81, 0x37};		// IPX SNAP ID
-					unsigned char aarp_snap_id[5] = {0x00, 0x00, 0x00, 0x80, 0xF3};	// Apple Talk AARP SNAP ID
-					unsigned char ddp_snap_id[5] = {0x08, 0x00, 0x07, 0x80, 0x9B};	// Apple Talk DDP SNAP ID
+					const unsigned char ipx_snap_id[5] = {0x0, 0x0, 0x0, 0x81, 0x37};		// IPX SNAP ID
+					const unsigned char aarp_snap_id[5] = {0x00, 0x00, 0x00, 0x80, 0xF3};	// Apple Talk AARP SNAP ID
+					const unsigned char ddp_snap_id[5] = {0x08, 0x00, 0x07, 0x80, 0x9B};	// Apple Talk DDP SNAP ID
 
 					framePtr += 3;	// eliminate the 802.2 header
 

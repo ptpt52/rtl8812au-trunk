@@ -1625,8 +1625,8 @@ ParseRes rtw_ieee802_11_parse_elems(u8 *start, uint len,
                                     struct rtw_ieee802_11_elems *elems,
                                     int show_errors);
 
-u8 *rtw_set_fixed_ie(unsigned char *pbuf, unsigned int len, unsigned char *source, unsigned int *frlen);
-u8 *rtw_set_ie(u8 *pbuf, sint index, uint len, u8 *source, uint *frlen);
+u8 *rtw_set_fixed_ie(unsigned char *pbuf, unsigned int len, const unsigned char *source, unsigned int *frlen);
+u8 *rtw_set_ie(u8 *pbuf, sint index, uint len, const u8 *source, uint *frlen);
 
 enum secondary_ch_offset {
 	SCN = 0, /* no secondary channel */

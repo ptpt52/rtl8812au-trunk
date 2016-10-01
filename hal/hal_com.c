@@ -731,7 +731,7 @@ u8	HwRateToMRate(u8 rate)
 
 void	HalSetBrateCfg(
     IN PADAPTER		Adapter,
-    IN u8			*mBratesOS,
+    const IN u8			*mBratesOS,
     OUT u16			*pBrateCfg)
 {
 	u8	i, is_brate, brate;
@@ -1374,7 +1374,7 @@ void hw_var_port_switch(_adapter *adapter)
 #endif /* CONFIG_CONCURRENT_MODE */
 }
 
-void SetHwReg(_adapter *adapter, u8 variable, u8 *val)
+void SetHwReg(_adapter *adapter, u8 variable, const u8 *val)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
 	DM_ODM_T *odm = &(hal_data->odmpriv);
@@ -1528,7 +1528,7 @@ void GetHwReg(_adapter *adapter, u8 variable, u8 *val)
 
 
 u8
-SetHalDefVar(_adapter *adapter, HAL_DEF_VARIABLE variable, void *value)
+SetHalDefVar(_adapter *adapter, HAL_DEF_VARIABLE variable, const void *value)
 {
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
 	DM_ODM_T *odm = &(hal_data->odmpriv);

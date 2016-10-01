@@ -949,7 +949,7 @@ usb_AggSettingRxUpdate_8812A(
 			//Adjust DMA page and thresh.
 			temp = pHalData->RegAcUsbDmaSize | (pHalData->RegAcUsbDmaTime<<8);
 			rtw_write16(Adapter, REG_RXDMA_AGG_PG_TH, temp);
-			rtw_write8(Adapter, REG_RXDMA_AGG_PG_TH+3, BIT(7)); //for dma agg , 0x280[31]¡GBIT_RXDMA_AGG_OLD_MOD, set 1
+			rtw_write8(Adapter, REG_RXDMA_AGG_PG_TH+3, BIT(7)); //for dma agg , 0x280[31]Â¡GBIT_RXDMA_AGG_OLD_MOD, set 1
 		}
 		break;
 	case USB_RX_AGG_USB:
@@ -2167,7 +2167,7 @@ hal_ReadMACAddress_8812AU(
 		}
 	} else {
 		//Random assigh MAC address
-		u8	sMacAddr[ETH_ALEN] = {0x00, 0xE0, 0x4C, 0x88, 0x12, 0x00};
+		const u8	sMacAddr[ETH_ALEN] = {0x00, 0xE0, 0x4C, 0x88, 0x12, 0x00};
 		//sMacAddr[5] = (u8)GetRandomNumber(1, 254);
 		_rtw_memcpy(pEEPROM->mac_addr, sMacAddr, ETH_ALEN);
 	}
@@ -2548,7 +2548,7 @@ void UpdateInterruptMask8812AU(PADAPTER padapter,u8 bHIMR0 ,u32 AddMSR, u32 Remo
 
 }
 
-void SetHwReg8812AU(PADAPTER Adapter, u8 variable, u8* val)
+void SetHwReg8812AU(PADAPTER Adapter, u8 variable, const u8* val)
 {
 	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 	//struct dm_priv	*pdmpriv = &pHalData->dmpriv;

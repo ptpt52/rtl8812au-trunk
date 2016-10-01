@@ -3817,8 +3817,8 @@ static s32 _halReadMACAddrFromFile(PADAPTER padapter, u8 *pbuf)
 	u32 i;
 	s32 ret = _SUCCESS;
 
-	u8 null_mac_addr[ETH_ALEN] = {0, 0, 0, 0, 0, 0};
-	u8 multi_mac_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+	const u8 null_mac_addr[ETH_ALEN] = {0, 0, 0, 0, 0, 0};
+	const u8 multi_mac_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 
 
 	curtime = rtw_get_current_time();
@@ -4862,7 +4862,7 @@ SetBeamformPatch_8812(
 #endif
 
 
-static void hw_var_set_opmode(PADAPTER Adapter, u8 variable, u8* val)
+static void hw_var_set_opmode(PADAPTER Adapter, u8 variable, const u8* val)
 {
 	u8	val8;
 	u8	mode = *((u8 *)val);
@@ -5093,7 +5093,7 @@ static void hw_var_set_opmode(PADAPTER Adapter, u8 variable, u8* val)
 
 }
 
-static void hw_var_set_macaddr(PADAPTER Adapter, u8 variable, u8* val)
+static void hw_var_set_macaddr(PADAPTER Adapter, u8 variable, const u8* val)
 {
 	u8 idx = 0;
 	u32 reg_macid;
@@ -5113,7 +5113,7 @@ static void hw_var_set_macaddr(PADAPTER Adapter, u8 variable, u8* val)
 
 }
 
-static void hw_var_set_bssid(PADAPTER Adapter, u8 variable, u8* val)
+static void hw_var_set_bssid(PADAPTER Adapter, u8 variable, const u8* val)
 {
 	u8	idx = 0;
 	u32 reg_bssid;
@@ -5133,7 +5133,7 @@ static void hw_var_set_bssid(PADAPTER Adapter, u8 variable, u8* val)
 
 }
 
-static void hw_var_set_bcn_func(PADAPTER Adapter, u8 variable, u8* val)
+static void hw_var_set_bcn_func(PADAPTER Adapter, u8 variable, const u8* val)
 {
 	u32 bcn_ctrl_reg;
 
@@ -5272,7 +5272,7 @@ static inline void hw_var_set_mlme_disconnect(PADAPTER Adapter, u8 variable, u8*
 #endif
 }
 
-static void hw_var_set_mlme_sitesurvey(PADAPTER Adapter, u8 variable, u8* val)
+static void hw_var_set_mlme_sitesurvey(PADAPTER Adapter, u8 variable, const u8* val)
 {
 	u32	value_rcr, rcr_clear_bit, reg_bcn_ctl;
 	u16	value_rxfltmap2;
@@ -5441,7 +5441,7 @@ static inline void hw_var_set_mlme_join(PADAPTER Adapter, u8 variable, u8* val)
 #endif
 }
 
-void SetHwReg8812A(PADAPTER padapter, u8 variable, u8 *pval)
+void SetHwReg8812A(PADAPTER padapter, u8 variable, const u8 *pval)
 {
 	PHAL_DATA_TYPE pHalData;
 	struct dm_priv *pdmpriv;
@@ -6412,7 +6412,7 @@ void GetHwReg8812A(PADAPTER padapter, u8 variable, u8 *pval)
  *	Description:
  *		Change default setting of specified variable.
  */
-u8 SetHalDefVar8812A(PADAPTER padapter, HAL_DEF_VARIABLE variable, void *pval)
+u8 SetHalDefVar8812A(PADAPTER padapter, HAL_DEF_VARIABLE variable, const void *pval)
 {
 	PHAL_DATA_TYPE pHalData;
 	u8 bResult;

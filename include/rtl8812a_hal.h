@@ -310,9 +310,9 @@ void SetBeaconRelatedRegisters8812A(PADAPTER padapter);
 void ReadRFType8812A(PADAPTER padapter);
 void InitDefaultValue8821A(PADAPTER padapter);
 
-void SetHwReg8812A(PADAPTER padapter, u8 variable, u8 *pval);
+void SetHwReg8812A(PADAPTER padapter, u8 variable, const u8 *pval);
 void GetHwReg8812A(PADAPTER padapter, u8 variable, u8 *pval);
-u8 SetHalDefVar8812A(PADAPTER padapter, HAL_DEF_VARIABLE variable, void *pval);
+u8 SetHalDefVar8812A(PADAPTER padapter, HAL_DEF_VARIABLE variable, const void *pval);
 u8 GetHalDefVar8812A(PADAPTER padapter, HAL_DEF_VARIABLE variable, void *pval);
 s32 c2h_id_filter_ccx_8812a(u8 *buf);
 void rtl8812_set_hal_ops(struct hal_ops *pHalFunc);

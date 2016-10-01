@@ -114,14 +114,14 @@ MCS rate definitions
 #define MCS_RATE_2R_13TO15_OFF	(0x00001fff)
 
 
-extern unsigned char RTW_WPA_OUI[];
-extern unsigned char WMM_OUI[];
-extern unsigned char WPS_OUI[];
-extern unsigned char WFD_OUI[];
-extern unsigned char P2P_OUI[];
+extern const unsigned char RTW_WPA_OUI[];
+extern const unsigned char WMM_OUI[];
+extern const unsigned char WPS_OUI[];
+extern const unsigned char WFD_OUI[];
+extern const unsigned char P2P_OUI[];
 
-extern unsigned char WMM_INFO_OUI[];
-extern unsigned char WMM_PARA_OUI[];
+extern const unsigned char WMM_INFO_OUI[];
+extern const unsigned char WMM_PARA_OUI[];
 
 
 //
@@ -651,16 +651,16 @@ unsigned int decide_wait_for_beacon_timeout(unsigned int bcn_interval);
 void read_cam(_adapter *padapter ,u8 entry, u8 *get_key);
 
 /* modify HW only */
-void _write_cam(_adapter *padapter, u8 entry, u16 ctrl, u8 *mac, u8 *key);
+void _write_cam(_adapter *padapter, u8 entry, u16 ctrl, const u8 *mac, const u8 *key);
 void _clear_cam_entry(_adapter *padapter, u8 entry);
 void write_cam_from_cache(_adapter *adapter, u8 id);
 
 /* modify both HW and cache */
-void write_cam(_adapter *padapter, u8 id, u16 ctrl, u8 *mac, u8 *key);
+void write_cam(_adapter *padapter, u8 id, u16 ctrl, const u8 *mac, const u8 *key);
 void clear_cam_entry(_adapter *padapter, u8 id);
 
 /* modify cache only */
-void write_cam_cache(_adapter *adapter, u8 id, u16 ctrl, u8 *mac, u8 *key);
+void write_cam_cache(_adapter *adapter, u8 id, u16 ctrl, const u8 *mac, const u8 *key);
 void clear_cam_cache(_adapter *adapter, u8 id);
 
 void invalidate_cam_all(_adapter *padapter);
@@ -770,34 +770,34 @@ s32 dump_mgntframe_and_wait(_adapter *padapter, struct xmit_frame *pmgntframe, i
 s32 dump_mgntframe_and_wait_ack(_adapter *padapter, struct xmit_frame *pmgntframe);
 
 #ifdef CONFIG_P2P
-void issue_probersp_p2p(_adapter *padapter, unsigned char *da);
-void issue_p2p_provision_request( _adapter *padapter, u8* pssid, u8 ussidlen, u8* pdev_raddr);
-void issue_p2p_GO_request(_adapter *padapter, u8* raddr);
+void issue_probersp_p2p(_adapter *padapter, const unsigned char *da);
+void issue_p2p_provision_request( _adapter *padapter, const u8* pssid, u8 ussidlen, const u8* pdev_raddr);
+void issue_p2p_GO_request(_adapter *padapter, const u8* raddr);
 void issue_probereq_p2p(_adapter *padapter, u8 *da);
 int issue_probereq_p2p_ex(_adapter *adapter, u8 *da, int try_cnt, int wait_ms);
-void issue_p2p_invitation_response(_adapter *padapter, u8* raddr, u8 dialogToken, u8 success);
-void issue_p2p_invitation_request(_adapter *padapter, u8* raddr );
+void issue_p2p_invitation_response(_adapter *padapter, const u8* raddr, u8 dialogToken, u8 success);
+void issue_p2p_invitation_request(_adapter *padapter, const u8* raddr );
 #endif //CONFIG_P2P
 void issue_beacon(_adapter *padapter, int timeout_ms);
-void issue_probersp(_adapter *padapter, unsigned char *da, u8 is_valid_p2p_probereq);
+void issue_probersp(_adapter *padapter, const unsigned char *da, u8 is_valid_p2p_probereq);
 void issue_assocreq(_adapter *padapter);
-void issue_asocrsp(_adapter *padapter, unsigned short status, struct sta_info *pstat, int pkt_type);
-void issue_auth(_adapter *padapter, struct sta_info *psta, unsigned short status);
-void issue_probereq(_adapter *padapter, NDIS_802_11_SSID *pssid, u8 *da);
-s32 issue_probereq_ex(_adapter *padapter, NDIS_802_11_SSID *pssid, u8* da, u8 ch, bool append_wps, int try_cnt, int wait_ms);
-int issue_nulldata(_adapter *padapter, unsigned char *da, unsigned int power_mode, int try_cnt, int wait_ms);
+void issue_asocrsp(_adapter *padapter, unsigned short status, const struct sta_info *pstat, int pkt_type);
+void issue_auth(_adapter *padapter, const struct sta_info *psta, unsigned short status);
+void issue_probereq(_adapter *padapter, const NDIS_802_11_SSID *pssid, const u8 *da);
+s32 issue_probereq_ex(_adapter *padapter, const NDIS_802_11_SSID *pssid, const u8* da, u8 ch, bool append_wps, int try_cnt, int wait_ms);
+int issue_nulldata(_adapter *padapter, const unsigned char *da, unsigned int power_mode, int try_cnt, int wait_ms);
 s32 issue_nulldata_in_interrupt(PADAPTER padapter, u8 *da);
-int issue_qos_nulldata(_adapter *padapter, unsigned char *da, u16 tid, int try_cnt, int wait_ms);
-int issue_deauth(_adapter *padapter, unsigned char *da, unsigned short reason);
-int issue_deauth_ex(_adapter *padapter, u8 *da, unsigned short reason, int try_cnt, int wait_ms);
-void issue_action_spct_ch_switch(_adapter *padapter, u8 *ra, u8 new_ch, u8 ch_offset);
-void issue_action_BA(_adapter *padapter, unsigned char *raddr, unsigned char action, unsigned short status);
+int issue_qos_nulldata(_adapter *padapter, const unsigned char *da, u16 tid, int try_cnt, int wait_ms);
+int issue_deauth(_adapter *padapter, const unsigned char *da, unsigned short reason);
+int issue_deauth_ex(_adapter *padapter, const u8 *da, unsigned short reason, int try_cnt, int wait_ms);
+void issue_action_spct_ch_switch(_adapter *padapter, const u8 *ra, u8 new_ch, u8 ch_offset);
+void issue_action_BA(_adapter *padapter, const unsigned char *raddr, unsigned char action, unsigned short status);
 #ifdef CONFIG_IEEE80211W
-void issue_action_SA_Query(_adapter *padapter, unsigned char *raddr, unsigned char action, unsigned short tid);
+void issue_action_SA_Query(_adapter *padapter, const unsigned char *raddr, unsigned char action, unsigned short tid);
 #endif //CONFIG_IEEE80211W
-int issue_action_SM_PS(_adapter *padapter ,  unsigned char *raddr , u8 NewMimoPsMode);
-int issue_action_SM_PS_wait_ack(_adapter *padapter, unsigned char *raddr, u8 NewMimoPsMode, int try_cnt, int wait_ms);
-unsigned int send_delba(_adapter *padapter, u8 initiator, u8 *addr);
+int issue_action_SM_PS(_adapter *padapter ,  const unsigned char *raddr , u8 NewMimoPsMode);
+int issue_action_SM_PS_wait_ack(_adapter *padapter, const unsigned char *raddr, u8 NewMimoPsMode, int try_cnt, int wait_ms);
+unsigned int send_delba(_adapter *padapter, u8 initiator, const u8 *addr);
 unsigned int send_beacon(_adapter *padapter);
 
 void start_clnt_assoc(_adapter *padapter);

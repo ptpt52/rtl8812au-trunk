@@ -129,7 +129,7 @@ int rtw_check_network_type(unsigned char *rate, int ratelen, int channel)
 
 }
 
-u8 *rtw_set_fixed_ie(unsigned char *pbuf, unsigned int len, unsigned char *source,
+u8 *rtw_set_fixed_ie(unsigned char *pbuf, unsigned int len, const unsigned char *source,
                      unsigned int *frlen)
 {
 	_rtw_memcpy((void *)pbuf, (void *)source, len);
@@ -143,7 +143,7 @@ u8 *rtw_set_ie
     u8 *pbuf,
     sint index,
     uint len,
-    u8 *source,
+    const u8 *source,
     uint *frlen //frame length
 )
 {
@@ -476,7 +476,7 @@ unsigned char *rtw_get_wpa_ie(unsigned char *pie, int *wpa_ie_len, int limit)
 {
 	int len;
 	u16 val16;
-	unsigned char wpa_oui_type[] = {0x00, 0x50, 0xf2, 0x01};
+	const unsigned char wpa_oui_type[] = {0x00, 0x50, 0xf2, 0x01};
 	u8 *pbuf = pie;
 	int limit_new = limit;
 
@@ -570,7 +570,7 @@ int rtw_parse_wpa_ie(u8* wpa_ie, int wpa_ie_len, int *group_cipher, int *pairwis
 	int i, ret=_SUCCESS;
 	int left, count;
 	u8 *pos;
-	u8 SUITE_1X[4] = {0x00, 0x50, 0xf2, 1};
+	const u8 SUITE_1X[4] = {0x00, 0x50, 0xf2, 1};
 
 	if (wpa_ie_len <= 0) {
 		/* No WPA IE - fail silently */
@@ -648,7 +648,7 @@ int rtw_parse_wpa2_ie(u8* rsn_ie, int rsn_ie_len, int *group_cipher, int *pairwi
 	int i, ret=_SUCCESS;
 	int left, count;
 	u8 *pos;
-	u8 SUITE_1X[4] = {0x00,0x0f, 0xac, 0x01};
+	const u8 SUITE_1X[4] = {0x00,0x0f, 0xac, 0x01};
 
 	if (rsn_ie_len <= 0) {
 		/* No RSN IE - fail silently */
