@@ -1,8 +1,10 @@
-# rtl8812au (renamed to rtl8821au)
+# rtl8812au
 
-rtl8821au driver base on version 4.3.14
+Realtek 8812AU/8821AU USB WiFi driver.
 
 for AC1200 (801.11ac) Wireless Dual-Band USB Adapter
+
+This code is base on version 4.3.14 from https://github.com/diederikdehaas/rtl8812AU
 
 ## Known Supported Devices:
 
@@ -39,11 +41,11 @@ CONFIG_PLATFORM_ARM_RPI = y
 ```
 
 ```sh
-# cd /usr/src/rtl8821au
+# cd /usr/src/rtl8812au
 # sudo make clean
 # sudo make
 # sudo make install
-# sudo modprobe -a rtl8821au
+# sudo modprobe -a rtl8812au
 ```
 
 ## Contributors
