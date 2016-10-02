@@ -40,10 +40,10 @@ void rtw_adapter_proc_replace(struct net_device *dev);
 
 #else //!CONFIG_PROC_DEBUG
 
-static inline struct proc_dir_entry *get_rtw_drv_proc(void) {return NULL;}
-static inline int rtw_drv_proc_init(void) {return 0;}
+#define get_rtw_drv_proc() NULL
+#define rtw_drv_proc_init() 0
 #define rtw_drv_proc_deinit() do {} while (0)
-static inline struct proc_dir_entry *rtw_adapter_proc_init(struct net_device *dev) {return NULL;}
+#define rtw_adapter_proc_init(dev) NULL
 #define rtw_adapter_proc_deinit(dev) do {} while (0)
 #define rtw_adapter_proc_replace(dev) do {} while (0)
 

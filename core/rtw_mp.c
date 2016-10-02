@@ -137,12 +137,19 @@ static void _init_mp_priv_(struct mp_priv *pmp_priv)
 	pmp_priv->network_macaddr[5] = 0x55;
 
 	pmp_priv->bSetRxBssid = _FALSE;
+	pmp_priv->bRTWSmbCfg = _FALSE;
 
 	pnetwork = &pmp_priv->mp_network.network;
 	_rtw_memcpy(pnetwork->MacAddress, pmp_priv->network_macaddr, ETH_ALEN);
 
 	pnetwork->Ssid.SsidLength = 8;
 	_rtw_memcpy(pnetwork->Ssid.Ssid, "mp_871x", pnetwork->Ssid.SsidLength);
+
+	pmp_priv->tx.payload = 2;
+#ifdef CONFIG_80211N_HT
+	pmp_priv->tx.attrib.ht_en = 1;
+#endif
+
 }
 
 #ifdef PLATFORM_WINDOWS
@@ -277,6 +284,9 @@ static void mp_init_xmit_attrib(struct mp_tx *pmptx, PADAPTER padapter)
 	pattrib->encrypt = 0;
 	pattrib->bswenc = _FALSE;
 	pattrib->qos_en = _FALSE;
+
+	pattrib->pktlen = 1000;
+
 }
 
 s32 init_mp_priv(PADAPTER padapter)
@@ -689,8 +699,6 @@ void MPT_PwrCtlDM(PADAPTER padapter, u32 bstart)
 		pdmpriv->TxPowerTrackControl = _TRUE;
 		pDM_Odm->RFCalibrateInfo.TxPowerTrackControl = _TRUE;
 		padapter->mppriv.mp_dm =1;
-		odm_TXPowerTrackingInit(pDM_Odm);
-		ODM_ClearTxPowerTrackingState(pDM_Odm);
 
 	} else {
 		DBG_871X("in MPT_PwrCtlDM stop \n");
@@ -702,11 +710,13 @@ void MPT_PwrCtlDM(PADAPTER padapter, u32 bstart)
 		{
 			TXPWRTRACK_CFG	c;
 			u1Byte	chnl =0 ;
-
+			_rtw_memset(&c, 0, sizeof(TXPWRTRACK_CFG));
 			ConfigureTxpowerTrack(pDM_Odm, &c);
 			ODM_ClearTxPowerTrackingState(pDM_Odm);
-			(*c.ODM_TxPwrTrackSetPwr)(pDM_Odm, BBSWING, ODM_RF_PATH_A, chnl);
-			(*c.ODM_TxPwrTrackSetPwr)(pDM_Odm, BBSWING, ODM_RF_PATH_B, chnl);
+			if (*c.ODM_TxPwrTrackSetPwr) {
+				(*c.ODM_TxPwrTrackSetPwr)(pDM_Odm, BBSWING, ODM_RF_PATH_A, chnl);
+				(*c.ODM_TxPwrTrackSetPwr)(pDM_Odm, BBSWING, ODM_RF_PATH_B, chnl);
+			}
 		}
 	}
 
@@ -725,7 +735,14 @@ u32 mp_join(PADAPTER padapter,u8 mode)
 	struct mp_priv *pmppriv = &padapter->mppriv;
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
 	struct wlan_network *tgt_network = &pmlmepriv->cur_network;
+	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
+	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
+	WLAN_BSSID_EX		*pnetwork = (WLAN_BSSID_EX*)(&(pmlmeinfo->network));
 
+#ifdef CONFIG_IOCTL_CFG80211
+	struct wireless_dev *pwdev = padapter->rtw_wdev;
+	pwdev->iftype = NL80211_IFTYPE_ADHOC;
+#endif //#ifdef CONFIG_IOCTL_CFG80211
 	// 1. initialize a new WLAN_BSSID_EX
 	_rtw_memset(&bssid, 0, sizeof(WLAN_BSSID_EX));
 	DBG_8192C("%s ,pmppriv->network_macaddr=%x %x %x %x %x %x \n",__func__,
@@ -738,6 +755,7 @@ u32 mp_join(PADAPTER padapter,u8 mode)
 		bssid.InfrastructureMode = Ndis802_11IBSS;
 		bssid.NetworkTypeInUse = Ndis802_11DS;
 		bssid.IELength = 0;
+		bssid.Configuration.DSConfig=pmppriv->channel;
 
 	} else if(mode==WIFI_FW_STATION_STATE) {
 		bssid.Ssid.SsidLength = strlen("mp_pseudo_STATION");
@@ -746,7 +764,6 @@ u32 mp_join(PADAPTER padapter,u8 mode)
 		bssid.NetworkTypeInUse = Ndis802_11DS;
 		bssid.IELength = 0;
 	}
-
 
 	length = get_WLAN_BSSID_EX_sz(&bssid);
 	if (length % 4)
@@ -767,14 +784,7 @@ u32 mp_join(PADAPTER padapter,u8 mode)
 	}
 	pmppriv->prev_fw_state = get_fwstate(pmlmepriv);
 	pmlmepriv->fw_state = WIFI_MP_STATE;
-#if 0
-	if (pmppriv->mode == _LOOPBOOK_MODE_) {
-		set_fwstate(pmlmepriv, WIFI_MP_LPBK_STATE); //append txdesc
-		RT_TRACE(_module_mp_, _drv_notice_, ("+start mp in Lookback mode\n"));
-	} else {
-		RT_TRACE(_module_mp_, _drv_notice_, ("+start mp in normal mode\n"));
-	}
-#endif
+
 	set_fwstate(pmlmepriv, _FW_UNDER_LINKING);
 
 	//3 2. create a new psta for mp driver
@@ -793,8 +803,17 @@ u32 mp_join(PADAPTER padapter,u8 mode)
 	//3 3. join psudo AdHoc
 	tgt_network->join_res = 1;
 	tgt_network->aid = psta->aid = 1;
-	_rtw_memcpy(&tgt_network->network, &bssid, length);
 
+	_rtw_memcpy(&padapter->registrypriv.dev_network, &bssid, length);
+	rtw_update_registrypriv_dev_network(padapter);
+	_rtw_memcpy(&tgt_network->network,&padapter->registrypriv.dev_network, padapter->registrypriv.dev_network.Length);
+	_rtw_memcpy(pnetwork,&padapter->registrypriv.dev_network, padapter->registrypriv.dev_network.Length);
+
+	if(rtw_createbss_cmd(padapter)!=_SUCCESS) {
+		DBG_871X("mp_join: rtw_createbss_cmd status FAIL*** \n ");
+		res =  _FALSE;
+		return res;
+	}
 	rtw_indicate_connect(padapter);
 	_clr_fwstate_(pmlmepriv, _FW_UNDER_LINKING);
 	set_fwstate(pmlmepriv,_FW_LINKED);
@@ -1067,7 +1086,7 @@ int SetTxPower(PADAPTER pAdapter)
 	}
 
 	TxPower[ODM_RF_PATH_A] = (u1Byte)(u1TxPower&0xff);
-	TxPower[ODM_RF_PATH_B] = (u1Byte)((u1TxPower&0xff00)>>8);
+	TxPower[ODM_RF_PATH_B] = (u1Byte)(u1TxPower&0xff);
 	DBG_871X("TxPower(A, B) = (0x%x, 0x%x)\n", TxPower[ODM_RF_PATH_A], TxPower[ODM_RF_PATH_B]);
 
 	for(rf=0; rf<2; rf++) {
@@ -1453,7 +1472,9 @@ void fill_tx_desc_8192e(PADAPTER padapter)
 #if defined(CONFIG_PCI_HCI) //8192EE
 	SET_TX_DESC_OFFSET_92E(pDesc, offset+8); //work around
 	SET_TX_DESC_PKT_OFFSET_92E(pDesc, 0); /* 8192EE pkt_offset is 0 */
-#else //8192EU 8192ES
+#elif  defined(CONFIG_SDIO_HCI)
+	SET_TX_DESC_OFFSET_92E(pDesc, offset);
+#else //8192EU
 	SET_TX_DESC_OFFSET_92E(pDesc, offset);
 	SET_TX_DESC_PKT_OFFSET_92E(pDesc, 1);
 #endif
@@ -1470,7 +1491,8 @@ void fill_tx_desc_8192e(PADAPTER padapter)
 	//SET_TX_DESC_QUEUE_SEL_8812(pDesc,  QSLT_MGNT);
 
 	if (!pattrib->qos_en) {
-		SET_TX_DESC_HWSEQ_SEL_92E(pDesc, 1); // Hw set sequence number
+		SET_TX_DESC_EN_HWSEQ_92E(pDesc, 1);// Hw set sequence number
+		SET_TX_DESC_HWSEQ_SEL_92E(pDesc, pattrib->hw_ssn_sel);
 	} else {
 		SET_TX_DESC_SEQ_92E(pDesc, pattrib->seqnum);
 	}
@@ -1494,34 +1516,33 @@ void fill_tx_desc_8192e(PADAPTER padapter)
 #if defined(CONFIG_RTL8723B)
 void fill_tx_desc_8723b(PADAPTER padapter)
 {
-
 	struct mp_priv *pmp_priv = &padapter->mppriv;
 	struct pkt_attrib *pattrib = &(pmp_priv->tx.attrib);
-	PTXDESC_8723B ptxdesc = (PTXDESC_8723B)&(pmp_priv->tx.desc);
-	u8 descRate;
+	u8 *ptxdesc = pmp_priv->tx.desc;
 
-	ptxdesc->bk = 1;
-	ptxdesc->macid = pattrib->mac_id;
-	ptxdesc->qsel = pattrib->qsel;
+	SET_TX_DESC_AGG_BREAK_8723B(ptxdesc, 1);
+	SET_TX_DESC_MACID_8723B(ptxdesc, pattrib->mac_id);
+	SET_TX_DESC_QUEUE_SEL_8723B(ptxdesc, pattrib->qsel);
 
-	ptxdesc->rate_id = pattrib->raid;
-	ptxdesc->seq = pattrib->seqnum;
-	ptxdesc->en_hwseq = 1;
-	ptxdesc->userate = 1;
-	ptxdesc->disdatafb = 1;
+	SET_TX_DESC_RATE_ID_8723B(ptxdesc, pattrib->raid);
+	SET_TX_DESC_SEQ_8723B(ptxdesc, pattrib->seqnum);
+	SET_TX_DESC_HWSEQ_EN_8723B(ptxdesc, 1);
+	SET_TX_DESC_USE_RATE_8723B(ptxdesc, 1);
+	SET_TX_DESC_DISABLE_FB_8723B(ptxdesc, 1);
 
-	if( pmp_priv->preamble ) {
-		if (pmp_priv->rateidx <=  MPT_RATE_54M)
-			ptxdesc->data_short = 1;
+	if (pmp_priv->preamble)
+		if (pmp_priv->rateidx <=  MPT_RATE_54M) {
+			SET_TX_DESC_DATA_SHORT_8723B(ptxdesc, 1);
+		}
+
+	if (pmp_priv->bandwidth == CHANNEL_WIDTH_40) {
+		SET_TX_DESC_DATA_BW_8723B(ptxdesc, 1);
 	}
-	if (pmp_priv->bandwidth == CHANNEL_WIDTH_40)
-		ptxdesc->data_bw = 1;
 
-	ptxdesc->datarate = pmp_priv->rateidx;
+	SET_TX_DESC_TX_RATE_8723B(ptxdesc, pmp_priv->rateidx);
 
-	ptxdesc->data_ratefb_lmt = 0x1F;
-	ptxdesc->rts_ratefb_lmt = 0xF;
-
+	SET_TX_DESC_DATA_RATE_FB_LIMIT_8723B(ptxdesc, 0x1F);
+	SET_TX_DESC_RTS_RATE_FB_LIMIT_8723B(ptxdesc, 0xF);
 }
 #endif
 
@@ -1543,7 +1564,7 @@ static void Rtw_MPSetMacTxEDCA(PADAPTER padapter)
 void SetPacketTx(PADAPTER padapter)
 {
 	u8 *ptr, *pkt_start, *pkt_end;
-	u32 pkt_size,i;
+	u32 pkt_size, i;
 	struct rtw_ieee80211_hdr *hdr;
 	u8 payload;
 	s32 bmcast;
@@ -1779,7 +1800,7 @@ static u32 rtw_GetPSDData(PADAPTER pAdapter, u32 point)
 {
 	u32 psd_val=0;
 
-#if defined(CONFIG_RTL8812A)||defined(CONFIG_RTL8821A) //MP PSD for 8812A	
+#if defined(CONFIG_RTL8812A)||defined(CONFIG_RTL8821A) //MP PSD for 8812A
 	u16 psd_reg = 0x910;
 	u16 psd_regL= 0xF44;
 
@@ -2145,8 +2166,7 @@ ULONG getPowerDiffByRate8188E(
 
 
 
-static inline	ULONG
-mpt_ProQueryCalTxPower_8188E(
+static inline ULONG mpt_ProQueryCalTxPower_8188E(
     IN	PADAPTER		pAdapter,
     IN	u1Byte			RfPath
 )
@@ -2456,7 +2476,6 @@ ULONG mpt_ProQueryCalTxPower(
 {
 
 	HAL_DATA_TYPE	*pHalData	= GET_HAL_DATA(pAdapter);
-	//ULONG			TxPower = 1, PwrGroup=0, PowerDiffByRate=0;
 	ULONG			TxPower = 1;
 	u1Byte			rate = 0;
 

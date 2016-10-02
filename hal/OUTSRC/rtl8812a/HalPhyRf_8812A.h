@@ -102,5 +102,5 @@ VOID PHY_SetRFPathSwitch_8812A(
 );
 
 
-#endif	// #ifndef __HAL_PHY_RF_8812A_H__								
+#endif	// #ifndef __HAL_PHY_RF_8812A_H__
 

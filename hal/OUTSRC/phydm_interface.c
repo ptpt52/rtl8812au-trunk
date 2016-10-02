@@ -296,7 +296,7 @@ VOID
 ODM_MoveMemory(
     IN 	PDM_ODM_T	pDM_Odm,
     OUT PVOID		pDest,
-    IN  const u8 * pSrc,
+    IN  PVOID		pSrc,
     IN  u4Byte		Length
 )
 {
@@ -311,7 +311,7 @@ ODM_MoveMemory(
 
 void ODM_Memory_Set
 (IN 	PDM_ODM_T	pDM_Odm,
- IN		PVOID pbuf,
+ IN  PVOID	pbuf,
  IN  s1Byte	value,
  IN  u4Byte	length)
 {
@@ -325,8 +325,8 @@ void ODM_Memory_Set
 }
 s4Byte ODM_CompareMemory(
     IN 	PDM_ODM_T		pDM_Odm,
-    IN	const PVOID pBuf1,
-    IN	const PVOID pBuf2,
+    IN	PVOID           pBuf1,
+    IN	PVOID           pBuf2,
     IN	u4Byte          length
 )
 {
@@ -624,165 +624,230 @@ ODM_ReleaseTimer(
 }
 
 
+u1Byte
+phydm_trans_h2c_id(
+    IN	PDM_ODM_T	pDM_Odm,
+    IN	u1Byte		phydm_h2c_id
+)
+{
+	u1Byte platform_h2c_id=0xff;
+
+
+	switch(phydm_h2c_id) {
+	//1 [0]
+	case ODM_H2C_RSSI_REPORT:
+
+#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
+		if(pDM_Odm->SupportICType == ODM_RTL8188E) {
+			platform_h2c_id = H2C_88E_RSSI_REPORT;
+		} else if(pDM_Odm->SupportICType == ODM_RTL8814A) {
+			platform_h2c_id =H2C_8814A_RSSI_REPORT;
+		} else {
+			platform_h2c_id = H2C_RSSI_REPORT;
+		}
+
+#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if((RTL8812A_SUPPORT==1) ||(RTL8821A_SUPPORT==1))
+		platform_h2c_id = H2C_8812_RSSI_REPORT;
+#elif(RTL8192E_SUPPORT==1)
+		platform_h2c_id =H2C_8192E_RSSI_REPORT;
+#elif(RTL8723B_SUPPORT==1)
+		platform_h2c_id =H2C_8723B_RSSI_SETTING;
+#elif(RTL8188E_SUPPORT==1)
+		platform_h2c_id =H2C_RSSI_REPORT;
+#elif(RTL8723A_SUPPORT==1)
+		platform_h2c_id =RSSI_SETTING_EID;
+#elif(RTL8192D_SUPPORT==1)
+		platform_h2c_id =H2C_RSSI_REPORT;
+#elif(RTL8192C_SUPPORT==1)
+		platform_h2c_id =RSSI_SETTING_EID;
+#endif
+
+#elif(DM_ODM_SUPPORT_TYPE & ODM_AP)
+#if((RTL8881A_SUPPORT==1)||(RTL8192E_SUPPORT==1)||(RTL8814A_SUPPORT==1) )
+		if(pDM_Odm->SupportICType == ODM_RTL8881A || pDM_Odm->SupportICType == ODM_RTL8192E|| pDM_Odm->SupportICType == ODM_RTL8814A) {
+			platform_h2c_id =H2C_88XX_RSSI_REPORT;
+			//ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_RA_DBG, ODM_DBG_LOUD, ("[H2C] H2C_88XX_RSSI_REPORT CMD_ID = (( %d )) \n", platform_h2c_id));
+		} else
+#endif
+#if(RTL8812A_SUPPORT==1)
+			if(pDM_Odm->SupportICType == ODM_RTL8812) {
+				platform_h2c_id = H2C_8812_RSSI_REPORT;
+			} else
+#endif
+			{}
+#endif
+
+		break;
+
+	//1 [3]
+	case ODM_H2C_WIFI_CALIBRATION:
+#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
+		platform_h2c_id =H2C_WIFI_CALIBRATION;
+
+#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if(RTL8723B_SUPPORT==1)
+		platform_h2c_id = H2C_8723B_BT_WLAN_CALIBRATION;
+#endif
+
+#elif(DM_ODM_SUPPORT_TYPE & ODM_AP)
+
+
+#endif
+
+		break;
+
+
+	//1 [4]
+	case ODM_H2C_IQ_CALIBRATION:
+#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
+		platform_h2c_id =H2C_IQ_CALIBRATION;
+
+#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if((RTL8812A_SUPPORT==1) ||(RTL8821A_SUPPORT==1))
+		platform_h2c_id = H2C_8812_IQ_CALIBRATION;
+#endif
+#elif(DM_ODM_SUPPORT_TYPE & ODM_AP)
+
+
+#endif
+
+		break;
+	//1 [5]
+	case ODM_H2C_RA_PARA_ADJUST:
+
+#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
+		if(pDM_Odm->SupportICType == ODM_RTL8814A) {
+			platform_h2c_id =H2C_8814A_RA_PARA_ADJUST;
+		} else {
+			platform_h2c_id = H2C_RA_PARA_ADJUST;
+		}
+#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if((RTL8812A_SUPPORT==1) ||(RTL8821A_SUPPORT==1))
+		platform_h2c_id = H2C_8812_RA_PARA_ADJUST;
+#elif(RTL8192E_SUPPORT==1)
+		platform_h2c_id =H2C_8192E_RA_PARA_ADJUST;
+#elif(RTL8723B_SUPPORT==1)
+		platform_h2c_id =H2C_8723B_RA_PARA_ADJUST;
+#endif
+
+#elif(DM_ODM_SUPPORT_TYPE & ODM_AP)
+#if((RTL8881A_SUPPORT==1)||(RTL8192E_SUPPORT==1)||(RTL8814A_SUPPORT==1))
+		if(pDM_Odm->SupportICType == ODM_RTL8881A || pDM_Odm->SupportICType == ODM_RTL8192E) {
+			platform_h2c_id =H2C_88XX_RA_PARA_ADJUST;
+			//ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_RA_DBG, ODM_DBG_LOUD, ("[H2C] H2C_88XX_RA_PARA_ADJUST CMD_ID = (( %d )) \n", platform_h2c_id));
+		} else if(pDM_Odm->SupportICType == ODM_RTL8814A) {
+			platform_h2c_id =H2C_88XX_RA_PARA_ADJUST_8814;
+		} else
+#endif
+#if(RTL8812A_SUPPORT==1)
+			if(pDM_Odm->SupportICType == ODM_RTL8812) {
+				platform_h2c_id = H2C_8812_RA_PARA_ADJUST;
+			} else
+#endif
+			{}
+#endif
+
+		break;
+
+
+	//1 [6]
+	case PHYDM_H2C_DYNAMIC_TX_PATH:
+
+#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
+		if(pDM_Odm->SupportICType == ODM_RTL8814A) {
+			platform_h2c_id =H2C_8814A_DYNAMIC_TX_PATH;
+		}
+#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
+
+
+#elif(DM_ODM_SUPPORT_TYPE & ODM_AP)
+#if(RTL8814A_SUPPORT==1)
+		if( pDM_Odm->SupportICType == ODM_RTL8814A) {
+			//platform_h2c_id =H2C_88XX_DYNAMIC_TX_PATH;
+		}
+#endif
+
+#endif
+
+		break;
+
+	default:
+		platform_h2c_id=0xff;
+		break;
+	}
+
+	return platform_h2c_id;
+
+}
+
 //
 // ODM FW relative API.
 //
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
+
 VOID
 ODM_FillH2CCmd(
     IN	PDM_ODM_T		pDM_Odm,
-    IN	u1Byte 			ElementID,
+    IN	u1Byte 			phydm_h2c_id,
     IN	u4Byte 			CmdLen,
     IN	pu1Byte			pCmdBuffer
 )
 {
-	PADAPTER 		Adapter = pDM_Odm->Adapter;
+	PADAPTER 	Adapter = pDM_Odm->Adapter;
+	u1Byte		platform_h2c_id;
 
-	if(pDM_Odm->SupportICType & ODM_IC_11AC_SERIES) {
-		switch(ElementID) {
-		case ODM_H2C_RSSI_REPORT:
+	platform_h2c_id=phydm_trans_h2c_id(pDM_Odm, phydm_h2c_id);
 
-#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-			FillH2CCmd8812(Adapter, H2C_8812_RSSI_REPORT, CmdLen, pCmdBuffer);
-#else
-#if((RTL8812A_SUPPORT==1) ||(RTL8821A_SUPPORT==1))
-			FillH2CCmd_8812(Adapter, H2C_8812_RSSI_REPORT, CmdLen, pCmdBuffer);
-#endif
-#endif
-			break;
-		case ODM_H2C_IQ_CALIBRATION:
-#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-			FillH2CCmd8812(Adapter, H2C_8812_IQ_CALIBRATION, CmdLen, pCmdBuffer);
-#else
-#if((RTL8812A_SUPPORT==1) ||(RTL8821A_SUPPORT==1))
-			FillH2CCmd_8812(Adapter, H2C_8812_IQ_CALIBRATION, CmdLen, pCmdBuffer);
-#endif
-#endif
-			break;
-		default:
-			break;
-		}
-
-	} else if(pDM_Odm->SupportICType == ODM_RTL8192E) {
-		switch(ElementID) {
-		case ODM_H2C_RSSI_REPORT:
-#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-			FillH2CCmd8812(Adapter, H2C_8812_RSSI_REPORT, CmdLen, pCmdBuffer);
-#else
-#if(RTL8192E_SUPPORT==1)
-			FillH2CCmd_8192E(Adapter, H2C_8192E_RSSI_REPORT, CmdLen, pCmdBuffer);
-#endif
-#endif
-			break;
-		default:
-			break;
-		}
-	} else if(pDM_Odm->SupportICType == ODM_RTL8723B) {
-		switch(ElementID) {
-		case ODM_H2C_RSSI_REPORT:
-#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-			FillH2CCmd8723B(Adapter, H2C_8723B_RSSI_REPORT, CmdLen, pCmdBuffer);
-#else
-#if(RTL8723B_SUPPORT==1)
-			FillH2CCmd8723B(Adapter, H2C_8723B_RSSI_SETTING, CmdLen, pCmdBuffer);
-#endif
-#endif
-			break;
-		case ODM_H2C_WIFI_CALIBRATION:
-#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-			FillH2CCmd8723B(Adapter, H2C_8723B_WIFI_CALIBRATION, CmdLen, pCmdBuffer);
-#else
-#if(RTL8723B_SUPPORT==1)
-			FillH2CCmd8723B(Adapter, H2C_8723B_BT_WLAN_CALIBRATION, CmdLen, pCmdBuffer);
-#endif
-#endif
-			break;
-		default:
-			break;
-		}
-
-	} else if(pDM_Odm->SupportICType == ODM_RTL8188E) {
-		switch(ElementID) {
-		case ODM_H2C_RSSI_REPORT:
-			//if((pDM_Odm->CutVersion == ODM_CUT_I) && (!pDM_Odm->RaSupport88E)){
-			if(!pDM_Odm->RaSupport88E) {
-#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-				FillH2CCmd88E(Adapter, H2C_88E_RSSI_REPORT, CmdLen, pCmdBuffer);
-#else
-#if(RTL8188E_SUPPORT==1)
-				FillH2CCmd_88E(Adapter, H2C_RSSI_REPORT, CmdLen, pCmdBuffer);
-#endif
-#endif
-			}
-			break;
-		default:
-			break;
-		}
+	if(platform_h2c_id==0xff) {
+		ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_RA_DBG, ODM_DBG_LOUD, ("[H2C] Wrong H2C CMD-ID !! platform_h2c_id==0xff ,  PHYDM_ElementID=((%d )) \n",phydm_h2c_id));
+		return;
 	}
-#if(DM_ODM_SUPPORT_TYPE & ODM_CE)
-	else if(pDM_Odm->SupportICType == ODM_RTL8723A) {
-		switch(ElementID) {
-		case ODM_H2C_RSSI_REPORT:
-#if(RTL8723A_SUPPORT==1)
-			FillH2CCmd(Adapter, RSSI_SETTING_EID, CmdLen, pCmdBuffer);
-#endif
-			break;
-		default:
-			break;
-		}
-	} else if(pDM_Odm->SupportICType == ODM_RTL8192D) {
-		switch(ElementID) {
-		case ODM_H2C_RSSI_REPORT:
-#if(RTL8192D_SUPPORT==1)
-			FillH2CCmd92D(Adapter, H2C_RSSI_REPORT, CmdLen, pCmdBuffer);
-#endif
-			break;
-		default:
-			break;
-		}
-	}
-#endif
-	else {
-		switch(ElementID) {
-		case ODM_H2C_RSSI_REPORT:
-#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-			FillH2CCmd92C(Adapter, H2C_RSSI_REPORT, CmdLen, pCmdBuffer);
-#else
-#if(RTL8192C_SUPPORT==1)
-			rtl8192c_FillH2CCmd(Adapter, RSSI_SETTING_EID, CmdLen, pCmdBuffer);
-#endif
-#endif
-			break;
-		default:
-			break;
-		}
-	}
-}
-#else
-u4Byte
-ODM_FillH2CCmd(
-    IN	pu1Byte		pH2CBuffer,
-    IN	u4Byte		H2CBufferLen,
-    IN	u4Byte		CmdNum,
-    IN	pu4Byte		pElementID,
-    IN	pu4Byte		pCmdLen,
-    IN	pu1Byte*		pCmbBuffer,
-    IN	pu1Byte		CmdStartSeq
-)
-{
-#if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
 
+#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
+	if(pDM_Odm->SupportICType == ODM_RTL8188E) {
+		if(!pDM_Odm->RaSupport88E)
+			FillH2CCmd88E(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
+	} else if(pDM_Odm->SupportICType == ODM_RTL8192C) {
+		FillH2CCmd92C(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
+	} else if(pDM_Odm->SupportICType == ODM_RTL8814A) {
+		FillH2CCmd8814A(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
+	} else {
+		FillH2CCmd(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
+	}
 #elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
 
-#elif(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	//FillH2CCmd(pH2CBuffer, H2CBufferLen, CmdNum, pElementID, pCmdLen, pCmbBuffer, CmdStartSeq);
-	return	FALSE;
+#if((RTL8812A_SUPPORT==1) ||(RTL8821A_SUPPORT==1))
+	FillH2CCmd_8812(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
+#elif(RTL8192E_SUPPORT==1)
+	FillH2CCmd_8192E(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
+#elif(RTL8723B_SUPPORT==1)
+	FillH2CCmd8723B(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
+#elif(RTL8188E_SUPPORT==1)
+	if(!pDM_Odm->RaSupport88E)
+		FillH2CCmd_88E(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
+#elif(RTL8723A_SUPPORT==1)
+	FillH2CCmd(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
+#elif(RTL8192D_SUPPORT==1)
+	FillH2CCmd92D(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
+#elif(RTL8192C_SUPPORT==1)
+	rtl8192c_FillH2CCmd(Adapter, platform_h2c_id, CmdLen, pCmdBuffer);
 #endif
 
-	return	TRUE;
+#elif(DM_ODM_SUPPORT_TYPE & ODM_AP)
+#if((RTL8881A_SUPPORT==1)||(RTL8192E_SUPPORT==1)||(RTL8814A_SUPPORT==1))
+	if(pDM_Odm->SupportICType == ODM_RTL8881A || pDM_Odm->SupportICType == ODM_RTL8192E|| pDM_Odm->SupportICType == ODM_RTL8814A) {
+		GET_HAL_INTERFACE(pDM_Odm->priv)->FillH2CCmdHandler(pDM_Odm->priv, platform_h2c_id, CmdLen, pCmdBuffer);
+		//FillH2CCmd88XX(pDM_Odm->priv, platform_h2c_id, CmdLen, pCmdBuffer);
+	} else
+#endif
+#if(RTL8812A_SUPPORT==1)
+		if(pDM_Odm->SupportICType == ODM_RTL8812) {
+			FillH2CCmd8812(pDM_Odm->priv, platform_h2c_id, CmdLen, pCmdBuffer);
+		} else
+#endif
+		{}
+#endif
 }
-#endif
-
 
 u8Byte
 ODM_GetCurrentTime(
@@ -809,7 +874,7 @@ ODM_GetProgressingTime(
 #elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	return rtw_get_passing_time_ms((u4Byte)Start_Time);
 #elif(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	return   (PlatformGetCurrentTime() - Start_Time)>>10;
+	return   ((PlatformGetCurrentTime() - Start_Time)>>10);
 #endif
 }
 

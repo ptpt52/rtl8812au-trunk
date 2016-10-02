@@ -28,6 +28,7 @@
 
 #if (RTL8812A_SUPPORT == 1)
 
+#if(defined(CONFIG_PATH_DIVERSITY))
 VOID
 odm_UpdateTxPath_8812A(IN PDM_ODM_T pDM_Odm, IN u1Byte Path)
 {
@@ -48,22 +49,6 @@ odm_UpdateTxPath_8812A(IN PDM_ODM_T pDM_Odm, IN u1Byte Path)
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_PATH_DIV, ODM_DBG_LOUD, ("Path=%s\n",(Path==ODM_RF_PATH_A)?"ODM_RF_PATH_A":"ODM_RF_PATH_B"));
 }
 
-VOID
-ODM_PathStatistics_8812A(
-    IN		PDM_ODM_T		pDM_Odm,
-    IN		u4Byte			MacId,
-    IN		u4Byte			RSSI_A,
-    IN		u4Byte			RSSI_B
-)
-{
-	pPATHDIV_T	pDM_PathDiv = &pDM_Odm->DM_PathDiv;
-
-	pDM_PathDiv->PathA_Sum[MacId]+=RSSI_A;
-	pDM_PathDiv->PathA_Cnt[MacId]++;
-
-	pDM_PathDiv->PathB_Sum[MacId]+=RSSI_B;
-	pDM_PathDiv->PathB_Cnt[MacId]++;
-}
 
 VOID
 ODM_PathDiversityInit_8812A(
@@ -164,5 +149,5 @@ ODM_SetTxPathByTxInfo_8812A(
 }
 #endif
 
-
+#endif // CONFIG_PATH_DIVERSITY
 #endif //#if (RTL8812A_SUPPORT == 1)

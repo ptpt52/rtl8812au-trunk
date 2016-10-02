@@ -516,9 +516,9 @@ _InitPageBoundary_8812AUsb(
 //	rxff_bndy = (Offset*256)-1;
 
 	if(IS_HARDWARE_TYPE_8812(Adapter))
-		rtw_write16(Adapter, (REG_TRXFF_BNDY + 2), MAX_RX_DMA_BUFFER_SIZE_8812-1);
+		rtw_write16(Adapter, (REG_TRXFF_BNDY + 2), RX_DMA_BOUNDARY_8812);
 	else
-		rtw_write16(Adapter, (REG_TRXFF_BNDY + 2), MAX_RX_DMA_BUFFER_SIZE_8821-1);
+		rtw_write16(Adapter, (REG_TRXFF_BNDY + 2), RX_DMA_BOUNDARY_8821);
 
 }
 
@@ -949,7 +949,7 @@ usb_AggSettingRxUpdate_8812A(
 			//Adjust DMA page and thresh.
 			temp = pHalData->RegAcUsbDmaSize | (pHalData->RegAcUsbDmaTime<<8);
 			rtw_write16(Adapter, REG_RXDMA_AGG_PG_TH, temp);
-			rtw_write8(Adapter, REG_RXDMA_AGG_PG_TH+3, BIT(7)); //for dma agg , 0x280[31]Â¡GBIT_RXDMA_AGG_OLD_MOD, set 1
+			rtw_write8(Adapter, REG_RXDMA_AGG_PG_TH+3, BIT(7)); //for dma agg , 0x280[31]¡GBIT_RXDMA_AGG_OLD_MOD, set 1
 		}
 		break;
 	case USB_RX_AGG_USB:
@@ -1231,8 +1231,7 @@ _InitAntenna_Selection_8812A(IN	PADAPTER Adapter)
 // If Efuse 0x0e bit1 is not enabled, we can not support selective suspend for Minicard and
 // slim card.
 //
-static inline VOID
-HalDetectSelectiveSuspendMode(
+static inline VOID HalDetectSelectiveSuspendMode(
     IN PADAPTER				Adapter
 )
 {
@@ -1354,9 +1353,8 @@ u32 rtl8812au_hal_init(PADAPTER Adapter)
 
 	//rt_rf_power_state		eRfPowerStateToSet;
 
-#ifdef CONFIG_DEBUG
 	u32 init_start_time = rtw_get_current_time();
-#endif
+
 
 #ifdef DBG_HAL_INIT_PROFILING
 
@@ -1681,7 +1679,11 @@ u32 rtl8812au_hal_init(PADAPTER Adapter)
 		rtw_write16(Adapter,REG_FAST_EDCA_CTRL ,0);
 	//adjust EDCCA to avoid collision
 	if(pregistrypriv->wifi_spec) {
-		rtw_write16(Adapter, rEDCCA_Jaguar, 0xfe01);
+		if (IS_HARDWARE_TYPE_8821(Adapter))
+			if (Adapter->registrypriv.adaptivity_en == 0) {
+				Adapter->registrypriv.adaptivity_en = 1;
+				Adapter->registrypriv.adaptivity_mode = 0;
+			}
 	}
 	//Nav limit , suggest by scott
 	rtw_write8(Adapter, 0x652, 0x0);
@@ -1842,16 +1844,18 @@ u32 rtl8812au_hal_init(PADAPTER Adapter)
 #ifdef CONFIG_BT_COEXIST
 	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_BT_COEXIST);
 	//_InitBTCoexist(Adapter);
-#endif
-
 	// 2010/08/23 MH According to Alfred's suggestion, we need to to prevent HW enter
 	// suspend mode automatically.
 	//HwSuspendModeEnable92Cu(Adapter, _FALSE);
 
-#ifdef CONFIG_BT_COEXIST
-	// Init BT hw config.
-	rtw_btcoex_HAL_Initialize(Adapter, _FALSE);
-#endif
+	if ( _TRUE == pHalData->EEPROMBluetoothCoexist) {
+		// Init BT hw config.
+		rtw_btcoex_HAL_Initialize(Adapter, _FALSE);
+	} else {
+		// In combo card run wifi only , must setting some hardware reg.
+		rtl8812a_combo_card_WifiOnlyHwInit(Adapter);
+	}
+#endif //CONFIG_BT_COEXIST
 
 	HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_MISC31);
 
@@ -1909,11 +1913,14 @@ hal_poweroff_8812au(
 {
 	u8	u1bTmp;
 	u8 bMacPwrCtrlOn = _FALSE;
+	u16 	utemp, ori_fsmc0;
 
 	rtw_hal_get_hwreg(Adapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
 	if(bMacPwrCtrlOn == _FALSE)
 		return ;
 
+	ori_fsmc0 = utemp = rtw_read16(Adapter, REG_APS_FSMCO);
+	rtw_write16(Adapter, REG_APS_FSMCO, utemp & ~0x8000);
 	DBG_871X(" %s\n",__FUNCTION__);
 
 	//Stop Tx Report Timer. 0x4EC[Bit1]=b'0
@@ -1950,6 +1957,10 @@ hal_poweroff_8812au(
 	bMacPwrCtrlOn = _FALSE;
 	rtw_hal_set_hwreg(Adapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
 
+	if (ori_fsmc0 & 0x8000) {
+		utemp = rtw_read16(Adapter, REG_APS_FSMCO);
+		rtw_write16(Adapter, REG_APS_FSMCO, utemp | 0x8000);
+	}
 }
 
 static void rtl8812au_hw_power_down(_adapter *padapter)
@@ -2167,7 +2178,7 @@ hal_ReadMACAddress_8812AU(
 		}
 	} else {
 		//Random assigh MAC address
-		const u8	sMacAddr[ETH_ALEN] = {0x00, 0xE0, 0x4C, 0x88, 0x12, 0x00};
+		u8	sMacAddr[ETH_ALEN] = {0x00, 0xE0, 0x4C, 0x88, 0x12, 0x00};
 		//sMacAddr[5] = (u8)GetRandomNumber(1, 254);
 		_rtw_memcpy(pEEPROM->mac_addr, sMacAddr, ETH_ALEN);
 	}
@@ -2424,13 +2435,47 @@ InitAdapterVariablesByPROM_8812AU(
 )
 {
 	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(Adapter);
+#ifdef CONFIG_EFUSE_CONFIG_FILE
+	struct file *fp;
+#endif //CONFIG_EFUSE_CONFIG_FILE
 
+#ifdef CONFIG_EFUSE_CONFIG_FILE
+	if (check_phy_efuse_tx_power_info_valid(Adapter) == _FALSE) {
+		fp = filp_open(EFUSE_MAP_PATH, O_RDONLY, 0);
+		if (fp == NULL || IS_ERR(fp)) {
+			DBG_871X("[WARNING] invalid phy efuse and no efuse file, use driver default!!\n");
+		} else {
+			Hal_readPGDataFromConfigFile(Adapter, fp);
+			filp_close(fp, NULL);
+		}
+	}
+#else
 	hal_InitPGData_8812A(Adapter, pEEPROM->efuse_eeprom_data);
+#endif //CONFIG_EFUSE_CONFIG_FILE
+
 	Hal_EfuseParseIDCode8812A(Adapter, pEEPROM->efuse_eeprom_data);
 
 	Hal_ReadPROMVersion8812A(Adapter, pEEPROM->efuse_eeprom_data, pEEPROM->bautoload_fail_flag);
 	hal_ReadIDs_8812AU(Adapter, pEEPROM->efuse_eeprom_data, pEEPROM->bautoload_fail_flag);
+
+#ifdef CONFIG_EFUSE_CONFIG_FILE
+	if (check_phy_efuse_macaddr_info_valid(Adapter) == _TRUE) {
+		DBG_871X("using phy efuse mac\n");
+		Hal_GetPhyEfuseMACAddr(Adapter, pEEPROM->mac_addr);
+	} else {
+		fp = filp_open(WIFIMAC_PATH, O_RDONLY, 0);
+		if (fp == NULL || IS_ERR(fp)) {
+			DBG_871X("wifimac does not exist!!\n");
+			Hal_GetPhyEfuseMACAddr(Adapter, pEEPROM->mac_addr);
+		} else {
+			Hal_ReadMACAddrFromFile(Adapter, fp);
+			filp_close(fp, NULL);
+		}
+	}
+#else
 	hal_ReadMACAddress_8812AU(Adapter, pEEPROM->efuse_eeprom_data, pEEPROM->bautoload_fail_flag);
+#endif //CONFIG_EFUSE_CONFIG_FILE
+
 	Hal_ReadTxPowerInfo8812A(Adapter, pEEPROM->efuse_eeprom_data, pEEPROM->bautoload_fail_flag);
 	Hal_ReadBoardType8812A(Adapter, pEEPROM->efuse_eeprom_data, pEEPROM->bautoload_fail_flag);
 
@@ -2553,14 +2598,17 @@ void SetHwReg8812AU(PADAPTER Adapter, u8 variable, const u8* val)
 	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 	//struct dm_priv	*pdmpriv = &pHalData->dmpriv;
 	//DM_ODM_T 		*podmpriv = &pHalData->odmpriv;
-#if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
-	struct wowlan_ioctl_param *poidparam;
+#if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN) || defined(CONFIG_P2P_WOWLAN)
+	const struct wowlan_ioctl_param *poidparam;
 	struct recv_buf *precvbuf;
 	struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(Adapter);
+	struct mlme_priv	*pmlmepriv = &Adapter->mlmepriv;
+	struct sta_info *psta = NULL;
 	int res, i;
 	u32 tmp;
 	u16 len = 0;
-	u8 mstatus = (*(u8 *)val);
+	u16 media_status_rpt;
+	u8 mstatus = (*(const u8 *)val);
 	u8 trycnt = 100;
 	u8 data[4];
 #endif
@@ -2629,9 +2677,9 @@ void SetHwReg8812AU(PADAPTER Adapter, u8 variable, const u8* val)
 		}
 #endif
 		break;
-#ifdef CONFIG_WOWLAN
+#ifdef CONFIG_WOWLAN_OLD
 	case HW_VAR_WOWLAN: {
-		poidparam = (struct wowlan_ioctl_param *)val;
+		poidparam = (const struct wowlan_ioctl_param *)val;
 		switch (poidparam->subcode) {
 		case WOWLAN_ENABLE:
 			DBG_871X_LEVEL(_drv_always_, "WOWLAN_ENABLE\n");
@@ -2685,6 +2733,11 @@ void SetHwReg8812AU(PADAPTER Adapter, u8 variable, const u8* val)
 		case WOWLAN_DISABLE:
 			DBG_871X_LEVEL(_drv_always_, "WOWLAN_DISABLE\n");
 			trycnt = 10;
+			psta = rtw_get_stainfo(&Adapter->stapriv, get_bssid(pmlmepriv));
+			if (psta != NULL) {
+				media_status_rpt = (u16)((psta->mac_id<<8)|RT_MEDIA_DISCONNECT); //  MACID|OPMODE:0 disconnect
+				rtw_hal_set_hwreg(Adapter,HW_VAR_H2C_MEDIA_STATUS_RPT,(u8 *)&media_status_rpt);
+			}
 			// 1. Read wakeup reason
 			pwrctl->wowlan_wake_reason = rtw_read8(Adapter, REG_MCUTST_WOWLAN);
 			DBG_871X_LEVEL(_drv_always_, "wakeup_reason: 0x%02x, mac_630=0x%08x, mac_634=0x%08x, mac_1c0=0x%08x, mac_1c4=0x%08x"
@@ -2727,7 +2780,7 @@ void SetHwReg8812AU(PADAPTER Adapter, u8 variable, const u8* val)
 #endif
 #ifdef CONFIG_AP_WOWLAN
 	case HW_VAR_AP_WOWLAN: {
-		poidparam = (struct wowlan_ioctl_param *)val;
+		poidparam = (const struct wowlan_ioctl_param *)val;
 		switch (poidparam->subcode) {
 		case WOWLAN_AP_ENABLE:
 			DBG_871X("%s, WOWLAN_AP_ENABLE\n", __func__);
@@ -2989,14 +3042,14 @@ static void rtl8812au_init_default_value(_adapter * padapter)
 	                                0);
 }
 
-static u8 rtl8812au_ps_func(PADAPTER Adapter,HAL_INTF_PS_FUNC efunc_id, u8 *val)
+static u8 rtl8812au_ps_func(PADAPTER Adapter,HAL_INTF_PS_FUNC efunc_id, const u8 *val)
 {
 	u8 bResult = _TRUE;
 	switch(efunc_id) {
 
 #if defined(CONFIG_AUTOSUSPEND) && defined(SUPPORT_HW_RFOFF_DETECTED)
 	case HAL_USB_SELECT_SUSPEND: {
-		u8 bfwpoll = *(( u8*)val);
+		u8 bfwpoll = *((const u8*)val);
 		//rtl8188e_set_FwSelectSuspend_cmd(Adapter,bfwpoll ,500);//note fw to support hw power down ping detect
 	}
 	break;

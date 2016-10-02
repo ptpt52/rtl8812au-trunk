@@ -36,8 +36,8 @@
 #define	PCI_MAX_DEVICES				32
 #define	PCI_MAX_FUNCTION				8
 
-#define	PCI_CONF_ADDRESS   				0x0CF8   // PCI Configuration Space Address 
-#define	PCI_CONF_DATA					0x0CFC   // PCI Configuration Space Data 
+#define	PCI_CONF_ADDRESS   				0x0CF8   // PCI Configuration Space Address
+#define	PCI_CONF_DATA					0x0CFC   // PCI Configuration Space Data
 
 #define	PCI_CLASS_BRIDGE_DEV			0x06
 #define	PCI_SUBCLASS_BR_PCI_TO_PCI	0x04
@@ -52,13 +52,13 @@
 
 #define HAL_HW_PCI_8180_DEVICE_ID           	0x8180
 #define HAL_HW_PCI_8185_DEVICE_ID           	0x8185	//8185 or 8185b
-#define HAL_HW_PCI_8188_DEVICE_ID           	0x8188	//8185b		
-#define HAL_HW_PCI_8198_DEVICE_ID           	0x8198	//8185b		
+#define HAL_HW_PCI_8188_DEVICE_ID           	0x8188	//8185b
+#define HAL_HW_PCI_8198_DEVICE_ID           	0x8198	//8185b
 #define HAL_HW_PCI_8190_DEVICE_ID           	0x8190	//8190
 #define HAL_HW_PCI_8723E_DEVICE_ID		0x8723	//8723E
 #define HAL_HW_PCI_8192_DEVICE_ID           	0x8192	//8192 PCI-E
 #define HAL_HW_PCI_8192SE_DEVICE_ID		0x8192	//8192 SE
-#define HAL_HW_PCI_8174_DEVICE_ID           	0x8174	//8192 SE 
+#define HAL_HW_PCI_8174_DEVICE_ID           	0x8174	//8192 SE
 #define HAL_HW_PCI_8173_DEVICE_ID           	0x8173	//8191 SE Crab
 #define HAL_HW_PCI_8172_DEVICE_ID           	0x8172	//8191 SE RE
 #define HAL_HW_PCI_8171_DEVICE_ID           	0x8171	//8191 SE Unicron

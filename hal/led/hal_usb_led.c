@@ -1965,7 +1965,8 @@ void BlinkTimerCallback(void *data)
 #ifdef CONFIG_LED_HANDLED_BY_CMD_THREAD
 	rtw_led_blink_cmd(padapter, (PVOID)pLed);
 #else
-	_set_workitem(&(pLed->BlinkWorkItem));
+	if(ATOMIC_READ(&pLed->bCancelWorkItem) == _FALSE)
+		_set_workitem(&(pLed->BlinkWorkItem));
 #endif
 }
 
@@ -4453,9 +4454,8 @@ InitLed(
 	pLed->LedPin = LedPin;
 
 	ResetLedStatus(pLed);
-
+	ATOMIC_SET(&pLed->bCancelWorkItem, _FALSE);
 	_init_timer(&(pLed->BlinkTimer), padapter->pnetdev, BlinkTimerCallback, pLed);
-
 	_init_workitem(&(pLed->BlinkWorkItem), BlinkWorkItemCallback, pLed);
 }
 
@@ -4469,6 +4469,7 @@ DeInitLed(
     PLED_USB		pLed
 )
 {
+	ATOMIC_SET(&pLed->bCancelWorkItem, _TRUE);
 	_cancel_workitem_sync(&(pLed->BlinkWorkItem));
 	_cancel_timer_ex(&(pLed->BlinkTimer));
 	ResetLedStatus(pLed);

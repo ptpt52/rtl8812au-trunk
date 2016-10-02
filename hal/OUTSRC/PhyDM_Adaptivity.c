@@ -24,6 +24,12 @@
 #include "Mp_Precomp.h"
 #include "phydm_precomp.h"
 
+#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
+#if WPP_SOFTWARE_TRACE
+#include "PhyDM_Adaptivity.tmh"
+#endif
+#endif
+
 
 VOID
 Phydm_CheckAdaptivity(
@@ -32,23 +38,27 @@ Phydm_CheckAdaptivity(
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	if(pDM_Odm->SupportAbility & ODM_BB_ADAPTIVITY) {
-		if(pDM_Odm->bAdaOn == TRUE) {
-			if(pDM_Odm->DynamicLinkAdaptivity == TRUE) {
-				if(pDM_Odm->bLinked && pDM_Odm->bCheck == FALSE) {
-					Phydm_NHMCounterStatistics(pDM_Odm);
-					Phydm_CheckEnvironment(pDM_Odm);
-				} else if(!pDM_Odm->bLinked) {
-					pDM_Odm->bCheck = FALSE;
-				}
-			} else {
-				Phydm_MACEDCCAState(pDM_Odm, PhyDM_DONT_IGNORE_EDCCA);
-				pDM_Odm->adaptivity_flag = TRUE;
+		if(pDM_Odm->DynamicLinkAdaptivity == TRUE) {
+			if(pDM_Odm->bLinked && pDM_Odm->bCheck == FALSE) {
+				Phydm_NHMCounterStatistics(pDM_Odm);
+				Phydm_CheckEnvironment(pDM_Odm);
+			} else if(!pDM_Odm->bLinked) {
+				pDM_Odm->bCheck = FALSE;
 			}
 		} else {
-			Phydm_MACEDCCAState(pDM_Odm, PhyDM_IGNORE_EDCCA);
-			pDM_Odm->adaptivity_flag = FALSE;
+			pDM_Odm->Adaptivity_enable = TRUE;
+
+			if(pDM_Odm->SupportICType & ODM_RTL8814A)
+				pDM_Odm->adaptivity_flag = FALSE;
+			else
+				pDM_Odm->adaptivity_flag = TRUE;
+
 		}
+	} else {
+		pDM_Odm->Adaptivity_enable = FALSE;
+		pDM_Odm->adaptivity_flag = FALSE;
 	}
+
 }
 
 VOID
@@ -137,21 +147,6 @@ Phydm_NHMCounterStatisticsReset(
 }
 
 VOID
-Phydm_NHMBBInit(
-    IN		PVOID			pDM_VOID
-)
-{
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-
-	pDM_Odm->adaptivity_flag = FALSE;
-	pDM_Odm->tolerance_cnt = 3;
-	pDM_Odm->NHMLastTxOkcnt = 0;
-	pDM_Odm->NHMLastRxOkcnt = 0;
-	pDM_Odm->NHMCurTxOkcnt = 0;
-	pDM_Odm->NHMCurRxOkcnt = 0;
-}
-
-VOID
 Phydm_SetEDCCAThreshold(
     IN	PVOID	pDM_VOID,
     IN	s1Byte	H2L,
@@ -167,6 +162,7 @@ Phydm_SetEDCCAThreshold(
 		ODM_SetBBReg(pDM_Odm, rFPGA0_XB_LSSIReadBack, bMaskByte0, (u1Byte)L2H);
 		ODM_SetBBReg(pDM_Odm, rFPGA0_XB_LSSIReadBack, bMaskByte1, (u1Byte)H2L);
 	}
+
 }
 
 VOID
@@ -211,8 +207,6 @@ Phydm_MACEDCCAState(
 		ODM_SetMACReg(pDM_Odm, REG_RD_CTRL, BIT11, 1);	//reg524[11]=1
 	}
 
-	pDM_Odm->EDCCA_enable_state = State;
-
 	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("EDCCA enable State = %d \n", State));
 
 }
@@ -246,10 +240,14 @@ Phydm_CheckEnvironment(
 {
 	PDM_ODM_T	pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	BOOLEAN 	isCleanEnvironment = FALSE;
-	//u1Byte		i, clean = 0;
+	//u1Byte		clean = 0;
 
 	if(pDM_Odm->bFirstLink == TRUE) {
-		pDM_Odm->adaptivity_flag = TRUE;
+		if(pDM_Odm->SupportICType & ODM_RTL8814A)
+			pDM_Odm->adaptivity_flag = FALSE;
+		else
+			pDM_Odm->adaptivity_flag = TRUE;
+
 		pDM_Odm->bFirstLink = FALSE;
 		return;
 	} else {
@@ -261,21 +259,25 @@ Phydm_CheckEnvironment(
 			Phydm_NHMCounterStatistics(pDM_Odm);
 			isCleanEnvironment = Phydm_CalNHMcnt(pDM_Odm);
 			if(isCleanEnvironment == TRUE) {
-				Phydm_MACEDCCAState(pDM_Odm, PhyDM_DONT_IGNORE_EDCCA);
 #if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
 				pDM_Odm->TH_L2H_ini = pDM_Odm->TH_L2H_ini_backup;			//mode 1
 				pDM_Odm->TH_EDCCA_HL_diff= pDM_Odm->TH_EDCCA_HL_diff_backup;
 #endif
-				pDM_Odm->adaptivity_flag = TRUE;
+				pDM_Odm->Adaptivity_enable = TRUE;
+
+				if(pDM_Odm->SupportICType & ODM_RTL8814A)
+					pDM_Odm->adaptivity_flag = FALSE;
+				else
+					pDM_Odm->adaptivity_flag = TRUE;
 			} else {
 #if(DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
-				Phydm_MACEDCCAState(pDM_Odm, PhyDM_IGNORE_EDCCA);
+				Phydm_SetEDCCAThreshold(pDM_Odm, 0x7f, 0x7f);
 #else
-				Phydm_MACEDCCAState(pDM_Odm, PhyDM_DONT_IGNORE_EDCCA);
 				pDM_Odm->TH_L2H_ini = pDM_Odm->TH_L2H_ini_mode2;			// for AP mode 2
 				pDM_Odm->TH_EDCCA_HL_diff= pDM_Odm->TH_EDCCA_HL_diff_mode2;
 #endif
 				pDM_Odm->adaptivity_flag = FALSE;
+				pDM_Odm->Adaptivity_enable = FALSE;
 			}
 
 			pDM_Odm->bFirstLink = TRUE;
@@ -285,88 +287,6 @@ Phydm_CheckEnvironment(
 	}
 
 
-}
-
-
-VOID
-Phydm_NHMBB(
-    IN		PVOID			pDM_VOID
-)
-{
-	PDM_ODM_T	pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	BOOLEAN		bCleanEnvironment;
-
-	bCleanEnvironment = Phydm_CalNHMcnt(pDM_Odm);
-
-	pDM_Odm->NHMCurTxOkcnt = *(pDM_Odm->pNumTxBytesUnicast) - pDM_Odm->NHMLastTxOkcnt;
-	pDM_Odm->NHMCurRxOkcnt = *(pDM_Odm->pNumRxBytesUnicast) - pDM_Odm->NHMLastRxOkcnt;
-	pDM_Odm->NHMLastTxOkcnt = *(pDM_Odm->pNumTxBytesUnicast);
-	pDM_Odm->NHMLastRxOkcnt = *(pDM_Odm->pNumRxBytesUnicast);
-	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("cnt_0=%d, cnt_1=%d, bCleanEnvironment = %d, NHMCurTxOkcnt = %llu, NHMCurRxOkcnt = %llu\n",
-	             pDM_Odm->NHM_cnt_0, pDM_Odm->NHM_cnt_1, bCleanEnvironment, pDM_Odm->NHMCurTxOkcnt, pDM_Odm->NHMCurRxOkcnt));
-
-	if(pDM_Odm->NHMWait < 4) {		// Start enter NHM after 4 NHMWait
-		pDM_Odm->NHMWait ++;
-		Phydm_MACEDCCAState(pDM_Odm, PhyDM_IGNORE_EDCCA);
-	} else if ( ((pDM_Odm->NHMCurTxOkcnt>>10) > 2) && ((pDM_Odm->NHMCurTxOkcnt) + 1 > (u8Byte)(pDM_Odm->NHMCurRxOkcnt<<2) + 1)) {	//Tx > 4*Rx and Tx > 2Mb possible for adaptivity test
-		if(bCleanEnvironment == TRUE || pDM_Odm->adaptivity_flag == TRUE) {
-			//Enable EDCCA since it is possible running Adaptivity testing
-			pDM_Odm->adaptivity_flag = TRUE;
-			Phydm_MACEDCCAState(pDM_Odm, PhyDM_DONT_IGNORE_EDCCA);
-			pDM_Odm->tolerance_cnt = 0;
-#if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
-			pDM_Odm->TH_L2H_ini = pDM_Odm->TH_L2H_ini_backup;
-			pDM_Odm->TH_EDCCA_HL_diff = pDM_Odm->TH_EDCCA_HL_diff_backup ;
-#endif
-		} else {
-			if(pDM_Odm->tolerance_cnt < 3)
-				pDM_Odm->tolerance_cnt ++;
-			else {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
-				pDM_Odm->TH_L2H_ini = pDM_Odm->TH_L2H_ini_mode2;
-				pDM_Odm->TH_EDCCA_HL_diff = pDM_Odm->TH_EDCCA_HL_diff_mode2 ;
-#else
-				Phydm_MACEDCCAState(pDM_Odm, PhyDM_IGNORE_EDCCA);
-#endif
-				pDM_Odm->adaptivity_flag = FALSE;
-			}
-		}
-	} else {	// TX<RX
-		if(pDM_Odm->adaptivity_flag == TRUE && bCleanEnvironment == FALSE) {
-			Phydm_MACEDCCAState(pDM_Odm, PhyDM_DONT_IGNORE_EDCCA);
-			pDM_Odm->tolerance_cnt = 0;
-#if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
-			pDM_Odm->TH_L2H_ini = pDM_Odm->TH_L2H_ini_backup;
-			pDM_Odm->TH_EDCCA_HL_diff = pDM_Odm->TH_EDCCA_HL_diff_backup ;
-#endif
-		}
-#if(DM_ODM_SUPPORT_TYPE & ODM_AP)		// for repeater mode add by YuChen 2014.06.23
-#ifdef UNIVERSAL_REPEATER
-		else if((bCleanEnvironment == TRUE) && (pDM_Odm->VXD_bLinked) && ((pDM_Odm->NHMCurTxOkcnt>>10) > 1)) {	// clean environment and VXD linked and Tx TP>1Mb
-			pDM_Odm->adaptivity_flag = TRUE;
-			Phydm_MACEDCCAState(pDM_Odm, PhyDM_DONT_IGNORE_EDCCA);
-			pDM_Odm->tolerance_cnt = 0;
-			pDM_Odm->TH_L2H_ini = pDM_Odm->TH_L2H_ini_backup;
-			pDM_Odm->TH_EDCCA_HL_diff = pDM_Odm->TH_EDCCA_HL_diff_backup ;
-		}
-#endif
-#endif									// for repeater mode add by YuChen 2014.06.23
-		else {
-			if(pDM_Odm->tolerance_cnt < 3)
-				pDM_Odm->tolerance_cnt ++;
-			else {
-#if(DM_ODM_SUPPORT_TYPE & (ODM_AP|ODM_ADSL))
-				pDM_Odm->TH_L2H_ini = pDM_Odm->TH_L2H_ini_mode2;
-				pDM_Odm->TH_EDCCA_HL_diff = pDM_Odm->TH_EDCCA_HL_diff_mode2 ;
-#else
-				Phydm_MACEDCCAState(pDM_Odm, PhyDM_IGNORE_EDCCA);
-#endif
-				pDM_Odm->adaptivity_flag = FALSE;
-			}
-		}
-	}
-
-	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("adaptivity_flag = %d\n ", pDM_Odm->adaptivity_flag));
 }
 
 VOID
@@ -450,12 +370,10 @@ Phydm_AdaptivityInit(
 	PADAPTER		pAdapter	= pDM_Odm->Adapter;
 	PMGNT_INFO		pMgntInfo = &(pAdapter->MgntInfo);
 	pDM_Odm->Carrier_Sense_enable = (BOOLEAN)pMgntInfo->RegEnableCarrierSense;
-	pDM_Odm->NHM_enable = (BOOLEAN)pMgntInfo->RegNHMEnable;
 	pDM_Odm->DynamicLinkAdaptivity = (BOOLEAN)pMgntInfo->RegDmLinkAdaptivity;
 #elif(DM_ODM_SUPPORT_TYPE == ODM_CE)
 	pDM_Odm->Carrier_Sense_enable = (pDM_Odm->Adapter->registrypriv.adaptivity_mode!=0)?TRUE:FALSE;
-	pDM_Odm->NHM_enable = (BOOLEAN)pDM_Odm->Adapter->registrypriv.nhm_en;
-	pDM_Odm->DynamicLinkAdaptivity = FALSE; // Jeff please add this
+	pDM_Odm->DynamicLinkAdaptivity = (pDM_Odm->Adapter->registrypriv.adaptivity_dml!=0)?TRUE:FALSE;
 #endif
 
 #if(DM_ODM_SUPPORT_TYPE & (ODM_CE|ODM_WIN))
@@ -476,8 +394,6 @@ Phydm_AdaptivityInit(
 			pDM_Odm->TH_L2H_ini = 0xa;
 	}
 
-	pDM_Odm->AdapEn_RSSI = 20;
-
 #if(DM_ODM_SUPPORT_TYPE == ODM_WIN)
 	if( pMgntInfo->RegHLDiffForAdaptivity != 0 )
 		pDM_Odm->TH_EDCCA_HL_diff = pMgntInfo->RegHLDiffForAdaptivity;
@@ -493,11 +409,9 @@ Phydm_AdaptivityInit(
 	if(pDM_Odm->Carrier_Sense_enable) {
 		pDM_Odm->TH_L2H_ini = 10;
 		pDM_Odm->TH_EDCCA_HL_diff = 7;
-		pDM_Odm->AdapEn_RSSI = 30;
 	} else {
 		pDM_Odm->TH_L2H_ini = pDM_Odm->TH_L2H_ini_backup;	//set by mib
 		pDM_Odm->TH_EDCCA_HL_diff = 7;
-		pDM_Odm->AdapEn_RSSI = 20;
 	}
 
 	pDM_Odm->TH_L2H_ini_mode2 = 20;
@@ -508,57 +422,63 @@ Phydm_AdaptivityInit(
 		pDM_Odm->DynamicLinkAdaptivity = TRUE;
 	else
 		pDM_Odm->DynamicLinkAdaptivity = FALSE;
-//	pDM_Odm->NHM_enable = FALSE;
+
 #endif
 
 	pDM_Odm->IGI_Base = 0x32;
 	pDM_Odm->IGI_target = 0x1c;
-	pDM_Odm->ForceEDCCA = 0;
+	pDM_Odm->FABound = 6000;
 	pDM_Odm->H2L_lb= 0;
 	pDM_Odm->L2H_lb= 0;
 	pDM_Odm->Adaptivity_IGI_upper = 0;
 	pDM_Odm->NHMWait = 0;
-	Phydm_NHMBBInit(pDM_Odm);
 	pDM_Odm->bCheck = FALSE;
 	pDM_Odm->bFirstLink = TRUE;
-	pDM_Odm->bAdaOn = TRUE;
+	pDM_Odm->Adaptivity_enable = FALSE;	// use this flag to judge enable or disable
 
-	ODM_SetBBReg(pDM_Odm, REG_RD_CTRL, BIT11, 1); // stop counting if EDCCA is asserted
+	Phydm_MACEDCCAState(pDM_Odm, PhyDM_DONT_IGNORE_EDCCA);
 
 	//Search pwdB lower bound
-	{
-		if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
-			ODM_SetBBReg(pDM_Odm,ODM_REG_DBG_RPT_11N, bMaskDWord, 0x208);
-		else if(pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
-			ODM_SetBBReg(pDM_Odm,ODM_REG_DBG_RPT_11AC, bMaskDWord, 0x209);
-		Phydm_SearchPwdBLowerBound(pDM_Odm);
+	if (pDM_Odm->SupportICType & ODM_IC_11N_SERIES) {
+		ODM_SetBBReg(pDM_Odm, ODM_REG_DBG_RPT_11N, bMaskDWord, 0x208);
+		ODM_SetBBReg(pDM_Odm, rOFDM0_ECCAThreshold, BIT9|BIT8, 0x0);	/* set forgetting factor = 0 for all n series IC*/
+	} else if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES) {
+		ODM_SetBBReg(pDM_Odm, ODM_REG_DBG_RPT_11AC, bMaskDWord, 0x209);
+		ODM_SetBBReg(pDM_Odm, rFPGA0_XA_LSSIReadBack, BIT1|BIT0, 0x0);
 	}
-	Phydm_MACEDCCAState(pDM_Odm, PhyDM_IGNORE_EDCCA);
+
+	if (pDM_Odm->SupportICType & ODM_RTL8814A) {	/* 8814a no need to find pwdB lower bound, maybe */
+		ODM_SetBBReg(pDM_Odm, ODM_REG_EDCCA_DOWN_OPT, BIT30|BIT29|BIT28, 0x7);	/*	interfernce need  > 2^x us, and then EDCCA will be 1	*/
+		ODM_SetBBReg(pDM_Odm, ODM_REG_EDCCA_POWER_CAL, BIT5, 1);					/*	0: mean, 1:max pwdB								*/
+		ODM_SetBBReg(pDM_Odm, ODM_REG_ACBB_EDCCA_ENHANCE, BIT29|BIT28, 0x1);		/*	0 : rx_dfir, 1: dcnf_out, 2 :rx_iq, 3: rx_nbi_nf_out		*/
+	} else
+		Phydm_SearchPwdBLowerBound(pDM_Odm);
+
 }
 
 
-BOOLEAN
+VOID
 Phydm_Adaptivity(
     IN		PVOID			pDM_VOID,
     IN		u1Byte			IGI
 )
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	s1Byte TH_L2H_dmc, TH_H2L_dmc, L2H_nolink_Band4 = 0x7f, H2L_nolink_Band4 = 0x7f;
-	s1Byte Diff, IGI_target;
-	BOOLEAN EDCCA_State = FALSE;
-
+	s1Byte 			TH_L2H_dmc, TH_H2L_dmc;
+	s1Byte 			Diff, IGI_target;
+	//BOOLEAN 		EDCCA_State = FALSE;
+	PFALSE_ALARM_STATISTICS 	FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm, PHYDM_FALSEALMCNT);
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 	PADAPTER		pAdapter	= pDM_Odm->Adapter;
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
-	BOOLEAN		bFwCurrentInPSMode=FALSE;
-	PMGNT_INFO				pMgntInfo = &(pAdapter->MgntInfo);
+	BOOLEAN			bFwCurrentInPSMode=FALSE;
+	PMGNT_INFO		pMgntInfo = &(pAdapter->MgntInfo);
 
 	pAdapter->HalFunc.GetHwRegHandler(pAdapter, HW_VAR_FW_PSMODE_STATUS, (pu1Byte)(&bFwCurrentInPSMode));
 
 	// Disable EDCCA mode while under LPS mode, added by Roger, 2012.09.14.
 	if(bFwCurrentInPSMode)
-		return FALSE;
+		return;
 #endif
 
 	if(!(pDM_Odm->SupportAbility & ODM_BB_ADAPTIVITY)) {
@@ -569,47 +489,42 @@ Phydm_Adaptivity(
 		if(pDM_Odm->SupportICType & ODM_IC_11N_SERIES)
 			Phydm_DynamicEDCCA(pDM_Odm);
 #endif
-		return FALSE;
+		return;
 	}
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	if(pMgntInfo->RegEnableAdaptivity== 2)
-#else
-	if (pDM_Odm->Adapter->registrypriv.adaptivity_en == 2)
-#endif
-	{
+	if(pMgntInfo->RegEnableAdaptivity== 2) {
 		if(pDM_Odm->Carrier_Sense_enable == FALSE) {	// check domain Code for Adaptivity or CarrierSense
 			if ((*pDM_Odm->pBandType == ODM_BAND_5G) &&
 			    !(pDM_Odm->odm_Regulation5G == REGULATION_ETSI || pDM_Odm->odm_Regulation5G == REGULATION_WW)) {
 				ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("Adaptivity skip 5G domain code : %d \n", pDM_Odm->odm_Regulation5G));
-				return FALSE;
+				return;
 			}
 
 			else if((*pDM_Odm->pBandType == ODM_BAND_2_4G) &&
 			        !(pDM_Odm->odm_Regulation2_4G == REGULATION_ETSI || pDM_Odm->odm_Regulation2_4G == REGULATION_WW)) {
 				ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("Adaptivity skip 2.4G domain code : %d \n", pDM_Odm->odm_Regulation2_4G));
-				return FALSE;
+				return;
 
 			} else if ((*pDM_Odm->pBandType != ODM_BAND_2_4G) && (*pDM_Odm->pBandType != ODM_BAND_5G)) {
 				ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("Adaptivity neither 2G nor 5G band, return\n"));
-				return FALSE;
+				return;
 			}
 		} else {
 			if ((*pDM_Odm->pBandType == ODM_BAND_5G) &&
-			    !(pDM_Odm->odm_Regulation5G == REGULATION_ETSI || pDM_Odm->odm_Regulation5G == REGULATION_WW)) {
+			    !(pDM_Odm->odm_Regulation5G == REGULATION_MKK || pDM_Odm->odm_Regulation5G == REGULATION_WW)) {
 				ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("CarrierSense skip 5G domain code : %d\n", pDM_Odm->odm_Regulation5G));
-				return FALSE;
+				return;
 			}
 
 			else if((*pDM_Odm->pBandType == ODM_BAND_2_4G) &&
-			        !(pDM_Odm->odm_Regulation2_4G == REGULATION_ETSI || pDM_Odm->odm_Regulation2_4G == REGULATION_WW)) {
+			        !(pDM_Odm->odm_Regulation2_4G == REGULATION_MKK  || pDM_Odm->odm_Regulation2_4G == REGULATION_WW)) {
 				ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("CarrierSense skip 2.4G domain code : %d\n", pDM_Odm->odm_Regulation2_4G));
-				return FALSE;
+				return;
 
 			} else if ((*pDM_Odm->pBandType != ODM_BAND_2_4G) && (*pDM_Odm->pBandType != ODM_BAND_5G)) {
 				ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("CarrierSense neither 2G nor 5G band, return\n"));
-				return FALSE;
+				return;
 			}
 		}
 	}
@@ -617,11 +532,14 @@ Phydm_Adaptivity(
 
 
 	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("odm_Adaptivity() =====> \n"));
-	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("ForceEDCCA=%d, IGI_Base=0x%x, TH_L2H_ini = %d, TH_EDCCA_HL_diff = %d, AdapEn_RSSI = %d\n",
-	             pDM_Odm->ForceEDCCA, pDM_Odm->IGI_Base, pDM_Odm->TH_L2H_ini, pDM_Odm->TH_EDCCA_HL_diff, pDM_Odm->AdapEn_RSSI));
+	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("IGI_Base=0x%x, TH_L2H_ini = %d, TH_EDCCA_HL_diff = %d\n",
+	             pDM_Odm->IGI_Base, pDM_Odm->TH_L2H_ini, pDM_Odm->TH_EDCCA_HL_diff));
 
-	if(pDM_Odm->SupportICType & ODM_IC_11AC_SERIES)
+	if(pDM_Odm->SupportICType & ODM_IC_11AC_SERIES) {
+		// fix AC series when enable EDCCA hang issue
+		ODM_SetBBReg(pDM_Odm, 0x800, BIT10, 1); //ADC_mask disable
 		ODM_SetBBReg(pDM_Odm, 0x800, BIT10, 0); //ADC_mask enable
+	}
 
 	if(*pDM_Odm->pBandWidth == ODM_BW20M) //CHANNEL_WIDTH_20
 		IGI_target = pDM_Odm->IGI_Base;
@@ -633,37 +551,56 @@ Phydm_Adaptivity(
 		IGI_target = pDM_Odm->IGI_Base;
 	pDM_Odm->IGI_target = (u1Byte) IGI_target;
 
-	if(*pDM_Odm->pChannel >= 149) {	// Band4 -> for AP : mode2, for sd4 and sd7 : turnoff adaptivity
+	if(*pDM_Odm->pChannel >= 149) {	// Band4 -> for AP : mode2
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 		if(pDM_Odm->bLinked) {
-			Diff = IGI_target -(s1Byte)IGI;
-			L2H_nolink_Band4 = pDM_Odm->TH_L2H_ini_mode2 + Diff;
-			if(L2H_nolink_Band4 > 10)
-				L2H_nolink_Band4 = 10;
-			H2L_nolink_Band4 = L2H_nolink_Band4 - pDM_Odm->TH_EDCCA_HL_diff_mode2;
+			if(pDM_Odm->SupportICType & ODM_RTL8814A) {
+				L2H_nolink_Band4 = (s1Byte)pDM_Odm->TH_L2H_ini_mode2 + IGI_target;
+				H2L_nolink_Band4 = L2H_nolink_Band4 - pDM_Odm->TH_EDCCA_HL_diff_mode2;
+			} else {
+				Diff = IGI_target -(s1Byte)IGI;
+				L2H_nolink_Band4 = pDM_Odm->TH_L2H_ini_mode2 + Diff;
+				if(L2H_nolink_Band4 > 10)
+					L2H_nolink_Band4 = 10;
+				H2L_nolink_Band4 = L2H_nolink_Band4 - pDM_Odm->TH_EDCCA_HL_diff_mode2;
+			}
+		} else {
+			L2H_nolink_Band4 = 0x7f;
+			H2L_nolink_Band4 = 0x7f;
 		}
-#endif
 		Phydm_SetEDCCAThreshold(pDM_Odm, H2L_nolink_Band4, L2H_nolink_Band4);
-		return FALSE;
+		return;
+#endif
 	}
 
-	if(!pDM_Odm->ForceEDCCA) {
-		if(pDM_Odm->RSSI_Min > pDM_Odm->AdapEn_RSSI)
-			EDCCA_State = 1;
-		else if(pDM_Odm->RSSI_Min < (pDM_Odm->AdapEn_RSSI - 5))
-			EDCCA_State = 0;
-	} else
-		EDCCA_State = 1;
+	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("BandWidth=%s, IGI_target=0x%x, FABound = %d, DynamicLinkAdaptivity = %d\n",
+	             (*pDM_Odm->pBandWidth==ODM_BW80M)?"80M":((*pDM_Odm->pBandWidth==ODM_BW40M)?"40M":"20M"), IGI_target, pDM_Odm->FABound, pDM_Odm->DynamicLinkAdaptivity));
+	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("RSSI_min = %d, AdapIGIUpper= 0x%x, adaptivity_flag = %d, Adaptivity_enable = %d\n",
+	             pDM_Odm->RSSI_Min, pDM_Odm->Adaptivity_IGI_upper, pDM_Odm->adaptivity_flag, pDM_Odm->Adaptivity_enable));
 
-	if(pDM_Odm->Carrier_Sense_enable == FALSE && pDM_Odm->NHM_enable == TRUE)
-		Phydm_NHMBB(pDM_Odm);
+	if((pDM_Odm->DynamicLinkAdaptivity == TRUE) && (!pDM_Odm->bLinked) && (pDM_Odm->Adaptivity_enable == FALSE)) {
+		Phydm_SetEDCCAThreshold(pDM_Odm, 0x7f, 0x7f);
+		ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("In DynamicLink mode(noisy) and No link, Turn off EDCCA!!\n"));
+		return;
+	}
+#if (!(DM_ODM_SUPPORT_TYPE & ODM_AP))
+	else if((pDM_Odm->DynamicLinkAdaptivity == TRUE) && (pDM_Odm->Adaptivity_enable == FALSE)) {
+		Phydm_SetEDCCAThreshold(pDM_Odm, 0x7f, 0x7f);
+		ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("In DynamicLink mode(noisy) disable EDCCA, return!!\n"));
+		return;
+	}
+#endif
 
-	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("BandWidth=%s, IGI_target=0x%x, EDCCA_State=%d, EDCCA_enable_state = %d\n",
-	             (*pDM_Odm->pBandWidth==ODM_BW80M)?"80M":((*pDM_Odm->pBandWidth==ODM_BW40M)?"40M":"20M"), IGI_target, EDCCA_State, pDM_Odm->EDCCA_enable_state));
-	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("RSSI_min = %d, AdapIGIUpper= 0x %x\n", pDM_Odm->RSSI_Min, pDM_Odm->Adaptivity_IGI_upper));
+	if((pDM_Odm->SupportICType & ODM_RTL8723B) && (pDM_Odm->CutVersion & ODM_CUT_B) && (FalseAlmCnt->Cnt_all > pDM_Odm->FABound) && (IGI == pDM_Odm->Adaptivity_IGI_upper)) {
+		pDM_Odm->Adaptivity_IGI_upper = pDM_Odm->Adaptivity_IGI_upper + 3;
+		ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("FA > %d, IGI upper bound + 3!!\n", pDM_Odm->FABound));
+	}
 
 
-	if(EDCCA_State == 1) {
+	if(pDM_Odm->SupportICType & ODM_RTL8814A) {
+		TH_L2H_dmc = (s1Byte)pDM_Odm->TH_L2H_ini + IGI_target;
+		TH_H2L_dmc = TH_L2H_dmc - pDM_Odm->TH_EDCCA_HL_diff;
+	} else {
 		Diff = IGI_target -(s1Byte)IGI;
 		TH_L2H_dmc = pDM_Odm->TH_L2H_ini + Diff;
 		if(TH_L2H_dmc > 10)
@@ -676,19 +613,124 @@ Phydm_Adaptivity(
 			TH_H2L_dmc = pDM_Odm->H2L_lb;
 		if(TH_L2H_dmc < pDM_Odm->L2H_lb)
 			TH_L2H_dmc = pDM_Odm->L2H_lb;
-	} else {
-		TH_L2H_dmc = 0x7f;
-		TH_H2L_dmc = 0x7f;
 	}
-	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("IGI=0x%x, TH_L2H_dmc = %d, TH_H2L_dmc = %d, adaptivity_flg = %d, bAdaOn = %d, DynamicLinkAdaptivity = %d, NHM_enable = %d\n",
-	             IGI, TH_L2H_dmc, TH_H2L_dmc, pDM_Odm->adaptivity_flag, pDM_Odm->bAdaOn, pDM_Odm->DynamicLinkAdaptivity, pDM_Odm->NHM_enable));
+	ODM_RT_TRACE(pDM_Odm,PHYDM_COMP_ADAPTIVITY, ODM_DBG_LOUD, ("IGI=0x%x, TH_L2H_dmc = %d, TH_H2L_dmc = %d\n", IGI, TH_L2H_dmc, TH_H2L_dmc));
 
 	Phydm_SetEDCCAThreshold(pDM_Odm, TH_H2L_dmc, TH_L2H_dmc);
-	return TRUE;
+	return;
 }
 
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
+
+VOID
+Phydm_AdaptivityBSOD(
+    IN		PVOID		pDM_VOID
+)
+{
+	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
+	PADAPTER			pAdapter = pDM_Odm->Adapter;
+	PMGNT_INFO		pMgntInfo = &(pAdapter->MgntInfo);
+	u1Byte			count = 0;
+	u4Byte			u4Value;
+
+	/*
+	1. turn off RF (TRX Mux in standby mode)
+	2. H2C mac id drop
+	3. ignore EDCCA
+	4. wait for clear FIFO
+	5. don't ignore EDCCA
+	6. turn on RF (TRX Mux in TRx mdoe)
+	7. H2C mac id resume
+	*/
+
+	RT_TRACE(COMP_MLME, DBG_WARNING, ("MAC id drop packet!!!!!\n"));
+
+	pAdapter->dropPktByMacIdCnt++;
+	pMgntInfo->bDropPktInProgress = TRUE;
+
+	pAdapter->HalFunc.GetHwRegHandler(pAdapter, HW_VAR_MAX_Q_PAGE_NUM, (pu1Byte)(&u4Value));
+	RT_TRACE(COMP_INIT, DBG_LOUD, ("Queue Reserved Page Number = 0x%08x\n", u4Value));
+	pAdapter->HalFunc.GetHwRegHandler(pAdapter, HW_VAR_AVBL_Q_PAGE_NUM, (pu1Byte)(&u4Value));
+	RT_TRACE(COMP_INIT, DBG_LOUD, ("Available Queue Page Number = 0x%08x\n", u4Value));
+
+#if 1
+
+	//3 Standby mode
+	Phydm_SetTRxMux(pDM_Odm, PhyDM_STANDBY_MODE, PhyDM_STANDBY_MODE);
+	ODM_Write_DIG(pDM_Odm, 0x20);
+
+	//3 H2C mac id drop
+	MacIdIndicateDisconnect(pAdapter);
+
+	//3 Ignore EDCCA
+	Phydm_MACEDCCAState(pDM_Odm, PhyDM_IGNORE_EDCCA);
+
+	delay_ms(50);
+	count = 5;
+
+#else
+
+	do {
+
+		u8Byte 		diffTime, curTime, oldestTime;
+		u1Byte		queueIdx
+
+		//3 Standby mode
+		Phydm_SetTRxMux(pDM_Odm, PhyDM_STANDBY_MODE, PhyDM_STANDBY_MODE);
+		ODM_Write_DIG(pDM_Odm, 0x20);
+
+		//3 H2C mac id drop
+		MacIdIndicateDisconnect(pAdapter);
+
+		//3 Ignore EDCCA
+		Phydm_MACEDCCAState(pDM_Odm, PhyDM_IGNORE_EDCCA);
+
+		count++;
+		delay_ms(10);
+
+		// Check latest packet
+		curTime = PlatformGetCurrentTime();
+		oldestTime = 0xFFFFFFFFFFFFFFFF;
+
+		for(queueIdx = 0; queueIdx < MAX_TX_QUEUE; queueIdx++) {
+			if(!IS_DATA_QUEUE(queueIdx))
+				continue;
+
+			if(!pAdapter->bTcbBusyQEmpty[queueIdx]) {
+				RT_TRACE(COMP_MLME, DBG_WARNING, ("oldestTime = %llu\n", oldestTime));
+				RT_TRACE(COMP_MLME, DBG_WARNING, ("Q[%d] = %llu\n", queueIdx, pAdapter->firstTcbSysTime[queueIdx]));
+				if(pAdapter->firstTcbSysTime[queueIdx] < oldestTime) {
+					oldestTime = pAdapter->firstTcbSysTime[queueIdx];
+				}
+			}
+		}
+
+		diffTime = curTime - oldestTime;
+
+		RT_TRACE(COMP_MLME, DBG_WARNING, ("diff s = %llu\n", (diffTime/1000000)));
+
+	} while(((diffTime/1000000) >= 4) && (oldestTime != 0xFFFFFFFFFFFFFFFF));
+#endif
+
+	//3 Resume EDCCA
+	Phydm_MACEDCCAState(pDM_Odm, PhyDM_DONT_IGNORE_EDCCA);
+
+	//3 Turn on TRx mode
+	Phydm_SetTRxMux(pDM_Odm, PhyDM_TX_MODE, PhyDM_RX_MODE);
+	ODM_Write_DIG(pDM_Odm, 0x20);
+
+	//3 Resume H2C macid
+	MacIdRecoverMediaStatus(pAdapter);
+
+	pAdapter->HalFunc.GetHwRegHandler(pAdapter, HW_VAR_AVBL_Q_PAGE_NUM, (pu1Byte)(&u4Value));
+	RT_TRACE(COMP_INIT, DBG_LOUD, ("Available Queue Page Number = 0x%08x\n", u4Value));
+
+	pMgntInfo->bDropPktInProgress = FALSE;
+	RT_TRACE(COMP_MLME, DBG_WARNING, ("End of MAC id drop packet, spent %dms\n", count*10));
+
+}
+
 VOID
 Phydm_EnableEDCCA(
     IN		PVOID					pDM_VOID
@@ -744,7 +786,7 @@ Phydm_DynamicEDCCA(
 	u1Byte			RegC50, RegC58;
 	BOOLEAN			bEDCCAenable = FALSE;
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN))
+#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
 	BOOLEAN			bFwCurrentInPSMode=FALSE;
 
 	pAdapter->HalFunc.GetHwRegHandler(pAdapter, HW_VAR_FW_PSMODE_STATUS, (pu1Byte)(&bFwCurrentInPSMode));

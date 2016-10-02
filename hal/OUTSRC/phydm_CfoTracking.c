@@ -27,7 +27,7 @@ odm_SetCrystalCap(
 )
 {
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PhyDM_CfoTrack);
+	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PHYDM_CFOTRACK);
 	BOOLEAN 					bEEPROMCheck;
 #if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
 	PADAPTER					Adapter = pDM_Odm->Adapter;
@@ -65,7 +65,7 @@ odm_SetCrystalCap(
 		CrystalCap = CrystalCap & 0x3F;
 		ODM_SetBBReg(pDM_Odm, REG_AFE_XTAL_CTRL, 0x7E000000, CrystalCap);
 		ODM_SetBBReg(pDM_Odm, REG_AFE_PLL_CTRL, 0x7E, CrystalCap);
-	} else if(pDM_Odm->SupportICType & ODM_RTL8814A) {
+	} else if(pDM_Odm->SupportICType & (ODM_RTL8814A|ODM_RTL8822B)) {
 		// write 0x2C[26:21] = 0x2C[20:15] = CrystalCap
 		CrystalCap = CrystalCap & 0x3F;
 		ODM_SetBBReg(pDM_Odm, REG_MAC_PHY_CTRL, 0x07FF8000, (CrystalCap | (CrystalCap << 6)));
@@ -109,7 +109,7 @@ odm_SetATCStatus(
 )
 {
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PhyDM_CfoTrack);
+	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PHYDM_CFOTRACK);
 
 	if(pCfoTrack->bATCStatus == ATCStatus)
 		return;
@@ -136,7 +136,7 @@ ODM_CfoTrackingReset(
 )
 {
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PhyDM_CfoTrack);
+	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PHYDM_CFOTRACK);
 	//u1Byte						CrystalCap;
 
 	pCfoTrack->DefXCap = odm_GetDefaultCrytaltalCap(pDM_Odm);
@@ -162,7 +162,7 @@ ODM_CfoTrackingInit(
 )
 {
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PhyDM_CfoTrack);
+	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PHYDM_CFOTRACK);
 
 	pCfoTrack->DefXCap = pCfoTrack->CrystalCap = odm_GetDefaultCrytaltalCap(pDM_Odm);
 	pCfoTrack->bATCStatus = odm_GetATCStatus(pDM_Odm);
@@ -177,7 +177,7 @@ ODM_CfoTracking(
 )
 {
 	PDM_ODM_T					pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PhyDM_CfoTrack);
+	PCFO_TRACKING				pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PHYDM_CFOTRACK);
 	int							CFO_kHz_A, CFO_kHz_B, CFO_ave = 0;
 	int							CFO_ave_diff;
 	int							CrystalCap = (int)pCfoTrack->CrystalCap;
@@ -296,7 +296,7 @@ ODM_ParsingCFO(
 {
 	PDM_ODM_T				pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PODM_PACKET_INFO_T		pPktinfo = (PODM_PACKET_INFO_T)pPktinfo_VOID;
-	PCFO_TRACKING			pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PhyDM_CfoTrack);
+	PCFO_TRACKING			pCfoTrack = (PCFO_TRACKING)PhyDM_Get_Structure( pDM_Odm, PHYDM_CFOTRACK);
 	u1Byte					i;
 
 	if(!(pDM_Odm->SupportAbility & ODM_BB_CFO_TRACKING))

@@ -58,7 +58,15 @@
 #define IEEE80211_BAND_5GHZ NL80211_BAND_5GHZ
 #define IEEE80211_BAND_60GHZ NL80211_BAND_60GHZ
 #define IEEE80211_NUM_BANDS NUM_NL80211_BANDS
-#endif /* LINUX_VERSION_CODE >= KERNEL_VERSION(4, 7, 0) */
+#endif /* LINUX_VERSION_CODE < KERNEL_VERSION(4, 7, 0) */
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 0)
+#else
+#define STATION_INFO_SIGNAL BIT(NL80211_STA_INFO_SIGNAL)
+#define STATION_INFO_TX_BITRATE BIT(NL80211_STA_INFO_TX_BITRATE)
+#define STATION_INFO_RX_PACKETS BIT(NL80211_STA_INFO_RX_PACKETS)
+#define STATION_INFO_TX_PACKETS BIT(NL80211_STA_INFO_RX_PACKETS)
+#endif /* LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 0) */
 
 enum _NIC_VERSION {
 
@@ -161,6 +169,10 @@ typedef struct _ADAPTER _adapter, ADAPTER,*PADAPTER;
 #include <circ_buf.h>
 
 #include <rtw_android.h>
+
+#ifdef CONFIG_BT_COEXIST
+#include <rtw_btcoex.h>
+#endif // CONFIG_BT_COEXIST
 
 #define SPEC_DEV_ID_NONE BIT(0)
 #define SPEC_DEV_ID_DISABLE_HT BIT(1)
@@ -334,7 +346,9 @@ struct registry_priv {
 	u8 hiq_filter;
 	u8 adaptivity_en;
 	u8 adaptivity_mode;
-	u8 nhm_en;
+	u8 adaptivity_dml;
+	u8 boffefusemask;
+	BOOLEAN bFileMaskEfuse;
 };
 
 
@@ -896,6 +910,10 @@ struct _ADAPTER {
 	struct wifi_display_info wfd_info;
 #endif //CONFIG_WFD
 
+#ifdef CONFIG_BT_COEXIST_SOCKET_TRX
+	struct bt_coex_info coex_info;
+#endif //CONFIG_BT_COEXIST_SOCKET_TRX
+
 	PVOID			HalData;
 	u32 hal_data_sz;
 	struct hal_ops	HalFunc;
@@ -914,6 +932,11 @@ struct _ADAPTER {
 	u8	bHaltInProgress;
 #ifdef CONFIG_GPIO_API
 	u8	pre_gpio_pin;
+	struct gpio_int_priv {
+		u8 interrupt_mode;
+		u8 interrupt_enable_mask;
+		void (*callback[8])(u8 level);
+	} gpiointpriv;
 #endif
 	_thread_hdl_ cmdThread;
 	_thread_hdl_ evtThread;
@@ -1050,13 +1073,21 @@ struct _ADAPTER {
 
 	//for debug purpose
 	u8 fix_rate;
+	u8 data_fb; /* data rate fallback, valid only when fix_rate is not 0xff */
 	u8 driver_vcs_en; //Enable=1, Disable=0 driver control vrtl_carrier_sense for tx
 	u8 driver_vcs_type;//force 0:disable VCS, 1:RTS-CTS, 2:CTS-to-self when vcs_en=1.
 	u8 driver_ampdu_spacing;//driver control AMPDU Density for peer sta's rx
 	u8 driver_rx_ampdu_factor;//0xff: disable drv ctrl, 0:8k, 1:16k, 2:32k, 3:64k;
-	u8 fix_ba_rxbuf_bz; /* 0~127, TODO:consider each sta and each TID */
 	u8 driver_rx_ampdu_spacing;  //driver control Rx AMPDU Density
+	u8 fix_rx_ampdu_accept;
+	u8 fix_rx_ampdu_size; /* 0~127, TODO:consider each sta and each TID */
 	unsigned char     in_cta_test;
+#ifdef DBG_RX_COUNTER_DUMP
+	u8 dump_rx_cnt_mode;/*BIT0:drv,BIT1:mac,BIT2:phy*/
+	u32 drv_rx_cnt_ok;
+	u32 drv_rx_cnt_crcerror;
+	u32 drv_rx_cnt_drop;
+#endif
 
 #ifdef CONFIG_DBG_COUNTER
 	struct rx_logs rx_logs;
@@ -1153,10 +1184,6 @@ __inline static u8 *myid(struct eeprom_priv *peepriv)
 #include <pci_ops.h>
 #include <pci_hal.h>
 #endif
-
-#ifdef CONFIG_BT_COEXIST
-#include <rtw_btcoex.h>
-#endif // CONFIG_BT_COEXIST
 
 #endif //__DRV_TYPES_H__
 

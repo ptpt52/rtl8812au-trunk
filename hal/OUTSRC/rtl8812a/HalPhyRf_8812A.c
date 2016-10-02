@@ -438,7 +438,7 @@ void _IQK_TX_FillIQC_8812A(
 void _IQK_BackupMacBB_8812A(
     IN PDM_ODM_T	pDM_Odm,
     IN pu4Byte		MACBB_backup,
-    IN const pu4Byte		Backup_MACBB_REG,
+    IN pu4Byte		Backup_MACBB_REG,
     IN u4Byte		MACBB_NUM
 )
 {
@@ -455,7 +455,7 @@ void _IQK_BackupRF_8812A(
     IN PDM_ODM_T	pDM_Odm,
     IN pu4Byte		RFA_backup,
     IN pu4Byte		RFB_backup,
-    IN const pu4Byte		Backup_RF_REG,
+    IN pu4Byte		Backup_RF_REG,
     IN u4Byte		RF_NUM
 )
 {
@@ -472,7 +472,7 @@ void _IQK_BackupRF_8812A(
 void _IQK_BackupAFE_8812A(
     IN PDM_ODM_T		pDM_Odm,
     IN pu4Byte		AFE_backup,
-    IN const pu4Byte		Backup_AFE_REG,
+    IN pu4Byte		Backup_AFE_REG,
     IN u4Byte		AFE_NUM
 )
 {
@@ -487,7 +487,7 @@ void _IQK_BackupAFE_8812A(
 void _IQK_RestoreMacBB_8812A(
     IN PDM_ODM_T		pDM_Odm,
     IN pu4Byte		MACBB_backup,
-    IN const pu4Byte		Backup_MACBB_REG,
+    IN pu4Byte		Backup_MACBB_REG,
     IN u4Byte		MACBB_NUM
 )
 {
@@ -502,7 +502,7 @@ void _IQK_RestoreMacBB_8812A(
 void _IQK_RestoreRF_8812A(
     IN PDM_ODM_T			pDM_Odm,
     IN ODM_RF_RADIO_PATH_E 	Path,
-    IN const pu4Byte			Backup_RF_REG,
+    IN pu4Byte			Backup_RF_REG,
     IN pu4Byte 			RF_backup,
     IN u4Byte			RF_REG_NUM
 )
@@ -531,7 +531,7 @@ void _IQK_RestoreRF_8812A(
 void _IQK_RestoreAFE_8812A(
     IN PDM_ODM_T		pDM_Odm,
     IN pu4Byte		AFE_backup,
-    IN const pu4Byte		Backup_AFE_REG,
+    IN pu4Byte		Backup_AFE_REG,
     IN u4Byte		AFE_NUM
 )
 {
@@ -683,8 +683,8 @@ void _IQK_Tx_8812A(
 		cal1_retry = 0;
 		while(1) {
 			// one shot
-			ODM_Write4Byte(pDM_Odm, 0xcb8, 0x00100000);// cb8[20] ¬±N SI/PI ¬®√è¬•√é√Öv¬§√Å¬µ¬π iqk_dpk module
-			ODM_Write4Byte(pDM_Odm, 0xeb8, 0x00100000);// cb8[20] ¬±N SI/PI ¬®√è¬•√é√Öv¬§√Å¬µ¬π iqk_dpk module
+			ODM_Write4Byte(pDM_Odm, 0xcb8, 0x00100000);// cb8[20] ±N SI/PI ®œ•Œ≈v§¡µπ iqk_dpk module
+			ODM_Write4Byte(pDM_Odm, 0xeb8, 0x00100000);// cb8[20] ±N SI/PI ®œ•Œ≈v§¡µπ iqk_dpk module
 			ODM_Write4Byte(pDM_Odm, 0x980, 0xfa000000);
 			ODM_Write4Byte(pDM_Odm, 0x980, 0xf8000000);
 
@@ -705,7 +705,7 @@ void _IQK_Tx_8812A(
 				}
 			}
 			ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("TX delay_count = %d\n", delay_count));
-			if (delay_count < 20) {							// If 20ms No Result, then cal_retry++
+			if (delay_count < 20) {						// If 20ms No Result, then cal_retry++
 				// ============TXIQK Check==============
 				TX0_fail = (BOOLEAN) ODM_GetBBReg(pDM_Odm, 0xd00, BIT(12));
 				TX1_fail = (BOOLEAN) ODM_GetBBReg(pDM_Odm, 0xd40, BIT(12));
@@ -888,7 +888,7 @@ void _IQK_Tx_8812A(
 				} else {
 					ODM_Write4Byte(pDM_Odm, 0xc8c, 0x28160cc0);
 				}
-				ODM_Write4Byte(pDM_Odm, 0xcb8, 0x00300000);// cb8[20] ¬±N SI/PI ¬®√è¬•√é√Öv¬§√Å¬µ¬π iqk_dpk module
+				ODM_Write4Byte(pDM_Odm, 0xcb8, 0x00300000);// cb8[20] ±N SI/PI ®œ•Œ≈v§¡µπ iqk_dpk module
 				ODM_Write4Byte(pDM_Odm, 0xcb8, 0x00100000);
 				ODM_delay_ms(5); //Delay 5ms
 				ODM_Write4Byte(pDM_Odm, 0xc8c, 0x3c000000);
@@ -904,8 +904,8 @@ void _IQK_Tx_8812A(
 				} else {
 					ODM_Write4Byte(pDM_Odm, 0xe8c, 0x28160ca0);
 				}
-				ODM_Write4Byte(pDM_Odm, 0xeb8, 0x00300000);// cb8[20] ¬±N SI/PI ¬®√è¬•√é√Öv¬§√Å¬µ¬π iqk_dpk module
-				ODM_Write4Byte(pDM_Odm, 0xeb8, 0x00100000);// cb8[20] ¬±N SI/PI ¬®√è¬•√é√Öv¬§√Å¬µ¬π iqk_dpk module
+				ODM_Write4Byte(pDM_Odm, 0xeb8, 0x00300000);// cb8[20] ±N SI/PI ®œ•Œ≈v§¡µπ iqk_dpk module
+				ODM_Write4Byte(pDM_Odm, 0xeb8, 0x00100000);// cb8[20] ±N SI/PI ®œ•Œ≈v§¡µπ iqk_dpk module
 				ODM_delay_ms(5); //Delay 5ms
 				ODM_Write4Byte(pDM_Odm, 0xe8c, 0x3c000000);
 				ODM_Write4Byte(pDM_Odm, 0xeb8, 0x00000000);
@@ -1084,13 +1084,13 @@ phy_IQCalibrate_8812A(
     IN u1Byte		Channel
 )
 {
-	u4Byte	MACBB_backup[MACBB_REG_NUM], AFE_backup[AFE_REG_NUM], RFA_backup[RF_REG_NUM], RFB_backup[RF_REG_NUM];
-	const u4Byte 	Backup_MACBB_REG[MACBB_REG_NUM] = {0x520, 0x550, 0x808, 0xa04, 0x90c, 0xc00, 0xe00, 0x838,  0x82c};
-	const u4Byte 	Backup_AFE_REG[AFE_REG_NUM] = {0xc5c, 0xc60, 0xc64, 0xc68, 0xcb0, 0xcb4,
+	u4Byte	MACBB_backup[MACBB_REG_NUM], AFE_backup[AFE_REG_NUM] = {0}, RFA_backup[RF_REG_NUM] = {0}, RFB_backup[RF_REG_NUM] = {0};
+	u4Byte 	Backup_MACBB_REG[MACBB_REG_NUM] = {0x520, 0x550, 0x808, 0xa04, 0x90c, 0xc00, 0xe00, 0x838,  0x82c};
+	u4Byte 	Backup_AFE_REG[AFE_REG_NUM] = {0xc5c, 0xc60, 0xc64, 0xc68, 0xcb0, 0xcb4,
 	                                       0xe5c, 0xe60, 0xe64, 0xe68, 0xeb0, 0xeb4
 	                                      };
 	u4Byte	Reg_C1B8, Reg_E1B8;
-	const u4Byte 	Backup_RF_REG[RF_REG_NUM] = {0x65, 0x8f, 0x0};
+	u4Byte 	Backup_RF_REG[RF_REG_NUM] = {0x65, 0x8f, 0x0};
 	u1Byte 	chnlIdx = ODM_GetRightChnlPlaceforIQK(Channel);
 
 	_IQK_BackupMacBB_8812A(pDM_Odm, MACBB_backup, Backup_MACBB_REG, MACBB_REG_NUM);
@@ -1161,11 +1161,13 @@ phy_LCCalibrate_8812A(
 	//3 4. Set LC calibration begin bit15
 	ODM_SetRFReg(pDM_Odm, ODM_RF_PATH_A, RF_CHNLBW, bRFRegOffsetMask, LC_Cal|0x08000);
 
+	ODM_delay_ms(150);		// suggest by RFSI Binson
+
 	// Leave LCK mode
 	tmp = ODM_GetRFReg(pDM_Odm, ODM_RF_PATH_A, RF_LCK, bRFRegOffsetMask);
 	ODM_SetRFReg(pDM_Odm, ODM_RF_PATH_A, RF_LCK, bRFRegOffsetMask, tmp & ~BIT14);
 
-	ODM_delay_ms(100);
+
 
 	//3 Restore original situation
 	if((reg0x914 & 70000) != 0) {	//Deal with contisuous TX case, 0x914[18:16]
@@ -1499,7 +1501,7 @@ _DPK_Globalparaset(
 	//set BB register
 	//***************************************//
 
-	// reg82c[31] = b'0, ¬§√Å¬¥¬´¬®√¨ page C
+	// reg82c[31] = b'0, §¡¥´®Ï page C
 	ODM_Write4Byte(pDM_Odm, 0x82c, 0x002083d5);
 
 	// test pin in/out control
@@ -1526,10 +1528,10 @@ _DPK_Globalparaset(
 	// reset DPK circuit
 	ODM_Write4Byte(pDM_Odm, 0xb00, 0x03000100);
 
-	// path A regc94[0] = b'1 (r_gothrough_iqkdpk), ¬±N DPK ¬§√Å¬∂i normal path
+	// path A regc94[0] = b'1 (r_gothrough_iqkdpk), ±N DPK §¡∂i normal path
 	ODM_Write4Byte(pDM_Odm, 0xc94, 0x01000001);
 
-	// path B rege94[0] = b'1 (r_gothrough_iqkdpk), ¬±N DPK ¬§√Å¬∂i normal path
+	// path B rege94[0] = b'1 (r_gothrough_iqkdpk), ±N DPK §¡∂i normal path
 	ODM_Write4Byte(pDM_Odm, 0xe94, 0x01000001);
 
 	//***************************************//
@@ -1537,7 +1539,7 @@ _DPK_Globalparaset(
 	//***************************************//
 
 	//path A
-	//regc68 ¬®√¨ regc84√Ä¬≥¬∏√ì¬¨O¬≠n¬∏√≤¬•¬ø¬±` Tx mode ¬Æ√â¬™¬∫¬≥]¬©w¬§@¬≠P
+	//regc68 ®Ï regc84¿≥∏”¨O≠n∏Ú•ø±` Tx mode Æ…™∫≥]©w§@≠P
 
 	ODM_Write4Byte(pDM_Odm, 0xc68, 0x19791979);
 	ODM_Write4Byte(pDM_Odm, 0xc6c, 0x19791979);
@@ -1553,7 +1555,7 @@ _DPK_Globalparaset(
 	ODM_Write4Byte(pDM_Odm, 0xc64, 0x77777777);
 
 	//path B
-	//rege68 ¬®√¨ rege84√Ä¬≥¬∏√ì¬¨O¬≠n¬∏√≤¬•¬ø¬±` Tx mode ¬Æ√â¬™¬∫¬≥]¬©w¬§@¬≠P
+	//rege68 ®Ï rege84¿≥∏”¨O≠n∏Ú•ø±` Tx mode Æ…™∫≥]©w§@≠P
 
 	ODM_Write4Byte(pDM_Odm, 0xe68, 0x19791979);
 	ODM_Write4Byte(pDM_Odm, 0xe6c, 0x19791979);
@@ -1706,7 +1708,7 @@ _DPK_EnableDP(
 	//=========//
 	// DPK setting	//
 	//=========//
-	// reg82c[31] = b'1, ¬§√Å¬¥¬´¬®√¨ page C1
+	// reg82c[31] = b'1, §¡¥´®Ï page C1
 	ODM_Write4Byte(pDM_Odm, 0x82c, 0x802083d5);
 
 
@@ -1717,7 +1719,7 @@ _DPK_EnableDP(
 	ODM_Write4Byte(pDM_Odm, 0xc8c+pagesel, 0x3c000000);
 
 
-	// ¬ºgPWSF table in 1st SRAM for PA = 11 use
+	// ºgPWSF table in 1st SRAM for PA = 11 use
 	ODM_Write4Byte(pDM_Odm, 0xc20+pagesel, 0x00000800);
 
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("Write PWSF table\n"));
@@ -1758,7 +1760,7 @@ _DPK_EnableDP(
 
 	ODM_Write4Byte(pDM_Odm, 0xce4+pagesel, 0x00000000);
 
-	// reg82c[31] = b'0, ¬§√Å¬¥¬´¬®√¨ page C
+	// reg82c[31] = b'0, §¡¥´®Ï page C
 	ODM_Write4Byte(pDM_Odm, 0x82c, 0x002083d5);
 
 }
@@ -1790,10 +1792,10 @@ _DPK_pathABDPK(
 		//***************************************//
 
 
-		// reg82c[31] = b'1, ¬§√Å¬¥¬´¬®√¨ page C1
+		// reg82c[31] = b'1, §¡¥´®Ï page C1
 		ODM_Write4Byte(pDM_Odm, 0x82c, 0x802083d5);
 
-		// regc20[15:13] = dB sel, ¬ßi¬∂D Gain Loss function ¬•h¬¥M¬ß√§ dB_sel ¬©√í¬≥]¬©w¬™¬∫PA gain loss¬•√ò¬º√ê¬©√í¬π√Ø√Ä¬≥¬™¬∫ Tx AGC ¬¨¬∞¬¶√≥.
+		// regc20[15:13] = dB sel, ßi∂D Gain Loss function •h¥Mß‰ dB_sel ©“≥]©w™∫PA gain loss•ÿº–©“πÔ¿≥™∫ Tx AGC ¨∞¶Û.
 		// dB_sel = b'000 ' 1.0 dB PA gain loss
 		// dB_sel = b'001 ' 1.5 dB PA gain loss
 		// dB_sel = b'010 ' 2.0 dB PA gain loss
@@ -1809,7 +1811,7 @@ _DPK_pathABDPK(
 		ODM_Write4Byte(pDM_Odm, 0xcc4+pagesel, 0x148b0000);
 		ODM_Write4Byte(pDM_Odm, 0xc8c+pagesel, 0x3c000000);
 
-		// tx_amp ' ¬®M¬©w Ramp ¬§¬§¬¶U¬©¬∂¬™i¬™¬∫¬Æ¬∂¬¥T¬§j¬§p
+		// tx_amp ' ®M©w Ramp §§¶U©∂™i™∫Æ∂¥T§j§p
 		ODM_Write4Byte(pDM_Odm, 0xc98+pagesel, 0x41382e21);
 		ODM_Write4Byte(pDM_Odm, 0xc9c+pagesel, 0x5b554f48);
 		ODM_Write4Byte(pDM_Odm, 0xca0+pagesel, 0x6f6b6661);
@@ -1819,7 +1821,7 @@ _DPK_pathABDPK(
 		ODM_Write4Byte(pDM_Odm, 0xcb0+pagesel, 0xaaa7a4a1);
 		ODM_Write4Byte(pDM_Odm, 0xcb4+pagesel, 0xb6b3b0ad);
 
-		// tx_inverse ' Ramp ¬§¬§¬¶U¬©¬∂¬™ipower ¬™¬∫¬≠√ã¬º√Ü, ¬•H¬≠p¬∫√¢¬•X PA ¬™¬∫ gain report??
+		// tx_inverse ' Ramp §§¶U©∂™ipower ™∫≠Àº∆, •H≠p∫‚•X PA ™∫ gain report??
 		ODM_Write4Byte(pDM_Odm, 0xc40+pagesel, 0x02ce03e9);
 		ODM_Write4Byte(pDM_Odm, 0xc44+pagesel, 0x01fd0249);
 		ODM_Write4Byte(pDM_Odm, 0xc48+pagesel, 0x01a101c9);
@@ -1868,18 +1870,18 @@ _DPK_pathABDPK(
 		// read back
 		ODM_Write4Byte(pDM_Odm, 0xc90+pagesel, 0x0109f018);
 		ODM_Write4Byte(pDM_Odm, 0xcb8+pagesel, 0x09000000);
-		// ¬•i¬•H¬¶b d00[3:0] ¬§¬§√Ö¬™¬¶^, dB_sel ¬§¬§¬©√í¬≥]¬©w¬™¬∫ gain loss ¬∑|¬∏¬®¬¶b¬≠√æ¬§@¬≠√ì Tx AGC ¬≥]¬©w
-		// √Ö¬™¬¶^d00[3:0] = h'1 ' Tx AGC = 15
-		// √Ö¬™¬¶^d00[3:0] = h'2 ' Tx AGC = 16
-		// √Ö¬™¬¶^d00[3:0] = h'3 ' Tx AGC = 17
-		// √Ö¬™¬¶^d00[3:0] = h'4 ' Tx AGC = 18
-		// √Ö¬™¬¶^d00[3:0] = h'5 ' Tx AGC = 19
-		// √Ö¬™¬¶^d00[3:0] = h'6 ' Tx AGC = 1a
-		// √Ö¬™¬¶^d00[3:0] = h'7 ' Tx AGC = 1b
-		// √Ö¬™¬¶^d00[3:0] = h'8 ' Tx AGC = 1c
-		// √Ö¬™¬¶^d00[3:0] = h'9 ' Tx AGC = 1d
-		// √Ö¬™¬¶^d00[3:0] = h'a ' Tx AGC = 1e
-		// √Ö¬™¬¶^d00[3:0] = h'b ' Tx AGC = 1f
+		// •i•H¶b d00[3:0] §§≈™¶^, dB_sel §§©“≥]©w™∫ gain loss ∑|∏®¶b≠˛§@≠” Tx AGC ≥]©w
+		// ≈™¶^d00[3:0] = h'1 ' Tx AGC = 15
+		// ≈™¶^d00[3:0] = h'2 ' Tx AGC = 16
+		// ≈™¶^d00[3:0] = h'3 ' Tx AGC = 17
+		// ≈™¶^d00[3:0] = h'4 ' Tx AGC = 18
+		// ≈™¶^d00[3:0] = h'5 ' Tx AGC = 19
+		// ≈™¶^d00[3:0] = h'6 ' Tx AGC = 1a
+		// ≈™¶^d00[3:0] = h'7 ' Tx AGC = 1b
+		// ≈™¶^d00[3:0] = h'8 ' Tx AGC = 1c
+		// ≈™¶^d00[3:0] = h'9 ' Tx AGC = 1d
+		// ≈™¶^d00[3:0] = h'a ' Tx AGC = 1e
+		// ≈™¶^d00[3:0] = h'b ' Tx AGC = 1f
 
 		TXindex = ODM_GetBBReg(pDM_Odm, 0xd00+regsel, 0x0000000f);
 
@@ -1895,7 +1897,7 @@ _DPK_pathABDPK(
 		ODM_Write4Byte(pDM_Odm, 0xc8c+pagesel, 0x3c000000);
 
 
-		// tx_amp ' ¬®M¬©w Ramp ¬§¬§¬¶U¬©¬∂¬™i¬™¬∫¬Æ¬∂¬¥T¬§j¬§p
+		// tx_amp ' ®M©w Ramp §§¶U©∂™i™∫Æ∂¥T§j§p
 
 		ODM_Write4Byte(pDM_Odm, 0xc98+pagesel, 0x41382e21);
 		ODM_Write4Byte(pDM_Odm, 0xc9c+pagesel, 0x5b554f48);
@@ -1906,7 +1908,7 @@ _DPK_pathABDPK(
 		ODM_Write4Byte(pDM_Odm, 0xcb0+pagesel, 0xaaa7a4a1);
 		ODM_Write4Byte(pDM_Odm, 0xcb4+pagesel, 0xb6b3b0ad);
 
-		// tx_inverse ' Ramp ¬§¬§¬¶U¬©¬∂¬™ipower ¬™¬∫¬≠√ã¬º√Ü, ¬•H¬≠p¬∫√¢¬•X PA ¬™¬∫ gain
+		// tx_inverse ' Ramp §§¶U©∂™ipower ™∫≠Àº∆, •H≠p∫‚•X PA ™∫ gain
 		ODM_Write4Byte(pDM_Odm, 0xc40+pagesel, 0x02ce03e9);
 		ODM_Write4Byte(pDM_Odm, 0xc44+pagesel, 0x01fd0249);
 		ODM_Write4Byte(pDM_Odm, 0xc48+pagesel, 0x01a101c9);
@@ -1925,7 +1927,7 @@ _DPK_pathABDPK(
 		ODM_Write4Byte(pDM_Odm, 0xc7c+pagesel, 0x00b500b8);
 
 		//fill BB TX index for the DPK reference
-		// reg82c[31] =1b'0, ¬§√Å¬¥¬´¬®√¨ page C
+		// reg82c[31] =1b'0, §¡¥´®Ï page C
 		ODM_Write4Byte(pDM_Odm, 0x82c, 0x002083d5);
 
 		ODM_Write4Byte(pDM_Odm, 0xc20+pagesel, 0x3c3c3c3c);
@@ -1941,26 +1943,26 @@ _DPK_pathABDPK(
 		ODM_Write4Byte(pDM_Odm, 0xc48+pagesel, 0x3c3c3c3c);
 		ODM_Write4Byte(pDM_Odm, 0xc4c+pagesel, 0x3c3c3c3c);
 
-		// reg82c[31] =1b'1, ¬§√Å¬¥¬´¬®√¨ page C1
+		// reg82c[31] =1b'1, §¡¥´®Ï page C1
 		ODM_Write4Byte(pDM_Odm, 0x82c, 0x802083d5);
 
 
 
 		// r_agc_boudary
-		// PA gain = 11 ¬π√Ø√Ä¬≥ tx_agc ¬±q1f ¬®√¨11  boundary = b'11111 ' PageC1 ¬™¬∫ bc0[4:0] = 11111
-		// PA gain = 10 ¬π√Ø√Ä¬≥ tx_agc ¬±q11 ¬®√¨11 ? boundary = b'10011 ' PageC1 ¬™¬∫ bc0[9:5] = 10001
-		// PA gain = 01 ¬π√Ø√Ä¬≥ tx_agc ¬±q10 ¬®√¨0e ? boundary = b'10000 ' PageC1 ¬™¬∫ bc0[14:10] = 10000
-		// PA gain = 00 ¬π√Ø√Ä¬≥ tx_agc ¬±q0d ¬®√¨00 ? boundary = b'01101 ' PageC1 ¬™¬∫ bc0[19:15] = 01101
+		// PA gain = 11 πÔ¿≥ tx_agc ±q1f ®Ï11  boundary = b'11111 ' PageC1 ™∫ bc0[4:0] = 11111
+		// PA gain = 10 πÔ¿≥ tx_agc ±q11 ®Ï11 ? boundary = b'10011 ' PageC1 ™∫ bc0[9:5] = 10001
+		// PA gain = 01 πÔ¿≥ tx_agc ±q10 ®Ï0e ? boundary = b'10000 ' PageC1 ™∫ bc0[14:10] = 10000
+		// PA gain = 00 πÔ¿≥ tx_agc ±q0d ®Ï00 ? boundary = b'01101 ' PageC1 ™∫ bc0[19:15] = 01101
 		ODM_Write4Byte(pDM_Odm, 0xcbc+pagesel, 0x0006c23f);
 
-		// r_bnd, ¬•t¬•~4¬∂√¥ PWSF (power scaling factor) ¬™¬∫ boundary, ¬¶]¬¨¬∞¬•√ò¬´e¬•u¬¶¬≥¬¶b PA gain = 11 ¬Æ√â¬§~¬∞¬µ¬∏√â√Äv, ¬©√í¬•H¬≥]¬¶¬® h'fffff ¬ßY¬•i.
+		// r_bnd, •t•~4∂Ù PWSF (power scaling factor) ™∫ boundary, ¶]¨∞•ÿ´e•u¶≥¶b PA gain = 11 Æ…§~∞µ∏…¿v, ©“•H≥]¶® h'fffff ßY•i.
 		ODM_Write4Byte(pDM_Odm, 0xcb8+pagesel, 0x000fffff);
 
 		//============//
 		// RF setting for DPK //
 		//============//
 		// 00[4:0] = Tx AGC, 00[9:5] = Rx AGC (BB), 00[12:10] = Rx AGC (LNA)
-		// ¬¶¬π¬≥B reg00[4:0] = h'1d, ¬¨O¬•√ë¬´e¬≠¬± gain loss function ¬±o¬®√¨¬™¬∫¬µ¬≤¬™G.
+		// ¶π≥B reg00[4:0] = h'1d, ¨O•—´e≠± gain loss function ±o®Ï™∫µ≤™G.
 		ODM_SetRFReg(pDM_Odm, (ODM_RF_RADIO_PATH_E)(0x0+path), 0x0, bRFRegOffsetMask, 0x517e0 | TXindex);
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("RF 0x0 = 0x%x\n", 0x517e0 | TXindex));
 

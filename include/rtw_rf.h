@@ -49,8 +49,8 @@
 
 //Country codes
 #define USA							0x555320
-#define EUROPE						0x1 //temp, should be provided later	
-#define JAPAN						0x2 //temp, should be provided later	
+#define EUROPE						0x1 //temp, should be provided later
+#define JAPAN						0x2 //temp, should be provided later
 
 struct	regulatory_class {
 	u32	starting_freq;					//MHz,

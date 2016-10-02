@@ -26,8 +26,8 @@
  * Public  General Config
  */
 #define AUTOCONF_INCLUDED
-#define RTL871X_MODULE_NAME "8812AU"
-#define DRV_NAME "rtl8812au"
+#define RTL871X_MODULE_NAME "8821AU"
+#define DRV_NAME "rtl8821au"
 
 
 #define CONFIG_USB_HCI	1
@@ -44,6 +44,7 @@
 //#define CONFIG_DEBUG_CFG80211
 //#define CONFIG_DRV_ISSUE_PROV_REQ // IOT FOR S2
 #define CONFIG_SET_SCAN_DENY_TIMER
+#define CONFIG_IEEE80211_BAND_5GHZ
 #endif
 
 /*
@@ -83,7 +84,7 @@
 #define CONFIG_IPS	1
 #ifdef CONFIG_IPS
 //#define CONFIG_IPS_LEVEL_2	1 //enable this to set default IPS mode to IPS_LEVEL_2
-#define CONFIG_IPS_CHECK_IN_WD // Do IPS Check in WatchDog.	
+#define CONFIG_IPS_CHECK_IN_WD // Do IPS Check in WatchDog.
 #endif
 //#define SUPPORT_HW_RFOFF_DETECTED	1
 
@@ -112,11 +113,11 @@
 //#define DBG_RUNTIME_PORT_SWITCH
 #define CONFIG_STA_MODE_SCAN_UNDER_AP_MODE
 //#ifdef CONFIG_RTL8812A
-//	#define CONFIG_TSF_RESET_OFFLOAD 1		// For 2 PORT TSF SYNC.
+//#define CONFIG_TSF_RESET_OFFLOAD 1		// For 2 PORT TSF SYNC.
 //#endif
+//#define CONFIG_MULTI_VIR_IFACES //besides primary&secondary interfaces, extend to support more interfaces
 #endif
 
-//#define CONFIG_IOL
 //#else 	//#ifndef CONFIG_MP_INCLUDED
 
 //#endif 	//#ifndef CONFIG_MP_INCLUDED
@@ -138,6 +139,9 @@
 #endif
 #define CONFIG_FIND_BEST_CHANNEL	1
 //#define CONFIG_NO_WIRELESS_HANDLERS	1
+
+//#define	CONFIG_AUTO_AP_MODE
+
 #endif
 
 #define CONFIG_P2P	1
@@ -145,9 +149,8 @@
 //The CONFIG_WFD is for supporting the Wi-Fi display
 #define CONFIG_WFD
 
-#ifndef CONFIG_WIFI_TEST
 #define CONFIG_P2P_REMOVE_GROUP_INFO
-#endif
+
 //#define CONFIG_DBG_P2P
 
 #define CONFIG_P2P_PS
@@ -158,15 +161,26 @@
 #endif
 
 //	Added by Kurt 20110511
-//#define CONFIG_TDLS	1
 #ifdef CONFIG_TDLS
+#define CONFIG_TDLS_DRIVER_SETUP
 //	#ifndef CONFIG_WFD
-//		#define CONFIG_WFD	1
+//		#define CONFIG_WFD
 //	#endif
-//	#define CONFIG_TDLS_AUTOSETUP			1
-//	#define CONFIG_TDLS_AUTOCHECKALIVE		1
+//	#define CONFIG_TDLS_AUTOSETUP
+#define CONFIG_TDLS_AUTOCHECKALIVE
+#define CONFIG_TDLS_CH_SW
 #endif
 
+#ifdef CONFIG_BT_COEXIST
+// for ODM and outsrc BT-Coex
+#define BT_30_SUPPORT 1
+
+#ifndef CONFIG_LPS
+#define CONFIG_LPS	// download reserved page to FW
+#endif
+#else // !CONFIG_BT_COEXIST
+#define BT_30_SUPPORT 0
+#endif // !CONFIG_BT_COEXIST
 
 #define CONFIG_SKB_COPY	1//for amsdu
 
@@ -177,13 +191,6 @@
 //#define CONFIG_LED_HANDLED_BY_CMD_THREAD
 #endif
 #endif // CONFIG_LED
-
-#ifdef CONFIG_IOL
-#define CONFIG_IOL_READ_EFUSE_MAP
-//#define DBG_IOL_READ_EFUSE_MAP
-#define CONFIG_IOL_LLT
-#endif
-
 
 #define USB_INTERFERENCE_ISSUE // this should be checked in all usb interface
 #define CONFIG_GLOBAL_UI_PID
@@ -205,6 +212,16 @@
 #define CONFIG_TX_MCAST2UNI	1	// Support IP multicast->unicast
 //#define CONFIG_CHECK_AC_LIFETIME 1	// Check packet lifetime of 4 ACs.
 
+#ifdef CONFIG_WOWLAN
+//#define CONFIG_GTK_OL
+#define CONFIG_ARP_KEEP_ALIVE
+#endif // CONFIG_WOWLAN
+
+#ifdef CONFIG_GPIO_WAKEUP
+#ifndef WAKEUP_GPIO_IDX
+#define WAKEUP_GPIO_IDX	1	// WIFI Chip Side
+#endif // !WAKEUP_GPIO_IDX
+#endif // CONFIG_GPIO_WAKEUP
 
 /*
  * Interface  Related Config
@@ -215,7 +232,6 @@
 #define CONFIG_USB_RX_AGGREGATION	1
 #endif
 
-#define CONFIG_PREALLOC_RECV_SKB	1
 //#define CONFIG_REDUCE_USB_TX_INT	1	// Trade-off: Improve performance, but may cause TX URBs blocked by USB Host/Bus driver on few platforms.
 //#define CONFIG_EASY_REPLACEMENT	1
 
@@ -225,16 +241,12 @@
 //#define CONFIG_USE_USB_BUFFER_ALLOC_TX 1	// Trade-off: For TX path, improve stability on some platforms, but may cause performance degrade on other platforms.
 //#define CONFIG_USE_USB_BUFFER_ALLOC_RX 1	// For RX path
 #ifdef CONFIG_USE_USB_BUFFER_ALLOC_RX
-#undef CONFIG_PREALLOC_RECV_SKB
-#else
-#ifdef CONFIG_PREALLOC_RECV_SKB
-//		#define CONFIG_FIX_NR_BULKIN_BUFFER		// only use USB prealloc_recv_buffer, no use alloc_skb()
-#endif
-#endif
 
-#ifdef CONFIG_WOWLAN
-// 1 spatial stream for lower power mode when entering suspend
-//#define CONFIG_LOWPR_1SS
+#else
+#define CONFIG_PREALLOC_RECV_SKB
+#ifdef CONFIG_PREALLOC_RECV_SKB
+//#define CONFIG_FIX_NR_BULKIN_BUFFER /* only use PREALLOC_RECV_SKB buffer, don't alloc skb at runtime */
+#endif
 #endif
 
 /*
@@ -249,14 +261,11 @@
 
 //#define CONFIG_USB_SUPPORT_ASYNC_VDN_REQ 1
 
-#define WAKEUP_GPIO_IDX	1	//WIFI Chip Side
 
 /*
  * HAL  Related Config
  */
 #define RTL8812A_RX_PACKET_INCLUDE_CRC	0
-
-#define CONFIG_RX_PACKET_APPEND_FCS
 
 //#define CONFIG_ONLY_ONE_OUT_EP_TO_LOW	0
 
@@ -297,6 +306,7 @@
 #endif
 
 #endif//CONFIG_PLATFORM_MN10300
+
 
 
 #if defined(CONFIG_PLATFORM_ACTIONS_ATM702X)
@@ -369,7 +379,7 @@
 //#define CONFIG_DEBUG /* DBG_871X, etc... */
 //#define CONFIG_DEBUG_RTL871X /* RT_TRACE, RT_PRINT_DATA, _func_enter_, _func_exit_ */
 
-//#define CONFIG_PROC_DEBUG
+#define CONFIG_PROC_DEBUG
 
 #define DBG_CONFIG_ERROR_DETECT
 //#define DBG_CONFIG_ERROR_DETECT_INT

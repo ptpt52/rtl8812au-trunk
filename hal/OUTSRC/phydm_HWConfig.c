@@ -59,7 +59,6 @@
 #define GET_VERSION_TC(ic, txt) 		(ODM_GetVersion_TC_##ic##txt())
 #define GET_VERSION(ic, txt) (pDM_Odm->bIsMPChip?GET_VERSION_MP(ic,txt):GET_VERSION_TC(ic,txt))
 
-
 u1Byte
 odm_QueryRxPwrPercentage(
     IN		s1Byte		AntPower
@@ -380,7 +379,7 @@ static u1Byte odm_SQ_process_patch_RT_CID_819x_Lenovo(
 	return SQ;
 }
 
-static u1Byte odm_SQ_process_patch_RT_CID_819x_Acer(
+static inline u1Byte odm_SQ_process_patch_RT_CID_819x_Acer(
     IN PDM_ODM_T	pDM_Odm,
     IN u1Byte 		isCCKrate,
     IN u1Byte 		PWDB_ALL,
@@ -476,7 +475,17 @@ odm_EVMdbToPercentage(
 
 	//DbgPrint("Value=%d\n", Value);
 	//ODM_RT_DISP(FRX, RX_PHY_SQ, ("EVMdbToPercentage92C Value=%d / %x \n", ret_val, ret_val));
+#ifdef ODM_EVM_ENHANCE_ANTDIV
 
+	if(ret_val >= 0)
+		ret_val = 0;
+	if(ret_val <= -40)
+		ret_val = -40;
+
+	ret_val = 0 - ret_val;
+	ret_val*=3;
+
+#else
 	if(ret_val >= 0)
 		ret_val = 0;
 	if(ret_val <= -33)
@@ -487,6 +496,7 @@ odm_EVMdbToPercentage(
 
 	if(ret_val == 99)
 		ret_val = 100;
+#endif
 
 	return(ret_val);
 }
@@ -526,7 +536,7 @@ odm_Cfo(
 	return ret_val;
 }
 
-
+#if(ODM_IC_11N_SERIES_SUPPORT == 1)
 VOID
 odm_RxPhyStatus92CSeries_Parsing(
     IN OUT	PDM_ODM_T					pDM_Odm,
@@ -535,7 +545,7 @@ odm_RxPhyStatus92CSeries_Parsing(
     IN		PODM_PACKET_INFO_T			pPktinfo
 )
 {
-	//SWAT_T				*pDM_SWAT_Table = &pDM_Odm->DM_SWAT_Table;
+	SWAT_T				*pDM_SWAT_Table = &pDM_Odm->DM_SWAT_Table;
 	u1Byte				i, Max_spatial_stream;
 	s1Byte				rx_pwr[4], rx_pwr_all=0;
 	u1Byte				EVM, PWDB_ALL = 0, PWDB_ALL_BT;
@@ -738,7 +748,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 			pPhyInfo->RxMIMOSignalQuality[ODM_RF_PATH_A] = SQ;
 			pPhyInfo->RxMIMOSignalQuality[ODM_RF_PATH_B] = -1;
 		}
-	} else { //is OFDM rate
+	} else { //2 is OFDM rate
 		pDM_Odm->PhyDbgInfo.NumQryPhyStatusOFDM++;
 
 		//
@@ -754,7 +764,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 
 			rx_pwr[i] = ((pPhyStaRpt->path_agc[i].gain& 0x3F)*2) - 110;
 
-
 #if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
 			pPhyInfo->RxPwr[i] = rx_pwr[i];
 #endif
@@ -764,8 +773,9 @@ odm_RxPhyStatus92CSeries_Parsing(
 			total_rssi += RSSI;
 			//RT_DISP(FRX, RX_PHY_SS, ("RF-%d RXPWR=%x RSSI=%d\n", i, rx_pwr[i], RSSI));
 
-			//Modification for ext-LNA board
+
 			if(pDM_Odm->SupportICType&ODM_RTL8192C) {
+				//Modification for ext-LNA board
 				if(pDM_Odm->BoardType & (ODM_BOARD_EXT_LNA | ODM_BOARD_EXT_PA)) {
 					if((pPhyStaRpt->path_agc[i].trsw) == 1)
 						RSSI = (RSSI>94)?100:(RSSI +6);
@@ -779,7 +789,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 
 			pPhyInfo->RxMIMOSignalStrength[i] =(u1Byte) RSSI;
 
-#if (DM_ODM_SUPPORT_TYPE &  (/*ODM_WIN|*/ODM_CE|ODM_AP|ODM_ADSL))
+#if (DM_ODM_SUPPORT_TYPE &  (/*ODM_WIN|*/ODM_CE|ODM_AP))
 			//Get Rx snr value in DB
 			pPhyInfo->RxSNR[i] = pDM_Odm->PhyDbgInfo.RxSNRdB[i] = (s4Byte)(pPhyStaRpt->path_rxsnr[i]/2);
 #endif
@@ -787,6 +797,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 			/* Record Signal Strength for next packet */
 			//if(pPktinfo->bPacketMatchBSSID)
 			{
+#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 				if((pDM_Odm->SupportPlatform == ODM_WIN) &&
 				   (pDM_Odm->PatchID==RT_CID_819x_Lenovo)) {
 					if(i==ODM_RF_PATH_A)
@@ -796,7 +807,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 				          (pDM_Odm->PatchID==RT_CID_819x_Acer)) {
 					pPhyInfo->SignalQuality = odm_SQ_process_patch_RT_CID_819x_Acer(pDM_Odm,isCCKrate,PWDB_ALL,0,RSSI);
 				}
-
+#endif
 			}
 		}
 
@@ -807,7 +818,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 		rx_pwr_all = (((pPhyStaRpt->cck_sig_qual_ofdm_pwdb_all) >> 1 )& 0x7f) -110;
 
 		PWDB_ALL_BT = PWDB_ALL = odm_QueryRxPwrPercentage(rx_pwr_all);
-		//RT_DISP(FRX, RX_PHY_SS, ("PWDB_ALL=%d\n",PWDB_ALL));
+
 
 		pPhyInfo->RxPWDBAll = PWDB_ALL;
 		//ODM_RT_TRACE(pDM_Odm,ODM_COMP_RSSI_MONITOR, ODM_DBG_LOUD, ("ODM OFDM RSSI=%d\n",pPhyInfo->RxPWDBAll));
@@ -836,7 +847,6 @@ odm_RxPhyStatus92CSeries_Parsing(
 				// value to positive one, then the dbm value (which is supposed to be negative)  is not correct anymore.
 				EVM = odm_EVMdbToPercentage( (pPhyStaRpt->stream_rxevm[i] ));	//dbm
 
-				//RT_DISP(FRX, RX_PHY_SQ, ("RXRATE=%x RXEVM=%x EVM=%s%d\n",
 				//GET_RX_STATUS_DESC_RX_MCS(pDesc), pDrvInfo->rxevm[i], "%", EVM));
 
 				//if(pPktinfo->bPacketMatchBSSID)
@@ -883,6 +893,8 @@ odm_RxPhyStatus92CSeries_Parsing(
 	}
 #endif
 
+	//DbgPrint("pPhyInfo->RxPWDBAll=%d\n", pPhyInfo->RxPWDBAll);
+	//DbgPrint("pPhyInfo->SignalStrength=%d\n", pPhyInfo->SignalStrength);
 	//DbgPrint("isCCKrate = %d, pPhyInfo->RxPWDBAll = %d, pPhyStaRpt->cck_agc_rpt_ofdm_cfosho_a = 0x%x\n",
 	//isCCKrate, pPhyInfo->RxPWDBAll, pPhyStaRpt->cck_agc_rpt_ofdm_cfosho_a);
 
@@ -895,6 +907,7 @@ odm_RxPhyStatus92CSeries_Parsing(
 	pDM_Odm->DM_FatTable.antsel_rx_keep_2 = pPhyStaRpt->antsel_rx_keep_2;
 #endif
 }
+#endif
 
 #if	ODM_IC_11AC_SERIES_SUPPORT
 
@@ -1157,10 +1170,6 @@ odm_RxPhyStatusJaguarSeries_Parsing(
 		pPhyInfo->RecvSignalPower = rx_pwr_all;
 #endif
 
-		//DbgPrint("OFDM: pPhyInfo->RxPWDBAll = %d, pPhyInfo->RxMIMOSignalStrength[0] = %d, pPhyInfo->RxMIMOSignalStrength[1] = %d\n",
-		//	pPhyInfo->RxPWDBAll, pPhyInfo->RxMIMOSignalStrength[0], pPhyInfo->RxMIMOSignalStrength[1]);
-
-
 		if((pDM_Odm->SupportPlatform == ODM_WIN) &&(pDM_Odm->PatchID==19)) {
 			//do nothing
 		} else {
@@ -1291,7 +1300,7 @@ odm_Process_RSSIForDM(
 	u4Byte			Weighting=0;
 	PSTA_INFO_T           	pEntry;
 
-	if(pPktinfo->StationID == 0xFF)
+	if (pPktinfo->StationID >= ODM_ASSOCIATE_ENTRY_NUM)
 		return;
 
 #if (RTL8723B_SUPPORT == 1)||(RTL8821A_SUPPORT == 1)
@@ -1337,19 +1346,12 @@ odm_Process_RSSIForDM(
 #if(defined(CONFIG_HW_ANTENNA_DIVERSITY))
 		ODM_Process_RSSIForAntDiv(pDM_Odm,pPhyInfo,pPktinfo);
 #endif
-	} else if(pDM_Odm->SupportAbility & ODM_BB_PATH_DIV) {
-#if (RTL8812A_SUPPORT == 1)
-		if(pDM_Odm->SupportICType == ODM_RTL8812) {
-			//pPATHDIV_T	pDM_PathDiv = &pDM_Odm->DM_PathDiv;
-			if(pPktinfo->bPacketToSelf || pPktinfo->bPacketMatchBSSID) {
-				if(pPktinfo->DataRate > DESC_RATE11M)
-					ODM_PathStatistics_8812A(pDM_Odm, pPktinfo->StationID, pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_A],
-					                         pPhyInfo->RxMIMOSignalStrength[ODM_RF_PATH_B]);
-			}
-		}
-#endif
 	}
-
+#if(defined(CONFIG_PATH_DIVERSITY))
+	else if(pDM_Odm->SupportAbility & ODM_BB_PATH_DIV) {
+		phydm_process_rssi_for_path_div(pDM_Odm,pPhyInfo,pPktinfo);
+	}
+#endif
 	//-----------------Smart Antenna Debug Message------------------//
 
 	UndecoratedSmoothedCCK =  pEntry->rssi_stat.UndecoratedSmoothedCCK;
@@ -1462,6 +1464,7 @@ odm_Process_RSSIForDM(
 }
 
 
+#if(ODM_IC_11N_SERIES_SUPPORT ==1)
 //
 // Endianness before calling this API
 //
@@ -1505,12 +1508,14 @@ ODM_PhyStatusQuery_92CSeries(
 	}
 
 }
-
+#endif
 
 
 //
 // Endianness before calling this API
 //
+#if(ODM_IC_11AC_SERIES_SUPPORT == 1)
+
 VOID
 ODM_PhyStatusQuery_JaguarSeries(
     IN OUT	PDM_ODM_T					pDM_Odm,
@@ -1526,7 +1531,11 @@ ODM_PhyStatusQuery_JaguarSeries(
 	    pPktinfo);
 
 	odm_Process_RSSIForDM(pDM_Odm,pPhyInfo,pPktinfo);
+#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
+	//phydm_sbd_check(pDM_Odm);
+#endif
 }
+#endif
 
 VOID
 ODM_PhyStatusQuery(
@@ -1536,12 +1545,15 @@ ODM_PhyStatusQuery(
     IN		PODM_PACKET_INFO_T			pPktinfo
 )
 {
-
-	if(pDM_Odm->SupportICType & ODM_IC_11AC_SERIES ) {
+#if(ODM_IC_11AC_SERIES_SUPPORT == 1)
+	if(pDM_Odm->SupportICType & ODM_IC_11AC_SERIES )
 		ODM_PhyStatusQuery_JaguarSeries(pDM_Odm,pPhyInfo,pPhyStatus,pPktinfo);
-	} else {
+#endif
+
+#if(ODM_IC_11N_SERIES_SUPPORT ==1)
+	if(pDM_Odm->SupportICType & ODM_IC_11N_SERIES )
 		ODM_PhyStatusQuery_92CSeries(pDM_Odm,pPhyInfo,pPhyStatus,pPktinfo);
-	}
+#endif
 }
 
 // For future use.
@@ -1572,14 +1584,14 @@ ODM_ConfigRFWithHeaderFile(
     IN 	ODM_RF_RADIO_PATH_E 	eRFPath
 )
 {
-	//PADAPTER		Adapter = pDM_Odm->Adapter;
-
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD,
 	             ("===>ODM_ConfigRFWithHeaderFile (%s)\n", (pDM_Odm->bIsMPChip) ? "MPChip" : "TestChip"));
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD,
 	             ("pDM_Odm->SupportPlatform: 0x%X, pDM_Odm->SupportInterface: 0x%X, pDM_Odm->BoardType: 0x%X\n",
 	              pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->BoardType));
 
+//1 AP doesn't use PHYDM power tracking table in these ICs
+#if (DM_ODM_SUPPORT_TYPE !=  ODM_AP)
 #if (RTL8723A_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8723A) {
 		if(ConfigType == CONFIG_RF_RADIO) {
@@ -1588,39 +1600,34 @@ ODM_ConfigRFWithHeaderFile(
 		}
 	}
 #endif
-
-#if (RTL8188E_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8188E) {
-		if(ConfigType == CONFIG_RF_RADIO) {
-			if(eRFPath == ODM_RF_PATH_A)
-				READ_AND_CONFIG_MP(8188E,_RadioA);
-		} else if(ConfigType == CONFIG_RF_TXPWR_LMT) {
-			READ_AND_CONFIG_MP(8188E,_TXPWR_LMT);
-		}
-	}
-#endif
-
 #if (RTL8812A_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8812) {
 		if(ConfigType == CONFIG_RF_RADIO) {
-			if(eRFPath == ODM_RF_PATH_A) {
+			if(eRFPath == ODM_RF_PATH_A)
 				READ_AND_CONFIG_MP(8812A,_RadioA);
-			} else if(eRFPath == ODM_RF_PATH_B) {
+			else if(eRFPath == ODM_RF_PATH_B)
 				READ_AND_CONFIG_MP(8812A,_RadioB);
-			}
 		} else if(ConfigType == CONFIG_RF_TXPWR_LMT) {
+#if (DM_ODM_SUPPORT_TYPE & ODM_WIN) && (DEV_BUS_TYPE == RT_PCI_INTERFACE)
+			PADAPTER		Adapter = pDM_Odm->Adapter;
+			HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
+			if ((pHalData->EEPROMSVID == 0x17AA && pHalData->EEPROMSMID == 0xA811) ||
+			    (pHalData->EEPROMSVID == 0x10EC && pHalData->EEPROMSMID == 0xA812) ||
+			    (pHalData->EEPROMSVID == 0x10EC && pHalData->EEPROMSMID == 0x8812))
+				READ_AND_CONFIG_MP(8812A,_TXPWR_LMT_HM812A03);
+#endif
 			READ_AND_CONFIG_MP(8812A,_TXPWR_LMT);
 		}
 	}
 #endif
-
 #if (RTL8821A_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8821) {
 		if(ConfigType == CONFIG_RF_RADIO) {
-			if(eRFPath == ODM_RF_PATH_A) {
+			if(eRFPath == ODM_RF_PATH_A)
 				READ_AND_CONFIG_MP(8821A,_RadioA);
-			}
 		} else if(ConfigType == CONFIG_RF_TXPWR_LMT) {
+
+
 
 			if (pDM_Odm->SupportInterface == ODM_ITRF_USB) {
 				if (pDM_Odm->ExtPA5G || pDM_Odm->ExtLNA5G)
@@ -1628,7 +1635,16 @@ ODM_ConfigRFWithHeaderFile(
 				else
 					READ_AND_CONFIG_MP(8821A,_TXPWR_LMT_8811AU_IPA);
 			} else {
-				READ_AND_CONFIG_MP(8821A,_TXPWR_LMT_8821A);
+#if (DM_ODM_SUPPORT_TYPE &  ODM_WIN)
+				PADAPTER		Adapter = pDM_Odm->Adapter;
+				PMGNT_INFO		pMgntInfo = &(Adapter->MgntInfo);
+				if (pMgntInfo->CustomerID == RT_CID_8821AE_ASUS_MB)
+					READ_AND_CONFIG_MP(8821A,_TXPWR_LMT_8821A_SAR_8mm);
+				else if (pMgntInfo->CustomerID == RT_CID_8821AE_ASUS_NB)
+					READ_AND_CONFIG_MP(8821A,_TXPWR_LMT_8821A_SAR_5mm);
+				else
+#endif
+					READ_AND_CONFIG_MP(8821A,_TXPWR_LMT_8821A);
 			}
 		}
 		ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("<===8821_ODM_ConfigRFWithHeaderFile\n"));
@@ -1637,11 +1653,10 @@ ODM_ConfigRFWithHeaderFile(
 
 #if (RTL8723B_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8723B) {
-		if(ConfigType == CONFIG_RF_RADIO) {
+		if(ConfigType == CONFIG_RF_RADIO)
 			READ_AND_CONFIG_MP(8723B,_RadioA);
-		} else if(ConfigType == CONFIG_RF_TXPWR_LMT) {
+		else if(ConfigType == CONFIG_RF_TXPWR_LMT)
 			READ_AND_CONFIG_MP(8723B,_TXPWR_LMT);
-		}
 	}
 #endif
 
@@ -1652,21 +1667,78 @@ ODM_ConfigRFWithHeaderFile(
 				READ_AND_CONFIG_MP(8192E,_RadioA);
 			else if(eRFPath == ODM_RF_PATH_B)
 				READ_AND_CONFIG_MP(8192E,_RadioB);
-		} else if(ConfigType == CONFIG_RF_TXPWR_LMT) {
+		} else if(ConfigType == CONFIG_RF_TXPWR_LMT)
 			READ_AND_CONFIG_MP(8192E,_TXPWR_LMT);
-		}
+	}
+#endif
+#endif//(DM_ODM_SUPPORT_TYPE !=  ODM_AP)
+
+//1 All platforms support
+#if (RTL8188E_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8188E) {
+		if(ConfigType == CONFIG_RF_RADIO) {
+			if(eRFPath == ODM_RF_PATH_A)
+				READ_AND_CONFIG_MP(8188E,_RadioA);
+		} else if(ConfigType == CONFIG_RF_TXPWR_LMT)
+			READ_AND_CONFIG_MP(8188E,_TXPWR_LMT);
+	}
+#endif
+#if (RTL8814A_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8814A) {
+		if(ConfigType == CONFIG_RF_RADIO) {
+			if(eRFPath == ODM_RF_PATH_A)
+				READ_AND_CONFIG_MP(8814A,_RadioA);
+			else if(eRFPath == ODM_RF_PATH_B)
+				READ_AND_CONFIG_MP(8814A,_RadioB);
+			else if(eRFPath == ODM_RF_PATH_C)
+				READ_AND_CONFIG_MP(8814A,_RadioC);
+			else if(eRFPath == ODM_RF_PATH_D)
+				READ_AND_CONFIG_MP(8814A,_RadioD);
+		} else if(ConfigType == CONFIG_RF_TXPWR_LMT)
+			READ_AND_CONFIG_MP(8814A,_TXPWR_LMT);
 	}
 #endif
 
-#if (RTL8814A_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8814A) {
-		/*
-		if(ConfigType == CONFIG_RF_TXPWR_LMT) {
-			READ_AND_CONFIG(8813A,_TXPWR_LMT);
-		}
-		*/
+//1 New ICs (WIN only)
+#if (DM_ODM_SUPPORT_TYPE &  ODM_WIN)
+#if (RTL8821B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8821B) {
+		if (ConfigType == CONFIG_RF_RADIO) {
+			if (eRFPath == ODM_RF_PATH_A)
+				READ_AND_CONFIG(8821B, _RadioA);
+		} else if (ConfigType == CONFIG_RF_TXPWR_LMT)
+			READ_AND_CONFIG(8821B, _TXPWR_LMT);
 	}
 #endif
+#if (RTL8822B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8822B) {
+		if(ConfigType == CONFIG_RF_RADIO) {
+			if(eRFPath == ODM_RF_PATH_A)
+				READ_AND_CONFIG_TC(8822B,_RadioA);
+			else if(eRFPath == ODM_RF_PATH_B)
+				READ_AND_CONFIG_TC(8822B,_RadioB);
+		}
+	}
+#endif
+#if (RTL8703B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8703B) {
+		if(ConfigType == CONFIG_RF_RADIO) {
+			if(eRFPath == ODM_RF_PATH_A)
+				READ_AND_CONFIG_TC(8703B,_RadioA);
+		}
+	}
+#endif
+#if ((DEV_BUS_TYPE == RT_USB_INTERFACE) || (DEV_BUS_TYPE == RT_SDIO_INTERFACE))
+#if (RTL8188F_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8188F) {
+		if(ConfigType == CONFIG_RF_RADIO) {
+			if(eRFPath == ODM_RF_PATH_A)
+				READ_AND_CONFIG_TC(8188F,_RadioA);
+		}
+	}
+#endif
+#endif
+#endif//(DM_ODM_SUPPORT_TYPE &  ODM_WIN)
 
 	return HAL_STATUS_SUCCESS;
 }
@@ -1681,20 +1753,22 @@ ODM_ConfigRFWithTxPwrTrackHeaderFile(
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD,
 	             ("pDM_Odm->SupportPlatform: 0x%X, pDM_Odm->SupportInterface: 0x%X, pDM_Odm->BoardType: 0x%X\n",
 	              pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->BoardType));
-	if(0) {
-	}
-#if (RTL8821A_SUPPORT == 1)
-	else if(pDM_Odm->SupportICType == ODM_RTL8821) {
+
+
+//1 AP doesn't use PHYDM power tracking table in these ICs
+#if (DM_ODM_SUPPORT_TYPE !=  ODM_AP)
+#if RTL8821A_SUPPORT
+	if(pDM_Odm->SupportICType == ODM_RTL8821) {
 		if (pDM_Odm->SupportInterface == ODM_ITRF_PCIE)
 			READ_AND_CONFIG_MP(8821A,_TxPowerTrack_PCIE);
 		else if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
 			READ_AND_CONFIG_MP(8821A,_TxPowerTrack_USB);
-		else
-			READ_AND_CONFIG_MP(8821A,_TxPowerTrack_PCIE);
+		else if (pDM_Odm->SupportInterface == ODM_ITRF_SDIO)
+			READ_AND_CONFIG_MP(8821A,_TxPowerTrack_SDIO);
 	}
 #endif
-#if (RTL8812A_SUPPORT == 1)
-	else if(pDM_Odm->SupportICType == ODM_RTL8812) {
+#if RTL8812A_SUPPORT
+	if(pDM_Odm->SupportICType == ODM_RTL8812) {
 		if (pDM_Odm->SupportInterface == ODM_ITRF_PCIE)
 			READ_AND_CONFIG_MP(8812A,_TxPowerTrack_PCIE);
 		else if (pDM_Odm->SupportInterface == ODM_ITRF_USB) {
@@ -1706,16 +1780,18 @@ ODM_ConfigRFWithTxPwrTrackHeaderFile(
 
 	}
 #endif
-#if (RTL8192E_SUPPORT == 1)
-	else if(pDM_Odm->SupportICType == ODM_RTL8192E) {
+#if RTL8192E_SUPPORT
+	if(pDM_Odm->SupportICType == ODM_RTL8192E) {
 		if (pDM_Odm->SupportInterface == ODM_ITRF_PCIE)
 			READ_AND_CONFIG_MP(8192E,_TxPowerTrack_PCIE);
 		else if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
 			READ_AND_CONFIG_MP(8192E,_TxPowerTrack_USB);
+		else if (pDM_Odm->SupportInterface == ODM_ITRF_SDIO)
+			READ_AND_CONFIG_MP(8192E,_TxPowerTrack_SDIO);
 	}
 #endif
 #if RTL8723B_SUPPORT
-	else if(pDM_Odm->SupportICType == ODM_RTL8723B) {
+	if(pDM_Odm->SupportICType == ODM_RTL8723B) {
 		if (pDM_Odm->SupportInterface == ODM_ITRF_PCIE)
 			READ_AND_CONFIG_MP(8723B,_TxPowerTrack_PCIE);
 		else if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
@@ -1725,15 +1801,52 @@ ODM_ConfigRFWithTxPwrTrackHeaderFile(
 	}
 #endif
 #if RTL8188E_SUPPORT
-	else if(pDM_Odm->SupportICType == ODM_RTL8188E) {
+	if(pDM_Odm->SupportICType == ODM_RTL8188E) {
 		if (pDM_Odm->SupportInterface == ODM_ITRF_PCIE)
 			READ_AND_CONFIG_MP(8188E,_TxPowerTrack_PCIE);
 		else if (pDM_Odm->SupportInterface == ODM_ITRF_USB)
 			READ_AND_CONFIG_MP(8188E,_TxPowerTrack_USB);
-		else
-			READ_AND_CONFIG_MP(8188E,_TxPowerTrack_PCIE);
+		else if (pDM_Odm->SupportInterface == ODM_ITRF_SDIO)
+			READ_AND_CONFIG_MP(8188E,_TxPowerTrack_SDIO);
 	}
 #endif
+#endif//(DM_ODM_SUPPORT_TYPE !=  ODM_AP)
+
+//1 All platforms support
+#if RTL8814A_SUPPORT
+	if(pDM_Odm->SupportICType == ODM_RTL8814A) {
+		if(pDM_Odm->RFEType == 0)
+			READ_AND_CONFIG_MP(8814A,_TxPowerTrack_Type0);
+		else if(pDM_Odm->RFEType == 2)
+			READ_AND_CONFIG_MP(8814A,_TxPowerTrack_Type2);
+		else
+			READ_AND_CONFIG_MP(8814A,_TxPowerTrack);
+	}
+#endif
+
+//1 New ICs (WIN only)
+#if (DM_ODM_SUPPORT_TYPE &  ODM_WIN)
+#if RTL8821B_SUPPORT
+	if(pDM_Odm->SupportICType == ODM_RTL8821B)
+		READ_AND_CONFIG(8821B,_TxPowerTrack);
+#endif
+#if RTL8822B_SUPPORT
+	if(pDM_Odm->SupportICType == ODM_RTL8822B)
+		READ_AND_CONFIG_TC(8822B,_TxPowerTrack);
+#endif
+#if RTL8703B_SUPPORT
+	if(pDM_Odm->SupportICType == ODM_RTL8703B)
+		READ_AND_CONFIG_TC(8703B,_TxPowerTrack_PCIE);
+#endif
+
+#if ((DEV_BUS_TYPE == RT_USB_INTERFACE) || (DEV_BUS_TYPE == RT_SDIO_INTERFACE))
+#if RTL8188F_SUPPORT
+	if(pDM_Odm->SupportICType == ODM_RTL8188F)
+		READ_AND_CONFIG_TC(8188F,_TxPowerTrack_PCIE);
+#endif
+#endif
+#endif//(DM_ODM_SUPPORT_TYPE &  ODM_WIN)
+
 
 	return HAL_STATUS_SUCCESS;
 }
@@ -1744,48 +1857,28 @@ ODM_ConfigBBWithHeaderFile(
     IN 	ODM_BB_Config_Type 		ConfigType
 )
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE|ODM_WIN))
-	//PADAPTER		Adapter = pDM_Odm->Adapter;
-#if (DM_ODM_SUPPORT_TYPE &  ODM_WIN)
-	PMGNT_INFO		pMgntInfo = &(Adapter->MgntInfo);
-#endif
-#endif
 
-	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD,
-	             ("===>ODM_ConfigBBWithHeaderFile (%s)\n", (pDM_Odm->bIsMPChip) ? "MPChip" : "TestChip"));
-	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD,
-	             ("pDM_Odm->SupportPlatform: 0x%X, pDM_Odm->SupportInterface: 0x%X, pDM_Odm->BoardType: 0x%X\n",
-	              pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->BoardType));
-
+//1 AP doesn't use PHYDM initialization in these ICs
+#if (DM_ODM_SUPPORT_TYPE !=  ODM_AP)
 #if (RTL8723A_SUPPORT == 1)
 	if(pDM_Odm->SupportICType == ODM_RTL8723A) {
-		if(ConfigType == CONFIG_BB_PHY_REG) {
+		if(ConfigType == CONFIG_BB_PHY_REG)
 			READ_AND_CONFIG_MP(8723A,_PHY_REG);
-		} else if(ConfigType == CONFIG_BB_AGC_TAB) {
+		else if(ConfigType == CONFIG_BB_AGC_TAB)
 			READ_AND_CONFIG_MP(8723A,_AGC_TAB);
-		}
 	}
 #endif
-
-#if (RTL8188E_SUPPORT == 1)
-	if(pDM_Odm->SupportICType == ODM_RTL8188E) {
-		if(ConfigType == CONFIG_BB_PHY_REG) {
-			READ_AND_CONFIG_MP(8188E,_PHY_REG);
-		} else if(ConfigType == CONFIG_BB_AGC_TAB) {
-			READ_AND_CONFIG_MP(8188E,_AGC_TAB);
-		} else if(ConfigType == CONFIG_BB_PHY_REG_PG) {
-			READ_AND_CONFIG_MP(8188E,_PHY_REG_PG);
-		}
-	}
-#endif
-
 #if (RTL8812A_SUPPORT == 1)
 	if(pDM_Odm->SupportICType == ODM_RTL8812) {
-		if(ConfigType == CONFIG_BB_PHY_REG) {
+		if(ConfigType == CONFIG_BB_PHY_REG)
 			READ_AND_CONFIG_MP(8812A,_PHY_REG);
-		} else if(ConfigType == CONFIG_BB_AGC_TAB) {
+		else if(ConfigType == CONFIG_BB_AGC_TAB)
 			READ_AND_CONFIG_MP(8812A,_AGC_TAB);
-		} else if(ConfigType == CONFIG_BB_PHY_REG_PG) {
+		else if(ConfigType == CONFIG_BB_PHY_REG_PG) {
+#if (DM_ODM_SUPPORT_TYPE &  ODM_WIN)
+			PADAPTER		Adapter = pDM_Odm->Adapter;
+			PMGNT_INFO		pMgntInfo = &(Adapter->MgntInfo);
+#endif
 			if (pDM_Odm->RFEType == 3 && pDM_Odm->bIsMPChip)
 				READ_AND_CONFIG_MP(8812A,_PHY_REG_PG_ASUS);
 #if (DM_ODM_SUPPORT_TYPE &  ODM_WIN)
@@ -1794,9 +1887,9 @@ ODM_ConfigBBWithHeaderFile(
 #endif
 			else
 				READ_AND_CONFIG_MP(8812A,_PHY_REG_PG);
-		} else if(ConfigType == CONFIG_BB_PHY_REG_MP) {
+		} else if(ConfigType == CONFIG_BB_PHY_REG_MP)
 			READ_AND_CONFIG_MP(8812A,_PHY_REG_MP);
-		} else if(ConfigType == CONFIG_BB_AGC_TAB_DIFF) {
+		else if(ConfigType == CONFIG_BB_AGC_TAB_DIFF) {
 			if ((36 <= *pDM_Odm->pChannel)  && (*pDM_Odm->pChannel  <= 64))
 				AGC_DIFF_CONFIG_MP(8812A,LB);
 			else if (100 <= *pDM_Odm->pChannel)
@@ -1804,54 +1897,122 @@ ODM_ConfigBBWithHeaderFile(
 		}
 	}
 #endif
-
 #if (RTL8821A_SUPPORT == 1)
 	if(pDM_Odm->SupportICType == ODM_RTL8821) {
-		if(ConfigType == CONFIG_BB_PHY_REG) {
+		if(ConfigType == CONFIG_BB_PHY_REG)
 			READ_AND_CONFIG_MP(8821A,_PHY_REG);
-		} else if(ConfigType == CONFIG_BB_AGC_TAB) {
+		else if(ConfigType == CONFIG_BB_AGC_TAB)
 			READ_AND_CONFIG_MP(8821A,_AGC_TAB);
-		} else if(ConfigType == CONFIG_BB_PHY_REG_PG) {
+		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
 			READ_AND_CONFIG_MP(8821A,_PHY_REG_PG);
-		}
 	}
 #endif
 #if (RTL8723B_SUPPORT == 1)
 	if(pDM_Odm->SupportICType == ODM_RTL8723B) {
-
-		if(ConfigType == CONFIG_BB_PHY_REG) {
+		if(ConfigType == CONFIG_BB_PHY_REG)
 			READ_AND_CONFIG_MP(8723B,_PHY_REG);
-		} else if(ConfigType == CONFIG_BB_AGC_TAB) {
+		else if(ConfigType == CONFIG_BB_AGC_TAB)
 			READ_AND_CONFIG_MP(8723B,_AGC_TAB);
-		} else if(ConfigType == CONFIG_BB_PHY_REG_PG) {
+		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
 			READ_AND_CONFIG_MP(8723B,_PHY_REG_PG);
-		}
 	}
 #endif
 #if (RTL8192E_SUPPORT == 1)
 	if(pDM_Odm->SupportICType == ODM_RTL8192E) {
-
-		if(ConfigType == CONFIG_BB_PHY_REG) {
+		if(ConfigType == CONFIG_BB_PHY_REG)
 			READ_AND_CONFIG_MP(8192E,_PHY_REG);
-		} else if(ConfigType == CONFIG_BB_AGC_TAB) {
+		else if(ConfigType == CONFIG_BB_AGC_TAB)
 			READ_AND_CONFIG_MP(8192E,_AGC_TAB);
-		} else if(ConfigType == CONFIG_BB_PHY_REG_PG) {
+		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
 			READ_AND_CONFIG_MP(8192E,_PHY_REG_PG);
-		}
+	}
+#endif
+#endif//(DM_ODM_SUPPORT_TYPE !=  ODM_AP)
+
+
+//1 All platforms support
+#if (RTL8188E_SUPPORT == 1)
+	if(pDM_Odm->SupportICType == ODM_RTL8188E) {
+		if(ConfigType == CONFIG_BB_PHY_REG)
+			READ_AND_CONFIG_MP(8188E,_PHY_REG);
+		else if(ConfigType == CONFIG_BB_AGC_TAB)
+			READ_AND_CONFIG_MP(8188E,_AGC_TAB);
+		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
+			READ_AND_CONFIG_MP(8188E,_PHY_REG_PG);
 	}
 #endif
 #if (RTL8814A_SUPPORT == 1)
 	if(pDM_Odm->SupportICType == ODM_RTL8814A) {
+		if(ConfigType == CONFIG_BB_PHY_REG)
+			READ_AND_CONFIG_MP(8814A,_PHY_REG);
+		else if(ConfigType == CONFIG_BB_AGC_TAB)
+			READ_AND_CONFIG_MP(8814A,_AGC_TAB);
+		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
+			READ_AND_CONFIG_MP(8814A,_PHY_REG_PG);
+		else if(ConfigType == CONFIG_BB_PHY_REG_MP)
+			READ_AND_CONFIG_MP(8814A,_PHY_REG_MP);
+	}
+#endif
 
-		if(ConfigType == CONFIG_BB_PHY_REG) {
-			READ_AND_CONFIG(8813A,_PHY_REG);
-		} else if(ConfigType == CONFIG_BB_AGC_TAB) {
-			READ_AND_CONFIG(8813A,_AGC_TAB);
-		} else if(ConfigType == CONFIG_BB_PHY_REG_PG) {
-			//READ_AND_CONFIG(8813A,_PHY_REG_PG);
+//1 New ICs (WIN only)
+#if (DM_ODM_SUPPORT_TYPE &  ODM_WIN)
+#if (RTL8821B_SUPPORT == 1)
+	if(pDM_Odm->SupportICType == ODM_RTL8821B) {
+		if (ConfigType == CONFIG_BB_PHY_REG) {
+			READ_AND_CONFIG(8821B,_PHY_REG);
+		} else if (ConfigType == CONFIG_BB_AGC_TAB) {
+			READ_AND_CONFIG(8821B,_AGC_TAB);
+		} else if (ConfigType == CONFIG_BB_PHY_REG_PG) {
+			READ_AND_CONFIG(8821B,_PHY_REG_PG);
 		}
 	}
 #endif
+#if (RTL8822B_SUPPORT == 1)
+	if(pDM_Odm->SupportICType == ODM_RTL8822B) {
+		if(ConfigType == CONFIG_BB_PHY_REG)
+			READ_AND_CONFIG_TC(8822B,_PHY_REG);
+		else if(ConfigType == CONFIG_BB_AGC_TAB)
+			READ_AND_CONFIG_TC(8822B,_AGC_TAB);
+		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
+			READ_AND_CONFIG_TC(8822B,_PHY_REG_PG);
+		else if(ConfigType == CONFIG_BB_PHY_REG_MP)
+			READ_AND_CONFIG_TC(8822B,_PHY_REG_MP);
+	}
+#endif
+#if (RTL8703B_SUPPORT == 1)
+	if(pDM_Odm->SupportICType == ODM_RTL8703B) {
+		if(ConfigType == CONFIG_BB_PHY_REG)
+			READ_AND_CONFIG_TC(8703B,_PHY_REG);
+		else if(ConfigType == CONFIG_BB_AGC_TAB)
+			READ_AND_CONFIG_TC(8703B,_AGC_TAB);
+		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
+			READ_AND_CONFIG_TC(8703B,_PHY_REG_PG);
+	}
+#endif
+#if ((DEV_BUS_TYPE == RT_USB_INTERFACE) || (DEV_BUS_TYPE == RT_SDIO_INTERFACE))
+#if (RTL8188F_SUPPORT == 1)
+	if(pDM_Odm->SupportICType == ODM_RTL8188F) {
+		if(ConfigType == CONFIG_BB_PHY_REG)
+			READ_AND_CONFIG_TC(8188F,_PHY_REG);
+		else if(ConfigType == CONFIG_BB_AGC_TAB)
+			READ_AND_CONFIG_TC(8188F,_AGC_TAB);
+		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
+			READ_AND_CONFIG_TC(8188F,_PHY_REG_PG);
+	}
+#endif
+#endif
+#if (RTL8195A_SUPPORT == 1)
+	if(pDM_Odm->SupportICType == ODM_RTL8195A) {
+		if(ConfigType == CONFIG_BB_PHY_REG)
+			READ_AND_CONFIG(8195A,_PHY_REG);
+		else if(ConfigType == CONFIG_BB_AGC_TAB)
+			READ_AND_CONFIG(8195A,_AGC_TAB);
+		else if(ConfigType == CONFIG_BB_PHY_REG_PG)
+			READ_AND_CONFIG(8195A,_PHY_REG_PG);
+	}
+#endif
+#endif//(DM_ODM_SUPPORT_TYPE &  ODM_WIN)
+
 	return HAL_STATUS_SUCCESS;
 }
 
@@ -1860,51 +2021,74 @@ ODM_ConfigMACWithHeaderFile(
     IN 	PDM_ODM_T	pDM_Odm
 )
 {
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_CE|ODM_WIN))
-	//PADAPTER		Adapter = pDM_Odm->Adapter;
-#endif
-	u1Byte result = HAL_STATUS_SUCCESS;
-
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD,
 	             ("===>ODM_ConfigMACWithHeaderFile (%s)\n", (pDM_Odm->bIsMPChip) ? "MPChip" : "TestChip"));
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD,
 	             ("pDM_Odm->SupportPlatform: 0x%X, pDM_Odm->SupportInterface: 0x%X, pDM_Odm->BoardType: 0x%X\n",
 	              pDM_Odm->SupportPlatform, pDM_Odm->SupportInterface, pDM_Odm->BoardType));
 
+//1 AP doesn't use PHYDM initialization in these ICs
+#if (DM_ODM_SUPPORT_TYPE !=  ODM_AP)
 #if (RTL8723A_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8723A) {
+	if (pDM_Odm->SupportICType == ODM_RTL8723A)
 		READ_AND_CONFIG_MP(8723A,_MAC_REG);
-	}
-#endif
-#if (RTL8188E_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8188E) {
-		READ_AND_CONFIG_MP(8188E,_MAC_REG);
-	}
 #endif
 #if (RTL8812A_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8812) {
+	if (pDM_Odm->SupportICType == ODM_RTL8812)
 		READ_AND_CONFIG_MP(8812A,_MAC_REG);
-	}
 #endif
 #if (RTL8821A_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8821) {
+	if (pDM_Odm->SupportICType == ODM_RTL8821)
 		READ_AND_CONFIG_MP(8821A,_MAC_REG);
-
-		ODM_RT_TRACE(pDM_Odm, ODM_COMP_INIT, ODM_DBG_LOUD, ("<===8821_ODM_ConfigMACwithHeaderFile\n"));
-	}
 #endif
 #if (RTL8723B_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8723B) {
+	if (pDM_Odm->SupportICType == ODM_RTL8723B)
 		READ_AND_CONFIG_MP(8723B,_MAC_REG);
-	}
 #endif
 #if (RTL8192E_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8192E) {
+	if (pDM_Odm->SupportICType == ODM_RTL8192E)
 		READ_AND_CONFIG_MP(8192E,_MAC_REG);
-	}
+#endif
+#endif//(DM_ODM_SUPPORT_TYPE !=  ODM_AP)
+
+//1 All platforms support
+#if (RTL8188E_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8188E)
+		READ_AND_CONFIG_MP(8188E,_MAC_REG);
+#endif
+#if (RTL8814A_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8814A)
+		READ_AND_CONFIG_MP(8814A,_MAC_REG);
 #endif
 
-	return result;
+//1 New ICs (WIN only)
+#if (DM_ODM_SUPPORT_TYPE &  ODM_WIN)
+#if (RTL8821B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8821B)
+		READ_AND_CONFIG(8821B,_MAC_REG);
+#endif
+#if (RTL8822B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8822B)
+		READ_AND_CONFIG_TC(8822B,_MAC_REG);
+#endif
+#if (RTL8703B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8703B)
+		READ_AND_CONFIG_TC(8703B,_MAC_REG);
+#endif
+
+#if ((DEV_BUS_TYPE == RT_USB_INTERFACE) || (DEV_BUS_TYPE == RT_SDIO_INTERFACE))
+#if (RTL8188F_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8188F)
+		READ_AND_CONFIG_TC(8188F,_MAC_REG);
+#endif
+#endif
+#if (RTL8195A_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8195A)
+		READ_AND_CONFIG_MP(8195A,_MAC_REG);
+#endif
+#endif
+
+	return HAL_STATUS_SUCCESS;
 }
 
 HAL_STATUS
@@ -1915,88 +2099,117 @@ ODM_ConfigFWWithHeaderFile(
     OUT u4Byte				*pSize
 )
 {
+#if (DM_ODM_SUPPORT_TYPE != ODM_AP)
 
 #if (RTL8188E_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8188E) {
 #ifdef CONFIG_SFW_SUPPORTED
-		if (ConfigType == CONFIG_FW_NIC) {
+		if (ConfigType == CONFIG_FW_NIC)
 			READ_FIRMWARE_MP(8188E,_FW_NIC_T);
-		} else if (ConfigType == CONFIG_FW_WoWLAN) {
+		else if (ConfigType == CONFIG_FW_WoWLAN)
 			READ_FIRMWARE_MP(8188E,_FW_WoWLAN_T);
-		} else if(ConfigType == CONFIG_FW_NIC_2) {
+		else if(ConfigType == CONFIG_FW_NIC_2)
 			READ_FIRMWARE_MP(8188E,_FW_NIC_S);
-		} else if (ConfigType == CONFIG_FW_WoWLAN_2) {
+		else if (ConfigType == CONFIG_FW_WoWLAN_2)
 			READ_FIRMWARE_MP(8188E,_FW_WoWLAN_S);
-		}
 #else
-		if (ConfigType == CONFIG_FW_NIC) {
+		if (ConfigType == CONFIG_FW_NIC)
 			READ_FIRMWARE_MP(8188E,_FW_NIC);
-		} else if (ConfigType == CONFIG_FW_WoWLAN) {
+		else if (ConfigType == CONFIG_FW_WoWLAN)
 			READ_FIRMWARE_MP(8188E,_FW_WoWLAN);
-		}
 #endif
 	}
 #endif
 #if (RTL8723B_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8723B) {
-		if (ConfigType == CONFIG_FW_NIC) {
+		if (ConfigType == CONFIG_FW_NIC)
 			READ_FIRMWARE_MP(8723B,_FW_NIC);
-		} else if (ConfigType == CONFIG_FW_WoWLAN) {
+		else if (ConfigType == CONFIG_FW_WoWLAN)
 			READ_FIRMWARE_MP(8723B,_FW_WoWLAN);
-		}
 #ifdef CONFIG_AP_WOWLAN
-		else if (ConfigType == CONFIG_FW_AP_WoWLAN) {
+		else if (ConfigType == CONFIG_FW_AP_WoWLAN)
 			READ_FIRMWARE(8723B,_FW_AP_WoWLAN);
-		}
 #endif
-		else if (ConfigType == CONFIG_FW_BT) {
+		else if (ConfigType == CONFIG_FW_BT)
 			READ_FIRMWARE_MP(8723B,_FW_BT);
-		} else if (ConfigType == CONFIG_FW_MP) {
+#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
+		else if (ConfigType == CONFIG_FW_MP)
 			READ_FIRMWARE_MP(8723B,_FW_MP);
-		}
+#endif
 	}
 #endif
 #if (RTL8812A_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8812) {
-		if (ConfigType == CONFIG_FW_NIC) {
+		if (ConfigType == CONFIG_FW_NIC)
 			READ_FIRMWARE_MP(8812A,_FW_NIC);
-		} else if (ConfigType == CONFIG_FW_WoWLAN) {
+		else if (ConfigType == CONFIG_FW_WoWLAN)
 			READ_FIRMWARE_MP(8812A,_FW_WoWLAN);
-		} else if (ConfigType == CONFIG_FW_BT) {
+		else if (ConfigType == CONFIG_FW_BT)
 			READ_FIRMWARE_MP(8812A,_FW_NIC_BT);
-		}
-
 	}
 #endif
 #if (RTL8821A_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8821) {
-		if (ConfigType == CONFIG_FW_NIC) {
+		if (ConfigType == CONFIG_FW_NIC)
 			READ_FIRMWARE_MP(8821A,_FW_NIC);
-		} else if (ConfigType == CONFIG_FW_WoWLAN) {
+		else if (ConfigType == CONFIG_FW_WoWLAN)
 			READ_FIRMWARE_MP(8821A,_FW_WoWLAN);
-		} else if (ConfigType == CONFIG_FW_BT) {
+		else if (ConfigType == CONFIG_FW_BT)
 			READ_FIRMWARE_MP(8821A,_FW_NIC_BT);
-		}
 	}
 #endif
 #if (RTL8192E_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8192E) {
-		if (ConfigType == CONFIG_FW_NIC) {
+		if (ConfigType == CONFIG_FW_NIC)
 			READ_FIRMWARE_MP(8192E,_FW_NIC);
-		} else if (ConfigType == CONFIG_FW_WoWLAN) {
+		else if (ConfigType == CONFIG_FW_WoWLAN)
 			READ_FIRMWARE_MP(8192E,_FW_WoWLAN);
-		}
 #ifdef CONFIG_AP_WOWLAN
-		else if (ConfigType == CONFIG_FW_AP_WoWLAN) {
+		else if (ConfigType == CONFIG_FW_AP_WoWLAN)
 			READ_FIRMWARE_MP(8192E,_FW_AP_WoWLAN);
-		}
 #endif
-
 	}
 #endif
+#if (RTL8814A_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8814A) {
+		if (ConfigType == CONFIG_FW_NIC)
+			READ_FIRMWARE_MP(8814A,_FW_NIC);
+	}
+#endif
+
+//1 New ICs (WIN only)
+#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
+#if (RTL8821B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8821B) {
+	}
+#endif
+#if (RTL8822B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8822B) {
+		if (ConfigType == CONFIG_FW_NIC)
+			READ_FIRMWARE_MP(8822B,_FW_NIC);
+		else if (ConfigType == CONFIG_FW_WoWLAN)
+			READ_FIRMWARE(8822B,_FW_WoWLAN);
+	}
+#endif
+#if (RTL8703B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8703B) {
+		if (ConfigType == CONFIG_FW_NIC)
+			READ_FIRMWARE_MP(8703B,_FW_NIC);
+	}
+#endif
+#if ((DEV_BUS_TYPE == RT_USB_INTERFACE) || (DEV_BUS_TYPE == RT_SDIO_INTERFACE))
+#if (RTL8188F_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8188F) {
+		if (ConfigType == CONFIG_FW_NIC)
+			READ_FIRMWARE_MP(8188F,_FW_NIC);
+	}
+#endif
+#endif
+#endif//(DM_ODM_SUPPORT_TYPE == ODM_WIN)
+
+#endif//(DM_ODM_SUPPORT_TYPE != ODM_AP)
 	return HAL_STATUS_SUCCESS;
 }
-
 
 u4Byte
 ODM_GetHWImgVersion(
@@ -2005,40 +2218,63 @@ ODM_GetHWImgVersion(
 {
 	u4Byte  Version=0;
 
+//1 AP doesn't use PHYDM initialization in these ICs
+#if (DM_ODM_SUPPORT_TYPE != ODM_AP)
 #if (RTL8723A_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8723A)
 		Version = GET_VERSION_MP(8723A,_MAC_REG);
 #endif
-
 #if (RTL8723B_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8723B)
 		Version = GET_VERSION_MP(8723B,_MAC_REG);
 #endif
-
-#if (RTL8188E_SUPPORT == 1)
-	if (pDM_Odm->SupportICType == ODM_RTL8188E)
-		Version = GET_VERSION_MP(8188E,_MAC_REG);
-#endif
-
 #if (RTL8821A_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8821)
 		Version = GET_VERSION_MP(8821A,_MAC_REG);
 #endif
-
 #if (RTL8192E_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8192E)
 		Version = GET_VERSION_MP(8192E,_MAC_REG);
 #endif
-
 #if (RTL8812A_SUPPORT == 1)
 	if (pDM_Odm->SupportICType == ODM_RTL8812)
 		Version = GET_VERSION_MP(8812A,_MAC_REG);
 #endif
+#endif //(DM_ODM_SUPPORT_TYPE != ODM_AP)
+
+//1 All platforms support
+#if (RTL8188E_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8188E)
+		Version = GET_VERSION_MP(8188E,_MAC_REG);
+#endif
+#if (RTL8814A_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8814A)
+		Version = GET_VERSION_MP(8814A,_MAC_REG);
+#endif
+
+//1 New ICs (WIN only)
+#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
+#if (RTL8821B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8821B)
+		Version = GET_VERSION(8821B,_MAC_REG);
+#endif
+#if (RTL8822B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8822B)
+		Version = GET_VERSION(8822B, _MAC_REG);
+#endif
+#if (RTL8703B_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8703B)
+		Version = GET_VERSION_TC(8703B, _MAC_REG);
+#endif
+#if ((DEV_BUS_TYPE == RT_USB_INTERFACE) || (DEV_BUS_TYPE == RT_SDIO_INTERFACE))
+#if (RTL8188F_SUPPORT == 1)
+	if (pDM_Odm->SupportICType == ODM_RTL8188F)
+		Version = GET_VERSION_TC(8188F, _MAC_REG);
+#endif
+#endif
+#endif //(DM_ODM_SUPPORT_TYPE == ODM_WIN)
 
 	return Version;
 }
-
-
-
 
 

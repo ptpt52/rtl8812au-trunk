@@ -19,6 +19,9 @@
  ******************************************************************************/
 #define _IEEE80211_C
 
+#ifdef CONFIG_PLATFORM_INTEL_BYT
+#include <linux/fs.h>
+#endif
 #include <drv_types.h>
 
 
@@ -101,7 +104,6 @@ uint	rtw_is_cckratesonly_included(u8 *rate)
 	while(rate[i]!=0) {
 		if  (  (((rate[i]) & 0x7f) != 2) && (((rate[i]) & 0x7f) != 4) &&
 		       (((rate[i]) & 0x7f) != 11)  && (((rate[i]) & 0x7f) != 22) )
-
 			return _FALSE;
 
 		i++;
@@ -129,7 +131,7 @@ int rtw_check_network_type(unsigned char *rate, int ratelen, int channel)
 
 }
 
-u8 *rtw_set_fixed_ie(unsigned char *pbuf, unsigned int len, const unsigned char *source,
+u8 *rtw_set_fixed_ie(unsigned char *pbuf, unsigned int len, unsigned char *source,
                      unsigned int *frlen)
 {
 	_rtw_memcpy((void *)pbuf, (void *)source, len);
@@ -143,7 +145,7 @@ u8 *rtw_set_ie
     u8 *pbuf,
     sint index,
     uint len,
-    const u8 *source,
+    u8 *source,
     uint *frlen //frame length
 )
 {
@@ -256,7 +258,7 @@ u8 *rtw_get_ie(u8 *pbuf, sint index, sint *len, sint limit)
  *
  * Returns: The address of the specific IE found, or NULL
  */
-u8 *rtw_get_ie_ex(u8 *in_ie, uint in_len, u8 eid, const u8 *oui, u8 oui_len, u8 *ie, uint *ielen)
+u8 *rtw_get_ie_ex(u8 *in_ie, uint in_len, u8 eid, u8 *oui, u8 oui_len, u8 *ie, uint *ielen)
 {
 	uint cnt;
 	u8 *target_ie = NULL;
@@ -302,7 +304,7 @@ u8 *rtw_get_ie_ex(u8 *in_ie, uint in_len, u8 eid, const u8 *oui, u8 oui_len, u8 
  *
  * Returns: _SUCCESS: ies is updated, _FAIL: not updated
  */
-int rtw_ies_remove_ie(u8 *ies, uint *ies_len, uint offset, u8 eid, const u8 *oui, u8 oui_len)
+int rtw_ies_remove_ie(u8 *ies, uint *ies_len, uint offset, u8 eid, u8 *oui, u8 oui_len)
 {
 	int ret = _FAIL;
 	u8 *target_ie;
@@ -476,7 +478,7 @@ unsigned char *rtw_get_wpa_ie(unsigned char *pie, int *wpa_ie_len, int limit)
 {
 	int len;
 	u16 val16;
-	const unsigned char wpa_oui_type[] = {0x00, 0x50, 0xf2, 0x01};
+	unsigned char wpa_oui_type[] = {0x00, 0x50, 0xf2, 0x01};
 	u8 *pbuf = pie;
 	int limit_new = limit;
 
@@ -570,7 +572,7 @@ int rtw_parse_wpa_ie(u8* wpa_ie, int wpa_ie_len, int *group_cipher, int *pairwis
 	int i, ret=_SUCCESS;
 	int left, count;
 	u8 *pos;
-	const u8 SUITE_1X[4] = {0x00, 0x50, 0xf2, 1};
+	u8 SUITE_1X[4] = {0x00, 0x50, 0xf2, 1};
 
 	if (wpa_ie_len <= 0) {
 		/* No WPA IE - fail silently */
@@ -648,7 +650,7 @@ int rtw_parse_wpa2_ie(u8* rsn_ie, int rsn_ie_len, int *group_cipher, int *pairwi
 	int i, ret=_SUCCESS;
 	int left, count;
 	u8 *pos;
-	const u8 SUITE_1X[4] = {0x00,0x0f, 0xac, 0x01};
+	u8 SUITE_1X[4] = {0x00,0x0f, 0xac, 0x01};
 
 	if (rsn_ie_len <= 0) {
 		/* No RSN IE - fail silently */
@@ -1287,6 +1289,37 @@ u8 convert_ip_addr(u8 hch, u8 mch, u8 lch)
 	return ((key_char2num(hch) * 100) + (key_char2num(mch) * 10 ) + key_char2num(lch));
 }
 
+#ifdef CONFIG_PLATFORM_INTEL_BYT
+#define MAC_ADDRESS_LEN 12
+
+int rtw_get_mac_addr_intel(unsigned char *buf)
+{
+	int ret = 0;
+	int i;
+	struct file *fp = NULL;
+	mm_segment_t oldfs;
+	unsigned char c_mac[MAC_ADDRESS_LEN];
+	char fname[]="/config/wifi/mac.txt";
+	int jj,kk;
+
+	DBG_871X("%s Enter\n", __FUNCTION__);
+
+	ret = rtw_retrive_from_file(fname, c_mac, MAC_ADDRESS_LEN);
+	if(ret < MAC_ADDRESS_LEN) {
+		return -1;
+	}
+
+	for( jj = 0, kk = 0; jj < ETH_ALEN; jj++, kk += 2 ) {
+		buf[jj] = key_2char2num(c_mac[kk], c_mac[kk+ 1]);
+	}
+
+	DBG_871X("%s: read from file mac address: "MAC_FMT"\n",
+	         __FUNCTION__, MAC_ARG(buf));
+
+	return 0;
+}
+#endif //CONFIG_PLATFORM_INTEL_BYT
+
 extern char* rtw_initmac;
 void rtw_macaddr_cfg(u8 *mac_addr)
 {
@@ -1301,7 +1334,13 @@ void rtw_macaddr_cfg(u8 *mac_addr)
 			mac[jj] = key_2char2num(rtw_initmac[kk], rtw_initmac[kk+ 1]);
 		}
 		_rtw_memcpy(mac_addr, mac, ETH_ALEN);
-	} else {
+	}
+#ifdef CONFIG_PLATFORM_INTEL_BYT
+	else if (0 == rtw_get_mac_addr_intel(mac)) {
+		_rtw_memcpy(mac_addr, mac, ETH_ALEN);
+	}
+#endif //CONFIG_PLATFORM_INTEL_BYT
+	else {
 		//	Use the mac address stored in the Efuse
 		_rtw_memcpy(mac, mac_addr, ETH_ALEN);
 	}

@@ -387,7 +387,7 @@ __inline static void rtw_dump_stack(void)
 #define rtw_warn_on(condition) do {} while (0)
 #endif
 
-__inline static int rtw_bug_check(void *parg1, void *parg2, void *parg3, void *parg4)
+__inline static int rtw_bug_check(const void *parg1, const void *parg2, void *parg3, void *parg4)
 {
 	int ret = _TRUE;
 

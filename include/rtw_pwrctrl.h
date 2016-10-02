@@ -275,6 +275,8 @@ struct pwrctrl_priv {
 
 	uint 	ips_enter_cnts;
 	uint 	ips_leave_cnts;
+	uint 	lps_enter_cnts;
+	uint 	lps_leave_cnts;
 
 	u8	ips_mode;
 	u8	ips_org_mode;
@@ -312,12 +314,13 @@ struct pwrctrl_priv {
 	u8		wowlan_wake_reason;
 	u8		wowlan_ap_mode;
 	u8		wowlan_mode;
+	u8		wowlan_p2p_mode;
+	u8		wowlan_pno_enable;
 #ifdef CONFIG_WOWLAN
 	u8		wowlan_pattern;
 	u8		wowlan_magic;
 	u8		wowlan_unicast;
 	u8		wowlan_pattern_idx;
-	u8		wowlan_pno_enable;
 	u8		wowlan_from_cmd;
 #ifdef CONFIG_PNO_SUPPORT
 	u8		pno_in_resume;
@@ -427,6 +430,7 @@ void LPS_Enter(PADAPTER padapter, const char *msg);
 void LPS_Leave(PADAPTER padapter, const char *msg);
 void traffic_check_for_leave_lps(PADAPTER padapter, u8 tx, u32 tx_packets);
 void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode, const char *msg);
+void rtw_set_fw_in_ips_mode(PADAPTER padapter, u8 enable);
 void rtw_set_rpwm(_adapter * padapter, u8 val8);
 #endif
 

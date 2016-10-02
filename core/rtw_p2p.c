@@ -287,7 +287,7 @@ static void issue_p2p_provision_resp(struct wifidirect_info *pwdinfo, u8* raddr,
 	u8			wpsielen = 0;
 #ifdef CONFIG_WFD
 	u32					wfdielen = 0;
-#endif //CONFIG_WFD		
+#endif //CONFIG_WFD
 
 	struct xmit_frame			*pmgntframe;
 	struct pkt_attrib			*pattrib;
@@ -2046,7 +2046,7 @@ u32 build_probe_resp_p2p_ie(struct wifidirect_info *pwdinfo, u8 *pbuf)
 
 }
 
-u32 build_prov_disc_request_p2p_ie(struct wifidirect_info *pwdinfo, u8 *pbuf, const u8* pssid, u8 ussidlen, const u8* pdev_raddr )
+u32 build_prov_disc_request_p2p_ie(struct wifidirect_info *pwdinfo, u8 *pbuf, u8* pssid, u8 ussidlen, u8* pdev_raddr )
 {
 	u8 p2pie[ MAX_P2P_IE_LEN] = { 0x00 };
 	u32 len=0, p2pielen = 0;
@@ -2593,7 +2593,7 @@ u8 process_p2p_group_negotation_req( struct wifidirect_info *pwdinfo, u8 *pframe
 	u32	wfd_ielen = 0;
 #ifdef CONFIG_TDLS
 	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-#endif // CONFIG_TDLS	
+#endif // CONFIG_TDLS
 #endif // CONFIG_WFD
 #ifdef CONFIG_CONCURRENT_MODE
 	//_adapter				*pbuddy_adapter = pwdinfo->padapter->pbuddy_adapter;
@@ -2786,7 +2786,7 @@ u8 process_p2p_group_negotation_resp( struct wifidirect_info *pwdinfo, u8 *pfram
 	u32	wfd_ielen = 0;
 #ifdef CONFIG_TDLS
 	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-#endif // CONFIG_TDLS	
+#endif // CONFIG_TDLS
 #endif // CONFIG_WFD
 
 	ies = pframe + _PUBLIC_ACTION_IE_OFFSET_;
@@ -3221,7 +3221,8 @@ void p2p_concurrent_handler( _adapter*	padapter )
 
 			set_channel_bwmode(padapter, pbuddy_mlmeext->cur_channel, pbuddy_mlmeext->cur_ch_offset, pbuddy_mlmeext->cur_bwmode);
 
-			issue_nulldata(pbuddy_adapter, NULL, 0, 3, 500);
+			if (check_buddy_fwstate(padapter, WIFI_FW_STATION_STATE))
+				issue_nulldata(pbuddy_adapter, NULL, 0, 3, 500);
 		} else if( pwdinfo->driver_interface == DRIVER_WEXT ) {
 			if(rtw_p2p_chk_state(pwdinfo, P2P_STATE_IDLE)) {
 				//	Now, the driver stays on the AP's channel.
@@ -3236,8 +3237,7 @@ void p2p_concurrent_handler( _adapter*	padapter )
 					}
 
 					rtw_p2p_set_state(pwdinfo, P2P_STATE_LISTEN);
-					if(!check_buddy_mlmeinfo_state(padapter, WIFI_FW_AP_STATE) &&
-					   (pmlmeinfo->state&0x03) != WIFI_FW_AP_STATE) {
+					if(!check_buddy_mlmeinfo_state(padapter, WIFI_FW_AP_STATE) && (pmlmeinfo->state&0x03) != WIFI_FW_AP_STATE) {
 						val8 = 1;
 						rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
 					}
@@ -3359,11 +3359,11 @@ static void ro_ch_handler(_adapter *padapter)
 static void ro_ch_timer_process (void *FunctionContext)
 {
 	_adapter *adapter = (_adapter *)FunctionContext;
-	struct rtw_wdev_priv *pwdev_priv = adapter_wdev_data(adapter);
 
 	//printk("%s \n", __FUNCTION__);
 
 #ifdef	CONFIG_CONCURRENT_MODE
+	struct rtw_wdev_priv *pwdev_priv = adapter_wdev_data(adapter);
 	ATOMIC_SET(&pwdev_priv->ro_ch_to, 1);
 #endif
 
@@ -3398,7 +3398,7 @@ static inline void rtw_change_p2pie_op_ch(_adapter *padapter, const u8 *frame_bo
 	}
 }
 
-static void rtw_change_p2pie_ch_list(_adapter *padapter, const u8 *frame_body, u32 len, u8 ch)
+static inline void rtw_change_p2pie_ch_list(_adapter *padapter, const u8 *frame_body, u32 len, u8 ch)
 {
 	u8 *ies, *p2p_ie;
 	u32 ies_len, p2p_ielen;
@@ -3438,7 +3438,7 @@ static void rtw_change_p2pie_ch_list(_adapter *padapter, const u8 *frame_body, u
 	}
 }
 
-static bool rtw_chk_p2pie_ch_list_with_buddy(_adapter *padapter, const u8 *frame_body, u32 len)
+static inline bool rtw_chk_p2pie_ch_list_with_buddy(_adapter *padapter, const u8 *frame_body, u32 len)
 {
 	bool fit = _FALSE;
 #ifdef CONFIG_CONCURRENT_MODE
@@ -3488,7 +3488,7 @@ static bool rtw_chk_p2pie_ch_list_with_buddy(_adapter *padapter, const u8 *frame
 	return fit;
 }
 
-static bool rtw_chk_p2pie_op_ch_with_buddy(_adapter *padapter, const u8 *frame_body, u32 len)
+static inline bool rtw_chk_p2pie_op_ch_with_buddy(_adapter *padapter, const u8 *frame_body, u32 len)
 {
 	bool fit = _FALSE;
 #ifdef CONFIG_CONCURRENT_MODE
@@ -3525,7 +3525,7 @@ static bool rtw_chk_p2pie_op_ch_with_buddy(_adapter *padapter, const u8 *frame_b
 	return fit;
 }
 
-static void rtw_cfg80211_adjust_p2pie_channel(_adapter *padapter, const u8 *frame_body, u32 len)
+static inline void rtw_cfg80211_adjust_p2pie_channel(_adapter *padapter, const u8 *frame_body, u32 len)
 {
 #ifdef CONFIG_CONCURRENT_MODE
 	u8 *ies, *p2p_ie;
@@ -4089,7 +4089,7 @@ void rtw_init_cfg80211_wifidirect_info( _adapter*	padapter)
 
 	_init_timer( &pcfg80211_wdinfo->remain_on_ch_timer, padapter->pnetdev, ro_ch_timer_process, padapter );
 }
-#endif //CONFIG_IOCTL_CFG80211	
+#endif //CONFIG_IOCTL_CFG80211
 
 void p2p_protocol_wk_hdl(_adapter *padapter, int intCmdType)
 {
@@ -4155,11 +4155,49 @@ void p2p_protocol_wk_hdl(_adapter *padapter, int intCmdType)
 		ro_ch_handler( padapter );
 		break;
 	}
-#endif //CONFIG_IOCTL_CFG80211		
+#endif //CONFIG_IOCTL_CFG80211
 
 	}
 
 	_func_exit_;
+}
+
+int process_p2p_cross_connect_ie(PADAPTER padapter, u8 *IEs, u32 IELength)
+{
+	int ret = _TRUE;
+	u8 * ies;
+	u32 ies_len;
+	u8 * p2p_ie;
+	u32	p2p_ielen = 0;
+	u8	p2p_attr[MAX_P2P_IE_LEN] = { 0x00 };// NoA length should be n*(13) + 2
+	u32	attr_contentlen = 0;
+
+	//struct wifidirect_info	*pwdinfo = &( padapter->wdinfo );
+
+	_func_enter_;
+
+	if(IELength <= _BEACON_IE_OFFSET_)
+		return ret;
+
+	ies = IEs + _BEACON_IE_OFFSET_;
+	ies_len = IELength - _BEACON_IE_OFFSET_;
+
+	p2p_ie = rtw_get_p2p_ie( ies, ies_len, NULL, &p2p_ielen);
+
+	while(p2p_ie) {
+		// Get P2P Manageability IE.
+		if(rtw_get_p2p_attr_content( p2p_ie, p2p_ielen, P2P_ATTR_MANAGEABILITY, p2p_attr, &attr_contentlen)) {
+			if ((p2p_attr[0]&(BIT(0)|BIT(1))) == 0x01) {
+				ret = _FALSE;
+			}
+			break;
+		}
+		//Get the next P2P IE
+		p2p_ie = rtw_get_p2p_ie(p2p_ie+p2p_ielen, ies_len -(p2p_ie -ies + p2p_ielen), NULL, &p2p_ielen);
+	}
+
+	_func_exit_;
+	return ret;
 }
 
 #ifdef CONFIG_P2P_PS
@@ -4383,7 +4421,7 @@ static void reset_ch_sitesurvey_timer_process (void *FunctionContext)
 	pwdinfo->rx_invitereq_info.operation_ch[1] = 0;
 	pwdinfo->rx_invitereq_info.operation_ch[2] = 0;
 	pwdinfo->rx_invitereq_info.operation_ch[3] = 0;
-#endif //CONFIG_P2P_OP_CHK_SOCIAL_CH 
+#endif //CONFIG_P2P_OP_CHK_SOCIAL_CH
 	pwdinfo->rx_invitereq_info.scan_op_ch_only = 0;
 }
 

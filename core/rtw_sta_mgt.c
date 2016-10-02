@@ -79,7 +79,7 @@ void _rtw_init_stainfo(struct sta_info *psta)
 
 	psta->keep_alive_trycnt = 0;
 
-#endif	// CONFIG_AP_MODE	
+#endif	// CONFIG_AP_MODE
 
 	_func_exit_;
 
@@ -312,7 +312,7 @@ u32	_rtw_free_sta_priv(struct	sta_priv *pstapriv)
 
 
 //struct	sta_info *rtw_alloc_stainfo(_queue *pfree_sta_queue, unsigned char *hwaddr)
-struct	sta_info *rtw_alloc_stainfo(struct	sta_priv *pstapriv, const u8 *hwaddr)
+struct	sta_info *rtw_alloc_stainfo(struct	sta_priv *pstapriv, u8 *hwaddr)
 {
 	_irqL irqL2;
 	uint tmp_aid;
@@ -402,6 +402,7 @@ struct	sta_info *rtw_alloc_stainfo(struct	sta_priv *pstapriv, const u8 *hwaddr)
 			preorder_ctrl->wend_b= 0xffff;
 			//preorder_ctrl->wsize_b = (NR_RECVBUFF-2);
 			preorder_ctrl->wsize_b = 64;//64;
+			preorder_ctrl->ampdu_size = RX_AMPDU_SIZE_INVALID;
 
 			_rtw_init_queue(&preorder_ctrl->pending_recvframe_queue);
 
@@ -530,6 +531,7 @@ u32	rtw_free_stainfo(_adapter *padapter , struct sta_info *psta)
 	_cancel_timer_ex(&psta->addba_retry_timer);
 
 #ifdef CONFIG_TDLS
+	psta->tdls_sta_state = TDLS_STATE_NONE;
 	rtw_free_tdls_timer(psta);
 #endif //CONFIG_TDLS
 
@@ -615,13 +617,13 @@ u32	rtw_free_stainfo(_adapter *padapter , struct sta_info *psta)
 		psta->aid = 0;
 	}
 
-#endif	// CONFIG_NATIVEAP_MLME	
+#endif	// CONFIG_NATIVEAP_MLME
 
 #ifdef CONFIG_TX_MCAST2UNI
 	psta->under_exist_checking = 0;
 #endif	// CONFIG_TX_MCAST2UNI
 
-#endif	// CONFIG_AP_MODE	
+#endif	// CONFIG_AP_MODE
 
 	_rtw_spinlock_free(&psta->lock);
 
@@ -753,7 +755,7 @@ u32 rtw_init_bcmc_stainfo(_adapter* padapter)
 	struct sta_info 	*psta;
 	struct tx_servq	*ptxservq;
 	u32 res=_SUCCESS;
-	const NDIS_802_11_MAC_ADDRESS	bcast_addr= {0xff,0xff,0xff,0xff,0xff,0xff};
+	NDIS_802_11_MAC_ADDRESS	bcast_addr= {0xff,0xff,0xff,0xff,0xff,0xff};
 
 	struct	sta_priv *pstapriv = &padapter->stapriv;
 	//_queue	*pstapending = &padapter->xmitpriv.bm_pending;
@@ -790,7 +792,7 @@ struct sta_info* rtw_get_bcmc_stainfo(_adapter* padapter)
 {
 	struct sta_info 	*psta;
 	struct sta_priv 	*pstapriv = &padapter->stapriv;
-	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 	_func_enter_;
 	psta = rtw_get_stainfo(pstapriv, bc_addr);
 	_func_exit_;

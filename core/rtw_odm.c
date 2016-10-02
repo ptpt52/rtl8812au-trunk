@@ -40,7 +40,7 @@ const char *odm_comp_str[] = {
 	/* BIT15 */"ODM_COMP_CFO_TRACKING",
 	/* BIT16 */"ODM_COMP_ACS",
 	/* BIT17 */"PHYDM_COMP_ADAPTIVITY",
-	/* BIT18 */NULL,
+	/* BIT18 */"PHYDM_COMP_RA_DBG",
 	/* BIT19 */NULL,
 	/* BIT20 */"ODM_COMP_EDCA_TURBO",
 	/* BIT21 */"ODM_COMP_EARLY_MODE",
@@ -51,7 +51,7 @@ const char *odm_comp_str[] = {
 	/* BIT26 */"ODM_COMP_CALIBRATION",
 	/* BIT27 */NULL,
 	/* BIT28 */NULL,
-	/* BIT29 */NULL,
+	/* BIT29 */"BEAMFORMING_DEBUG",
 	/* BIT30 */"ODM_COMP_COMMON",
 	/* BIT31 */"ODM_COMP_INIT",
 };
@@ -173,14 +173,13 @@ void rtw_odm_adaptivity_ver_msg(void *sel, _adapter *adapter)
 
 #define RTW_ADAPTIVITY_EN_DISABLE 0
 #define RTW_ADAPTIVITY_EN_ENABLE 1
-#define RTW_ADAPTIVITY_EN_AUTO 2
 
 void rtw_odm_adaptivity_en_msg(void *sel, _adapter *adapter)
 {
 	struct registry_priv *regsty = &adapter->registrypriv;
-	struct mlme_priv *mlme = &adapter->mlmepriv;
-	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
-	DM_ODM_T *odm = &hal_data->odmpriv;
+	//struct mlme_priv *mlme = &adapter->mlmepriv;
+	//HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
+	//DM_ODM_T *odm = &hal_data->odmpriv;
 
 	DBG_871X_SEL_NL(sel, "RTW_ADAPTIVITY_EN_");
 
@@ -188,9 +187,6 @@ void rtw_odm_adaptivity_en_msg(void *sel, _adapter *adapter)
 		DBG_871X_SEL(sel, "DISABLE\n");
 	} else if (regsty->adaptivity_en == RTW_ADAPTIVITY_EN_ENABLE) {
 		DBG_871X_SEL(sel, "ENABLE\n");
-	} else if (regsty->adaptivity_en == RTW_ADAPTIVITY_EN_AUTO) {
-		DBG_871X_SEL(sel, "AUTO, chplan:0x%02x, Regulation:%u,%u\n"
-		             , mlme->ChannelPlan, odm->odm_Regulation2_4G, odm->odm_Regulation5G);
 	} else {
 		DBG_871X_SEL(sel, "INVALID\n");
 	}
@@ -214,18 +210,18 @@ void rtw_odm_adaptivity_mode_msg(void *sel, _adapter *adapter)
 	}
 }
 
-#define RTW_NHM_EN_DISABLE 0
-#define RTW_NHM_EN_ENABLE 1
+#define RTW_ADAPTIVITY_DML_DISABLE 0
+#define RTW_ADAPTIVITY_DML_ENABLE 1
 
-void rtw_odm_nhm_en_msg(void *sel, _adapter *adapter)
+void rtw_odm_adaptivity_dml_msg(void *sel, _adapter *adapter)
 {
 	struct registry_priv *regsty = &adapter->registrypriv;
 
-	DBG_871X_SEL_NL(sel, "RTW_NHM_EN_");
+	DBG_871X_SEL_NL(sel, "RTW_ADAPTIVITY_DML_");
 
-	if (regsty->nhm_en == RTW_NHM_EN_DISABLE) {
+	if (regsty->adaptivity_dml == RTW_ADAPTIVITY_DML_DISABLE) {
 		DBG_871X_SEL(sel, "DISABLE\n");
-	} else if (regsty->nhm_en == RTW_NHM_EN_ENABLE) {
+	} else if (regsty->adaptivity_dml == RTW_ADAPTIVITY_DML_ENABLE) {
 		DBG_871X_SEL(sel, "ENABLE\n");
 	} else {
 		DBG_871X_SEL(sel, "INVALID\n");
@@ -238,15 +234,14 @@ bool rtw_odm_adaptivity_needed(_adapter *adapter)
 	//struct mlme_priv *mlme = &adapter->mlmepriv;
 	bool ret = _FALSE;
 
-	if (regsty->adaptivity_en == RTW_ADAPTIVITY_EN_ENABLE
-	    || regsty->adaptivity_en == RTW_ADAPTIVITY_EN_AUTO)
+	if (regsty->adaptivity_en == RTW_ADAPTIVITY_EN_ENABLE)
 		ret = _TRUE;
 
 	if (ret == _TRUE) {
 		rtw_odm_adaptivity_ver_msg(RTW_DBGDUMP, adapter);
 		rtw_odm_adaptivity_en_msg(RTW_DBGDUMP, adapter);
 		rtw_odm_adaptivity_mode_msg(RTW_DBGDUMP, adapter);
-		rtw_odm_nhm_en_msg(RTW_DBGDUMP, adapter);
+		rtw_odm_adaptivity_dml_msg(RTW_DBGDUMP, adapter);
 	}
 
 	return ret;
@@ -260,22 +255,20 @@ void rtw_odm_adaptivity_parm_msg(void *sel, _adapter *adapter)
 	rtw_odm_adaptivity_ver_msg(sel, adapter);
 	rtw_odm_adaptivity_en_msg(sel, adapter);
 	rtw_odm_adaptivity_mode_msg(sel, adapter);
-	rtw_odm_nhm_en_msg(sel, adapter);
+	rtw_odm_adaptivity_dml_msg(sel, adapter);
 
-	DBG_871X_SEL_NL(sel, "%10s %16s %8s %10s %11s %14s\n"
-	                , "TH_L2H_ini", "TH_EDCCA_HL_diff", "IGI_Base", "ForceEDCCA", "AdapEn_RSSI", "IGI_LowerBound");
-	DBG_871X_SEL_NL(sel, "0x%-8x %-16d 0x%-6x %-10d %-11u %-14u\n"
+	DBG_871X_SEL_NL(sel, "%10s %16s %8s %7s\n"
+	                , "TH_L2H_ini", "TH_EDCCA_HL_diff", "IGI_Base", "FABound");
+	DBG_871X_SEL_NL(sel, "0x%-8x %-16d 0x%-6x %-7d\n"
 	                , (u8)odm->TH_L2H_ini
 	                , odm->TH_EDCCA_HL_diff
 	                , odm->IGI_Base
-	                , odm->ForceEDCCA
-	                , odm->AdapEn_RSSI
-	                , odm->IGI_LowerBound
+	                , odm->FABound
 	               );
 
-	DBG_871X_SEL_NL(sel, "%8s %9s\n", "EDCCA_ES","Adap_Flag");
-	DBG_871X_SEL_NL(sel, "%-8x %-9x \n"
-	                , odm->EDCCA_enable_state
+	DBG_871X_SEL_NL(sel, "%15s %9s\n", "AdapEnableState","Adap_Flag");
+	DBG_871X_SEL_NL(sel, "%-15x %-9x \n"
+	                , odm->Adaptivity_enable
 	                , odm->adaptivity_flag
 	               );
 
@@ -283,7 +276,7 @@ void rtw_odm_adaptivity_parm_msg(void *sel, _adapter *adapter)
 }
 
 void rtw_odm_adaptivity_parm_set(_adapter *adapter, s8 TH_L2H_ini, s8 TH_EDCCA_HL_diff,
-                                 s8 IGI_Base, bool ForceEDCCA, u8 AdapEn_RSSI, u8 IGI_LowerBound)
+                                 s8 IGI_Base, u32 FABound)
 {
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(adapter);
 	DM_ODM_T *odm = &pHalData->odmpriv;
@@ -291,9 +284,7 @@ void rtw_odm_adaptivity_parm_set(_adapter *adapter, s8 TH_L2H_ini, s8 TH_EDCCA_H
 	odm->TH_L2H_ini = TH_L2H_ini;
 	odm->TH_EDCCA_HL_diff = TH_EDCCA_HL_diff;
 	odm->IGI_Base = IGI_Base;
-	odm->ForceEDCCA = ForceEDCCA;
-	odm->AdapEn_RSSI = AdapEn_RSSI;
-	odm->IGI_LowerBound = IGI_LowerBound;
+	odm->FABound = FABound;
 }
 
 void rtw_odm_get_perpkt_rssi(void *sel, _adapter *adapter)

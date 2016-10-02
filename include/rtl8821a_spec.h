@@ -42,6 +42,7 @@
 //-----------------------------------------------------
 //	0x0100h ~ 0x01FFh	MACTOP General Configuration
 //-----------------------------------------------------
+#define REG_WOWLAN_WAKE_REASON          REG_MCUTST_WOWLAN
 
 //-----------------------------------------------------
 //	0x0200h ~ 0x027Fh	TXDMA Configuration

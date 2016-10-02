@@ -1048,8 +1048,7 @@ phy_ConvertTxPowerByRateInDbmToRelativeValues(
 	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA( pAdapter );
 	u8 			base = 0, i = 0, value = 0,
 	            band = 0, path = 0, txNum = 0;
-	            //startIndex = 0;
-	const u8			cckRates[4] = {MGN_1M, MGN_2M, MGN_5_5M, MGN_11M},
+	const u8	cckRates[4] = {MGN_1M, MGN_2M, MGN_5_5M, MGN_11M},
 				ofdmRates[8] = {MGN_6M, MGN_9M, MGN_12M, MGN_18M, MGN_24M, MGN_36M, MGN_48M, MGN_54M},
 				mcs0_7Rates[8] = {MGN_MCS0, MGN_MCS1, MGN_MCS2, MGN_MCS3, MGN_MCS4, MGN_MCS5, MGN_MCS6, MGN_MCS7},
 				mcs8_15Rates[8] = {MGN_MCS8, MGN_MCS9, MGN_MCS10, MGN_MCS11, MGN_MCS12, MGN_MCS13, MGN_MCS14, MGN_MCS15},
@@ -2665,10 +2664,10 @@ phy_ConfigMACWithParaFile(
 	_rtw_memset(pHalData->para_file_buf, 0, MAX_PARA_FILE_BUF_LEN);
 
 	if ((pHalData->mac_reg_len == 0) && (pHalData->mac_reg == NULL)) {
-		rtw_merge_string(s_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
+		rtw_merge_string(rtw_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
 
-		if (rtw_is_file_readable(s_file_path) == _TRUE) {
-			rlen = rtw_retrive_from_file(s_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
+		if (rtw_is_file_readable(rtw_file_path) == _TRUE) {
+			rlen = rtw_retrive_from_file(rtw_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
 			if (rlen > 0) {
 				rtStatus = _SUCCESS;
 				pHalData->mac_reg = rtw_zvmalloc(rlen);
@@ -2749,10 +2748,10 @@ phy_ConfigBBWithParaFile(
 	_rtw_memset(pHalData->para_file_buf, 0, MAX_PARA_FILE_BUF_LEN);
 
 	if ((pBufLen != NULL) && (*pBufLen == 0) && (pBuf == NULL)) {
-		rtw_merge_string(s_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
+		rtw_merge_string(rtw_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
 
-		if (rtw_is_file_readable(s_file_path) == _TRUE) {
-			rlen = rtw_retrive_from_file(s_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
+		if (rtw_is_file_readable(rtw_file_path) == _TRUE) {
+			rlen = rtw_retrive_from_file(rtw_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
 			if (rlen > 0) {
 				rtStatus = _SUCCESS;
 				pBuf = rtw_zvmalloc(rlen);
@@ -3134,10 +3133,10 @@ phy_ConfigBBWithPgParaFile(
 	_rtw_memset(pHalData->para_file_buf, 0, MAX_PARA_FILE_BUF_LEN);
 
 	if ((pHalData->bb_phy_reg_pg_len == 0) && (pHalData->bb_phy_reg_pg == NULL)) {
-		rtw_merge_string(s_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
+		rtw_merge_string(rtw_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
 
-		if (rtw_is_file_readable(s_file_path) == _TRUE) {
-			rlen = rtw_retrive_from_file(s_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
+		if (rtw_is_file_readable(rtw_file_path) == _TRUE) {
+			rlen = rtw_retrive_from_file(rtw_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
 			if (rlen > 0) {
 				rtStatus = _SUCCESS;
 				pHalData->bb_phy_reg_pg = rtw_zvmalloc(rlen);
@@ -3187,10 +3186,10 @@ phy_ConfigBBWithMpParaFile(
 	_rtw_memset(pHalData->para_file_buf, 0, MAX_PARA_FILE_BUF_LEN);
 
 	if ((pHalData->bb_phy_reg_mp_len == 0) && (pHalData->bb_phy_reg_mp == NULL)) {
-		rtw_merge_string(s_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
+		rtw_merge_string(rtw_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
 
-		if (rtw_is_file_readable(s_file_path) == _TRUE) {
-			rlen = rtw_retrive_from_file(s_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
+		if (rtw_is_file_readable(rtw_file_path) == _TRUE) {
+			rlen = rtw_retrive_from_file(rtw_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
 			if (rlen > 0) {
 				rtStatus = _SUCCESS;
 				pHalData->bb_phy_reg_mp = rtw_zvmalloc(rlen);
@@ -3296,10 +3295,10 @@ PHY_ConfigRFWithParaFile(
 	_rtw_memset(pHalData->para_file_buf, 0, MAX_PARA_FILE_BUF_LEN);
 
 	if ((pBufLen != NULL) && (*pBufLen == 0) && (pBuf == NULL)) {
-		rtw_merge_string(s_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
+		rtw_merge_string(rtw_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
 
-		if (rtw_is_file_readable(s_file_path) == _TRUE) {
-			rlen = rtw_retrive_from_file(s_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
+		if (rtw_is_file_readable(rtw_file_path) == _TRUE) {
+			rlen = rtw_retrive_from_file(rtw_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
 			if (rlen > 0) {
 				rtStatus = _SUCCESS;
 				pBuf = rtw_zvmalloc(rlen);
@@ -3498,10 +3497,10 @@ PHY_ConfigRFWithTxPwrTrackParaFile(
 	_rtw_memset(pHalData->para_file_buf, 0, MAX_PARA_FILE_BUF_LEN);
 
 	if ((pHalData->rf_tx_pwr_track_len == 0) && (pHalData->rf_tx_pwr_track == NULL)) {
-		rtw_merge_string(s_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
+		rtw_merge_string(rtw_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
 
-		if (rtw_is_file_readable(s_file_path) == _TRUE) {
-			rlen = rtw_retrive_from_file(s_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
+		if (rtw_is_file_readable(rtw_file_path) == _TRUE) {
+			rlen = rtw_retrive_from_file(rtw_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
 			if (rlen > 0) {
 				rtStatus = _SUCCESS;
 				pHalData->rf_tx_pwr_track = rtw_zvmalloc(rlen);
@@ -3837,10 +3836,10 @@ PHY_ConfigRFWithPowerLimitTableParaFile(
 	_rtw_memset(pHalData->para_file_buf, 0, MAX_PARA_FILE_BUF_LEN);
 
 	if ((pHalData->rf_tx_pwr_lmt_len == 0) && (pHalData->rf_tx_pwr_lmt == NULL)) {
-		rtw_merge_string(s_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
+		rtw_merge_string(rtw_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
 
-		if (rtw_is_file_readable(s_file_path) == _TRUE) {
-			rlen = rtw_retrive_from_file(s_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
+		if (rtw_is_file_readable(rtw_file_path) == _TRUE) {
+			rlen = rtw_retrive_from_file(rtw_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
 			if (rlen > 0) {
 				rtStatus = _SUCCESS;
 				pHalData->rf_tx_pwr_lmt = rtw_zvmalloc(rlen);

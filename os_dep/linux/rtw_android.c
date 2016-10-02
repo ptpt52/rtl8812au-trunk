@@ -161,7 +161,8 @@ typedef struct compat_android_wifi_priv_cmd {
  */
 static int g_wifi_on = _TRUE;
 
-unsigned int oob_irq;
+unsigned int oob_irq = 0;
+unsigned int oob_gpio = 0;
 
 #ifdef CONFIG_PNO_SUPPORT
 /*
@@ -459,7 +460,7 @@ static const char *miracast_mode_str[] = {
 	"INVALID",
 };
 
-static inline const char *get_miracast_mode_str(int mode)
+static const char *get_miracast_mode_str(int mode)
 {
 	if (mode < MIRACAST_DISABLED || mode >= MIRACAST_INVALID)
 		mode = MIRACAST_INVALID;
@@ -567,7 +568,7 @@ int rtw_android_priv_cmd(struct net_device *net, struct ifreq *ifr, int cmd)
 		goto exit;
 	}
 #ifdef CONFIG_COMPAT
-	if (1) {
+	{
 		/* User space is 32-bit, use compat ioctl */
 		compat_android_wifi_priv_cmd compat_priv_cmd;
 
@@ -835,14 +836,15 @@ int rtw_android_priv_cmd(struct net_device *net, struct ifreq *ifr, int cmd)
 	case ANDROID_WIFI_CMD_GTK_REKEY_OFFLOAD:
 		rtw_gtk_offload(net, (u8*)command);
 		break;
-#endif //CONFIG_GTK_OL		
+#endif //CONFIG_GTK_OL
 	case ANDROID_WIFI_CMD_P2P_DISABLE: {
+#ifdef CONFIG_P2P
 		//struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
-		//struct wifidirect_info 	*pwdinfo= &(padapter->wdinfo);
 		//u8 channel, ch_offset;
 		//u16 bwmode;
 
 		rtw_p2p_enable(padapter, P2P_ROLE_DISABLE);
+#endif // CONFIG_P2P
 		break;
 	}
 	default:
@@ -1018,9 +1020,13 @@ static int wifi_probe(struct platform_device *pdev)
 	       wifi_irqres->start, wifi_wake_gpio);
 
 	if (wifi_wake_gpio > 0) {
+#ifdef CONFIG_PLATFORM_INTEL_BYT
+		wifi_configure_gpio();
+#else //CONFIG_PLATFORM_INTEL_BYT
 		gpio_request(wifi_wake_gpio, "oob_irq");
 		gpio_direction_input(wifi_wake_gpio);
 		oob_irq = gpio_to_irq(wifi_wake_gpio);
+#endif //CONFIG_PLATFORM_INTEL_BYT
 		printk("%s oob_irq:%d\n", __func__, oob_irq);
 	} else if(wifi_irqres) {
 		oob_irq = wifi_irqres->start;
@@ -1203,3 +1209,34 @@ static void wifi_del_dev(void)
 }
 #endif /* defined(RTW_ENABLE_WIFI_CONTROL_FUNC) */
 
+#ifdef CONFIG_GPIO_WAKEUP
+#ifdef CONFIG_PLATFORM_INTEL_BYT
+int wifi_configure_gpio(void)
+{
+	if (gpio_request(oob_gpio, "oob_irq")) {
+		DBG_871X("## %s Cannot request GPIO\n", __FUNCTION__);
+		return -1;
+	}
+	gpio_export(oob_gpio, 0);
+	if (gpio_direction_input(oob_gpio)) {
+		DBG_871X("## %s Cannot set GPIO direction input\n", __FUNCTION__);
+		return -1;
+	}
+	if ((oob_irq = gpio_to_irq(oob_gpio)) < 0) {
+		DBG_871X("## %s Cannot convert GPIO to IRQ\n", __FUNCTION__);
+		return -1;
+	}
+
+	DBG_871X("## %s OOB_IRQ=%d\n", __FUNCTION__, oob_irq);
+
+	return 0;
+}
+#endif //CONFIG_PLATFORM_INTEL_BYT
+void wifi_free_gpio(unsigned int gpio)
+{
+#ifdef CONFIG_PLATFORM_INTEL_BYT
+	if(gpio)
+		gpio_free(gpio);
+#endif //CONFIG_PLATFORM_INTEL_BYT
+}
+#endif //CONFIG_GPIO_WAKEUP

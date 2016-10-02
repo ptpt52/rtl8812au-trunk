@@ -162,7 +162,7 @@
 #define EEPROM_HT20_MAX_PWR_OFFSET_5GH_92D				0xB8
 
 
-#define EEPROM_CHANNEL_PLAN_92D							0xBB // Map of supported channels.	
+#define EEPROM_CHANNEL_PLAN_92D							0xBB // Map of supported channels.
 #define EEPROM_TEST_CHANNEL_PLAN_92D					0xBB
 #define EEPROM_THERMAL_METER_92D							0xC3	//[4:0]
 #define EEPROM_IQK_DELTA_92D								0xBC
@@ -281,7 +281,7 @@
 #define 	EEPROM_LNA_TYPE_5G_8192EU           	0xBF
 
 // RTL8192ES
-#define	EEPROM_MAC_ADDR_8192ES				0x11B
+#define	EEPROM_MAC_ADDR_8192ES				0x11A
 //====================================================
 //			EEPROM/Efuse PG Offset for 8812AE/8812AU/8812AS
 //====================================================

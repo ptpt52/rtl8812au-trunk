@@ -25,24 +25,25 @@
 #include <linux/inetdevice.h>
 #endif
 
-const unsigned char ARTHEROS_OUI1[] = {0x00, 0x03, 0x7f};
-const unsigned char ARTHEROS_OUI2[] = {0x00, 0x13, 0x74};
+unsigned char ARTHEROS_OUI1[] = {0x00, 0x03, 0x7f};
+unsigned char ARTHEROS_OUI2[] = {0x00, 0x13, 0x74};
 
-const unsigned char BROADCOM_OUI1[] = {0x00, 0x10, 0x18};
-const unsigned char BROADCOM_OUI2[] = {0x00, 0x0a, 0xf7};
-const unsigned char BROADCOM_OUI3[] = {0x00, 0x05, 0xb5};
+unsigned char BROADCOM_OUI1[] = {0x00, 0x10, 0x18};
+unsigned char BROADCOM_OUI2[] = {0x00, 0x0a, 0xf7};
+unsigned char BROADCOM_OUI3[] = {0x00, 0x05, 0xb5};
+unsigned char BROADCOM_OUI4[] = {0x00, 0x90, 0x4c};
 
-const unsigned char CISCO_OUI[] = {0x00, 0x40, 0x96};
-const unsigned char MARVELL_OUI[] = {0x00, 0x50, 0x43};
-const unsigned char RALINK_OUI[] = {0x00, 0x0c, 0x43};
-const unsigned char REALTEK_OUI[] = {0x00, 0xe0, 0x4c};
-const unsigned char AIRGOCAP_OUI[] = {0x00, 0x0a, 0xf5};
+unsigned char CISCO_OUI[] = {0x00, 0x40, 0x96};
+unsigned char MARVELL_OUI[] = {0x00, 0x50, 0x43};
+unsigned char RALINK_OUI[] = {0x00, 0x0c, 0x43};
+unsigned char REALTEK_OUI[] = {0x00, 0xe0, 0x4c};
+unsigned char AIRGOCAP_OUI[] = {0x00, 0x0a, 0xf5};
 
-const unsigned char REALTEK_96B_IE[] = {0x00, 0xe0, 0x4c, 0x02, 0x01, 0x20};
+unsigned char REALTEK_96B_IE[] = {0x00, 0xe0, 0x4c, 0x02, 0x01, 0x20};
 
-extern const unsigned char RTW_WPA_OUI[];
-extern const unsigned char WPA_TKIP_CIPHER[4];
-extern const unsigned char RSN_TKIP_CIPHER[4];
+extern unsigned char RTW_WPA_OUI[];
+extern unsigned char WPA_TKIP_CIPHER[4];
+extern unsigned char RSN_TKIP_CIPHER[4];
 
 #define R2T_PHY_DELAY	(0)
 
@@ -136,7 +137,9 @@ u8 networktype_to_raid(_adapter *adapter,struct sta_info *psta)
 u8 networktype_to_raid_ex(_adapter *adapter, struct sta_info *psta)
 {
 	//struct mlme_ext_priv	*pmlmeext = &adapter->mlmeextpriv;
-	u8 raid, cur_rf_type, rf_type= RF_1T1R;
+	u8 raid, cur_rf_type, rf_type;
+
+	cur_rf_type = rf_type = RF_1T1R;
 
 	rtw_hal_get_hwreg(adapter, HW_VAR_RF_TYPE, (u8 *)(&cur_rf_type));
 
@@ -803,8 +806,9 @@ void invalidate_cam_all(_adapter *padapter)
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	struct cam_ctl_t *cam_ctl = &dvobj->cam_ctl;
 	_irqL irqL;
+	u8 val8 = 0;
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_CAM_INVALID_ALL, 0);
+	rtw_hal_set_hwreg(padapter, HW_VAR_CAM_INVALID_ALL, &val8);
 
 	_enter_critical_bh(&cam_ctl->lock, &irqL);
 	cam_ctl->bitmap = 0;
@@ -840,9 +844,36 @@ void read_cam(_adapter *padapter ,u8 entry, u8 *get_key)
 	}
 	//DBG_8192C("*********************************\n");
 }
+
+bool read_phy_cam_is_gtk(_adapter *padapter, u8 entry)
+{
+	bool res = _FALSE;
+	u32 addr, cmd;
+
+	addr = entry << 3;
+	cmd = _ReadCAM(padapter, addr);
+
+	res = (cmd & BIT6)? _TRUE:_FALSE;
+	return res;
+}
+
+void dump_cam_table(_adapter *padapter)
+{
+	u32 i, j, addr, cmd;
+	DBG_871X("###########DUMP CAM TABLE##############\n");
+	for (i = 0; i < 8 ; i++) {
+		addr = i << 3;
+		DBG_871X("********* DUMP CAM Entry_#%02d**********\n",i);
+		for (j = 0; j < 6; j++) {
+			cmd = _ReadCAM(padapter ,addr+j);
+			DBG_8192C("offset:0x%02x => 0x%08x \n",addr+j,cmd);
+		}
+		DBG_871X("*********************************\n");
+	}
+}
 #endif
 
-void _write_cam(_adapter *padapter, u8 entry, u16 ctrl, const u8 *mac, const u8 *key)
+void _write_cam(_adapter *padapter, u8 entry, u16 ctrl, u8 *mac, u8 *key)
 {
 	unsigned int i, val, addr;
 	int j;
@@ -873,13 +904,13 @@ void _write_cam(_adapter *padapter, u8 entry, u16 ctrl, const u8 *mac, const u8 
 
 void _clear_cam_entry(_adapter *padapter, u8 entry)
 {
-	const unsigned char null_sta[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-	const unsigned char null_key[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00};
+	unsigned char null_sta[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	unsigned char null_key[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00};
 
 	_write_cam(padapter, entry, 0, null_sta, null_key);
 }
 
-inline void write_cam(_adapter *adapter, u8 id, u16 ctrl, const u8 *mac, const u8 *key)
+inline void write_cam(_adapter *adapter, u8 id, u16 ctrl, u8 *mac, u8 *key)
 {
 #ifdef CONFIG_WRITE_CACHE_ONLY
 	write_cam_cache(adapter, id ,ctrl, mac, key);
@@ -909,7 +940,7 @@ inline void write_cam_from_cache(_adapter *adapter, u8 id)
 	_write_cam(adapter, id, cache.ctrl, cache.mac, cache.key);
 }
 
-void write_cam_cache(_adapter *adapter, u8 id, u16 ctrl, const u8 *mac, const u8 *key)
+void write_cam_cache(_adapter *adapter, u8 id, u16 ctrl, u8 *mac, u8 *key)
 {
 	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
 	struct cam_ctl_t *cam_ctl = &dvobj->cam_ctl;
@@ -1170,7 +1201,6 @@ void flush_all_cam_entry(_adapter *padapter)
 
 #ifdef CONFIG_CONCURRENT_MODE
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-
 	if(check_buddy_fwstate(padapter, _FW_LINKED) == _TRUE) {
 		if(check_fwstate(pmlmepriv, WIFI_STATION_STATE)) {
 			struct sta_priv	*pstapriv = &padapter->stapriv;
@@ -1534,7 +1564,7 @@ void HT_caps_handler(_adapter *padapter, PNDIS_802_11_VARIABLE_IEs pIE)
 {
 #ifdef CONFIG_80211N_HT
 	unsigned int	i;
-	u8	rf_type;
+	u8	rf_type = RF_1T1R;
 	u8	max_AMPDU_len, min_MPDU_spacing;
 	u8	cur_ldpc_cap=0, cur_stbc_cap=0, cur_beamform_cap=0;
 	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
@@ -1847,22 +1877,6 @@ void	update_ldpc_stbc_cap(struct sta_info *psta)
 #endif //CONFIG_80211N_HT
 }
 
-#ifdef CONFIG_TDLS
-int check_ap_tdls_prohibited(u8 *pframe, u8 pkt_len)
-{
-	u8 tdls_prohibited_bit = 0x40; //bit(38); TDLS_prohibited
-
-	if(pkt_len < 5) {
-		return _FALSE;
-	}
-
-	pframe += 4;
-	if( (*pframe) & tdls_prohibited_bit )
-		return _TRUE;
-
-	return _FALSE;
-}
-#endif //CONFIG_TDLS
 
 /*
  * rtw_get_bcn_keys: get beacon keys from recv frame
@@ -2321,6 +2335,8 @@ void update_beacon_info(_adapter *padapter, u8 *pframe, uint pkt_len, struct sta
 		case _EXT_CAP_IE_:
 			if( check_ap_tdls_prohibited(pIE->data, pIE->Length) == _TRUE )
 				ptdlsinfo->ap_prohibited = _TRUE;
+			if (check_ap_tdls_ch_switching_prohibited(pIE->data, pIE->Length) == _TRUE)
+				ptdlsinfo->ch_switch_prohibited = _TRUE;
 			break;
 #endif //CONFIG_TDLS
 		default:
@@ -2690,9 +2706,10 @@ unsigned char check_assoc_AP(u8 *pframe, uint len)
 			if ((_rtw_memcmp(pIE->data, ARTHEROS_OUI1, 3)) || (_rtw_memcmp(pIE->data, ARTHEROS_OUI2, 3))) {
 				DBG_871X("link to Artheros AP\n");
 				return HT_IOT_PEER_ATHEROS;
-			} else if ((_rtw_memcmp(pIE->data, BROADCOM_OUI1, 3))
-			           || (_rtw_memcmp(pIE->data, BROADCOM_OUI2, 3))
-			           || (_rtw_memcmp(pIE->data, BROADCOM_OUI2, 3))) {
+			} else if (	(_rtw_memcmp(pIE->data, BROADCOM_OUI1, 3))
+			            || (_rtw_memcmp(pIE->data, BROADCOM_OUI2, 3))
+			            || (_rtw_memcmp(pIE->data, BROADCOM_OUI3, 3))
+			            || (_rtw_memcmp(pIE->data, BROADCOM_OUI4, 3))) {
 				DBG_871X("link to Broadcom AP\n");
 				return HT_IOT_PEER_BROADCOM;
 			} else if (_rtw_memcmp(pIE->data, MARVELL_OUI, 3)) {
@@ -2978,32 +2995,43 @@ void process_addba_req(_adapter *padapter, u8 *paddba_req, u8 *addr)
 	struct recv_reorder_ctrl *preorder_ctrl;
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct ADDBA_request	*preq = (struct ADDBA_request*)paddba_req;
-	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
-	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
+	//struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
+	//struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
+	u8 size;
 
 	psta = rtw_get_stainfo(pstapriv, addr);
+	if (!psta)
+		goto exit;
 
-	if(psta) {
-		start_seq = le16_to_cpu(preq->BA_starting_seqctrl) >> 4;
+	start_seq = le16_to_cpu(preq->BA_starting_seqctrl) >> 4;
 
-		param = le16_to_cpu(preq->BA_para_set);
-		tid = (param>>2)&0x0f;
+	param = le16_to_cpu(preq->BA_para_set);
+	tid = (param>>2)&0x0f;
 
-		preorder_ctrl = &psta->recvreorder_ctrl[tid];
+	preorder_ctrl = &psta->recvreorder_ctrl[tid];
 
 #ifdef CONFIG_UPDATE_INDICATE_SEQ_WHILE_PROCESS_ADDBA_REQ
-		preorder_ctrl->indicate_seq = start_seq;
+	preorder_ctrl->indicate_seq = start_seq;
 #ifdef DBG_RX_SEQ
-		DBG_871X("DBG_RX_SEQ %s:%d IndicateSeq: %d, start_seq: %d\n", __FUNCTION__, __LINE__,
-		         preorder_ctrl->indicate_seq, start_seq);
+	DBG_871X("DBG_RX_SEQ %s:%d IndicateSeq: %d, start_seq: %d\n", __func__, __LINE__,
+	         preorder_ctrl->indicate_seq, start_seq);
 #endif
 #else
-		preorder_ctrl->indicate_seq = 0xffff;
+	preorder_ctrl->indicate_seq = 0xffff;
 #endif
 
-		preorder_ctrl->enable =(pmlmeinfo->bAcceptAddbaReq == _TRUE)? _TRUE :_FALSE;
+	preorder_ctrl->enable = rtw_rx_ampdu_is_accept(padapter);
+	size = rtw_rx_ampdu_size(padapter);
+
+	if (preorder_ctrl->enable == _TRUE) {
+		preorder_ctrl->ampdu_size = size;
+		issue_addba_rsp(padapter, addr, tid, 0, size);
+	} else {
+		issue_addba_rsp(padapter, addr, tid, 37, size); /* reject ADDBA Req */
 	}
 
+exit:
+	return;
 }
 
 void update_TSF(struct mlme_ext_priv *pmlmeext, u8 *pframe, uint len)
@@ -3087,20 +3115,20 @@ void adaptive_early_32k(struct mlme_ext_priv *pmlmeext, u8 *pframe, uint len)
 			pmlmeext->bcn_delay_ratio[i] = (pmlmeext->bcn_delay_cnt[i] * 100) /pmlmeext->bcn_cnt;
 
 
-			DBG_871X("%s():bcn_delay_cnt[%d]=%d,  bcn_delay_ratio[%d]=%d\n", __func__, i,
-			         pmlmeext->bcn_delay_cnt[i] , i, pmlmeext->bcn_delay_ratio[i]);
+			//DBG_871X("%s():bcn_delay_cnt[%d]=%d,  bcn_delay_ratio[%d]=%d\n", __func__, i,
+			//	pmlmeext->bcn_delay_cnt[i] , i, pmlmeext->bcn_delay_ratio[i]);
 
 			ratio_20_delay += pmlmeext->bcn_delay_ratio[i];
 			ratio_80_delay += pmlmeext->bcn_delay_ratio[i];
 
 			if(ratio_20_delay > 20 && DrvBcnEarly == 0xff) {
 				DrvBcnEarly = i;
-				DBG_871X("%s(): DrvBcnEarly = %d\n", __func__, DrvBcnEarly);
+				//DBG_871X("%s(): DrvBcnEarly = %d\n", __func__, DrvBcnEarly);
 			}
 
 			if(ratio_80_delay > 80 && DrvBcnTimeOut == 0xff) {
 				DrvBcnTimeOut = i;
-				DBG_871X("%s(): DrvBcnTimeOut = %d\n", __func__, DrvBcnTimeOut);
+				//DBG_871X("%s(): DrvBcnTimeOut = %d\n", __func__, DrvBcnTimeOut);
 			}
 
 			//reset adaptive_early_32k cnt
@@ -3244,7 +3272,7 @@ void rtw_alloc_macid(_adapter *padapter, struct sta_info *psta)
 {
 	int i;
 	_irqL irqL;
-	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	struct macid_ctl_t *macid_ctl = dvobj_to_macidctl(dvobj);
 	struct macid_bmp *used_map = &macid_ctl->used;
@@ -3321,7 +3349,7 @@ exit:
 void rtw_release_macid(_adapter *padapter, struct sta_info *psta)
 {
 	_irqL irqL;
-	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	struct macid_ctl_t *macid_ctl = dvobj_to_macidctl(dvobj);
 
@@ -3580,8 +3608,8 @@ _adapter *dvobj_get_port0_adapter(struct dvobj_priv *dvobj)
  */
 u8 rtw_check_invalid_mac_address(u8 *mac_addr)
 {
-	const u8 null_mac_addr[ETH_ALEN] = {0, 0, 0, 0, 0, 0};
-	const u8 multi_mac_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+	u8 null_mac_addr[ETH_ALEN] = {0, 0, 0, 0, 0, 0};
+	u8 multi_mac_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 	u8 res = _FALSE;
 
 	if (_rtw_memcmp(mac_addr, null_mac_addr, ETH_ALEN)) {

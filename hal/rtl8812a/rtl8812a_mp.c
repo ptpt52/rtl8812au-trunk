@@ -575,11 +575,10 @@ void Hal_SetAntenna(PADAPTER pAdapter)
 	R_ANTENNA_SELECT_OFDM *p_ofdm_tx;	/* OFDM Tx register */
 	R_ANTENNA_SELECT_CCK *p_cck_txrx;
 
-	//u8	r_rx_antenna_ofdm = 0, r_ant_select_cck_val = 0;
-	u8 r_ant_select_cck_val = 0;
+	u8	r_ant_select_cck_val = 0;
 	//u8	chgTx = 0, chgRx = 0;
-	//u32	r_ant_sel_cck_val = 0, r_ant_select_ofdm_val = 0, r_ofdm_tx_en_val = 0;
-	u32 r_ant_select_ofdm_val = 0;
+	u32	r_ant_select_ofdm_val = 0;
+
 
 	p_ofdm_tx = (R_ANTENNA_SELECT_OFDM *)&r_ant_select_ofdm_val;
 	p_cck_txrx = (R_ANTENNA_SELECT_CCK *)&r_ant_select_cck_val;

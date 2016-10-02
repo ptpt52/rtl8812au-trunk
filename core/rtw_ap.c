@@ -24,11 +24,11 @@
 
 #ifdef CONFIG_AP_MODE
 
-extern const unsigned char	RTW_WPA_OUI[];
-extern const unsigned char 	WMM_OUI[];
-extern const unsigned char	WPS_OUI[];
-extern const unsigned char	P2P_OUI[];
-extern const unsigned char	WFD_OUI[];
+extern unsigned char	RTW_WPA_OUI[];
+extern unsigned char 	WMM_OUI[];
+extern unsigned char	WPS_OUI[];
+extern unsigned char	P2P_OUI[];
+extern unsigned char	WFD_OUI[];
 
 void init_mlme_ap_info(_adapter *padapter)
 {
@@ -499,7 +499,7 @@ void	expire_timeout_chk(_adapter *padapter)
 
 						DBG_871X("issue addba_req to check if sta alive, keep_alive_trycnt=%d\n", psta->keep_alive_trycnt);
 
-						issue_action_BA(padapter, psta->hwaddr, RTW_WLAN_ACTION_ADDBA_REQ, (u16)priority);
+						issue_addba_req(padapter, psta->hwaddr, (u8)priority);
 
 						_set_timer(&psta->addba_retry_timer, ADDBA_TO);
 
@@ -516,7 +516,7 @@ void	expire_timeout_chk(_adapter *padapter)
 			}
 
 #endif //CONFIG_80211N_HT
-#endif //CONFIG_ACTIVE_KEEP_ALIVE_CHECK	
+#endif //CONFIG_ACTIVE_KEEP_ALIVE_CHECK
 			if (psta->state & WIFI_SLEEP_STATE) {
 				if (!(psta->state & WIFI_STA_ALIVE_CHK_STATE)) {
 					//to check if alive by another methods if staion is at ps mode.
@@ -1290,7 +1290,7 @@ void start_bss_network(_adapter *padapter, u8 *pbuf)
 
 #ifdef CONFIG_DUALMAC_CONCURRENT
 	dc_set_ap_channel_bandwidth(padapter, cur_channel, cur_ch_offset, cur_bwmode);
-#else //!CONFIG_DUALMAC_CONCURRENT	
+#else //!CONFIG_DUALMAC_CONCURRENT
 #ifdef CONFIG_CONCURRENT_MODE
 	//TODO: need to judge the phy parameters on concurrent mode for single phy
 	concurrent_set_ap_chbw(padapter, cur_channel, cur_ch_offset, cur_bwmode);
@@ -2783,7 +2783,7 @@ int rtw_ap_inform_ch_switch(_adapter *padapter, u8 new_ch, u8 ch_offset)
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
-	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 
 	if((pmlmeinfo->state&0x03) != WIFI_FW_AP_STATE)
 		return ret;
@@ -2819,7 +2819,7 @@ int rtw_sta_flush(_adapter *padapter)
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
-	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 
 	if((pmlmeinfo->state&0x03) != WIFI_FW_AP_STATE)
 		return ret;
@@ -2972,7 +2972,7 @@ void rtw_ap_restore_network(_adapter *padapter)
 			/* per sta pairwise key and settings */
 			if(	(padapter->securitypriv.dot11PrivacyAlgrthm == _TKIP_) ||
 			    (padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)) {
-				rtw_setstakey_cmd(padapter, psta, _TRUE,_FALSE);
+				rtw_setstakey_cmd(padapter, psta, UNICAST_KEY,_FALSE);
 			}
 		}
 	}
@@ -2985,6 +2985,7 @@ void start_ap_mode(_adapter *padapter)
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct wlan_acl_pool *pacl_list = &pstapriv->acl_list;
 
 	pmlmepriv->update_bcn = _FALSE;
@@ -3002,10 +3003,12 @@ void start_ap_mode(_adapter *padapter)
 #ifdef CONFIG_80211N_HT
 	pmlmepriv->num_sta_no_ht = 0;
 #endif //CONFIG_80211N_HT
+	pmlmeinfo->HT_info_enable =0;
+	pmlmeinfo->HT_caps_enable=0;
+	pmlmeinfo->HT_enable=0;
+
 	pmlmepriv->num_sta_ht_20mhz = 0;
-
 	pmlmepriv->olbc = _FALSE;
-
 	pmlmepriv->olbc_ht = _FALSE;
 
 #ifdef CONFIG_80211N_HT

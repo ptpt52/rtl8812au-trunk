@@ -92,6 +92,7 @@ u8 GLBtcWiFiInScanState;
 u8 GLBtcWiFiInIQKState;
 u8 GLBtcWiFiInIPS;
 u8 GLBtcWiFiInLPS;
+u8 GLBtcBtCoexAliveRegistered;
 
 u32 GLBtcDbgType[BTC_MSG_MAX];
 u8 GLBtcDbgBuf[BT_TMP_BUF_SIZE];
@@ -275,6 +276,9 @@ void halbtcoutsrc_LeaveLowPower(PBTC_COEXIST pBtCoexist)
 	timeout = 30;
 #endif // !LPS_RPWM_WAIT_MS
 
+	if (GLBtcBtCoexAliveRegistered == _TRUE)
+		return;
+
 	stime = rtw_get_current_time();
 	do {
 		ready = rtw_register_task_alive(padapter, BTCOEX_ALIVE);
@@ -287,6 +291,8 @@ void halbtcoutsrc_LeaveLowPower(PBTC_COEXIST pBtCoexist)
 
 		rtw_msleep_os(1);
 	} while (1);
+
+	GLBtcBtCoexAliveRegistered = _TRUE;
 #endif // CONFIG_LPS_LCLK
 }
 
@@ -299,9 +305,13 @@ void halbtcoutsrc_NormalLowPower(PBTC_COEXIST pBtCoexist)
 #ifdef CONFIG_LPS_LCLK
 	PADAPTER padapter;
 
+	if (GLBtcBtCoexAliveRegistered == _FALSE)
+		return;
 
 	padapter = pBtCoexist->Adapter;
 	rtw_unregister_task_alive(padapter, BTCOEX_ALIVE);
+
+	GLBtcBtCoexAliveRegistered = _FALSE;
 #endif // CONFIG_LPS_LCLK
 }
 
@@ -337,7 +347,7 @@ void halbtcoutsrc_AggregationCheck(PBTC_COEXIST pBtCoexist)
 	}
 
 	if (pBtCoexist->btInfo.bRejectAggPkt) {
-		rtw_btcoex_RejectApAggregatedPacket(padapter, _TRUE);
+		bNeedToAct = _TRUE;
 		pBtCoexist->btInfo.bPreRejectAggPkt = pBtCoexist->btInfo.bRejectAggPkt;
 	} else {
 		if(pBtCoexist->btInfo.bPreRejectAggPkt) {
@@ -358,12 +368,10 @@ void halbtcoutsrc_AggregationCheck(PBTC_COEXIST pBtCoexist)
 			}
 			pBtCoexist->btInfo.preAggBufSize = pBtCoexist->btInfo.aggBufSize;
 		}
-
-		if (bNeedToAct) {
-			rtw_btcoex_RejectApAggregatedPacket(padapter, _TRUE);
-			rtw_btcoex_RejectApAggregatedPacket(padapter, _FALSE);
-		}
 	}
+
+	if (bNeedToAct)
+		rtw_btcoex_rx_ampdu_apply(padapter);
 }
 
 u8 halbtcoutsrc_IsWifiBusy(PADAPTER padapter)
@@ -472,8 +480,9 @@ u32 halbtcoutsrc_GetBtPatchVer(PBTC_COEXIST pBtCoexist)
 	u8 btFwVer = 0x0;
 	u8 cnt = 0;
 
-#if 0
+#ifdef CONFIG_BT_COEXIST_SOCKET_TRX
 	if (!pBtCoexist->btInfo.btRealFwVer && cnt<=5) {
+#if 0
 		if (halbtcoutsrc_IsHwMailboxExist(pBtCoexist)) {
 			// mailbox exists, through mailbox
 			if (NDBG_GetBtFwVersion(pBtCoexist->Adapter, &btRealFwVer, &btFwVer)) {
@@ -483,7 +492,10 @@ u32 halbtcoutsrc_GetBtPatchVer(PBTC_COEXIST pBtCoexist)
 				pBtCoexist->btInfo.btRealFwVer = 0x0;
 				pBtCoexist->btInfo.btFwVer = 0x0;
 			}
-		} else {	// no mailbox, query bt patch version through stack.
+		} else	// no mailbox, query bt patch version through stack.
+#endif
+			// query bt patch version through socket.
+		{
 			u1Byte	dataLen=2;
 			u1Byte	buf[4] = {0};
 			buf[0] = 0x0;	// OP_Code
@@ -492,7 +504,7 @@ u32 halbtcoutsrc_GetBtPatchVer(PBTC_COEXIST pBtCoexist)
 		}
 		cnt++;
 	}
-#endif
+#endif //CONFIG_BT_COEXIST_SOCKET_TRX
 	return pBtCoexist->btInfo.btRealFwVer;
 }
 
@@ -520,10 +532,10 @@ static u8 halbtcoutsrc_GetWifiScanAPNum(PADAPTER padapter)
 	pmlmeext = &padapter->mlmeextpriv;
 
 	if (GLBtcWiFiInScanState == _FALSE) {
-		if (pmlmeext->sitesurvey_res.bss_cnt > 0xFF)
+		if (pmlmepriv->num_of_scanned > 0xFF)
 			scan_AP_num = 0xFF;
 		else
-			scan_AP_num = (u8)pmlmeext->sitesurvey_res.bss_cnt;
+			scan_AP_num = (u8)pmlmepriv->num_of_scanned;
 	}
 
 	return scan_AP_num;
@@ -654,6 +666,10 @@ u8 halbtcoutsrc_Get(void *pBtcContext, u8 getType, void *pOutBuf)
 	case BTC_GET_BL_EXT_SWITCH:
 		*pu8 = _FALSE;
 		break;
+	case BTC_GET_BL_IS_ASUS_8723B:
+		/* Always return FALSE in linux driver since this case is added only for windows driver */
+		*pu8 = _FALSE;
+		break;
 
 	case BTC_GET_S4_WIFI_RSSI:
 		*pS4Tmp = halbtcoutsrc_GetWifiRssi(padapter);
@@ -723,7 +739,23 @@ u8 halbtcoutsrc_Get(void *pBtcContext, u8 getType, void *pOutBuf)
 		*pU1Tmp = halbtcoutsrc_GetWifiScanAPNum(padapter);
 		break;
 	case BTC_GET_U1_ANT_TYPE:
-		*pU1Tmp = (u1Byte)BTC_ANT_TYPE_0;
+		switch(pHalData->bt_coexist.btAntisolation) {
+		case 0:
+			*pU1Tmp = (u1Byte)BTC_ANT_TYPE_0;
+			break;
+		case 1:
+			*pU1Tmp = (u1Byte)BTC_ANT_TYPE_1;
+			break;
+		case 2:
+			*pU1Tmp = (u1Byte)BTC_ANT_TYPE_2;
+			break;
+		case 3:
+			*pU1Tmp = (u1Byte)BTC_ANT_TYPE_3;
+			break;
+		case 4:
+			*pU1Tmp = (u1Byte)BTC_ANT_TYPE_4;
+			break;
+		}
 		break;
 
 	//=======1Ant===========
@@ -885,33 +917,33 @@ u8 halbtcoutsrc_Set(void *pBtcContext, u8 setType, void *pInBuf)
 	break;
 
 	case BTC_SET_ACT_CTRL_BT_INFO:
-#if 0
+#ifdef CONFIG_BT_COEXIST_SOCKET_TRX
 	{
 		u8 dataLen = *pU1Tmp;
 		u8 tmpBuf[20];
 		if (dataLen) {
 			_rtw_memcpy(tmpBuf, pU1Tmp+1, dataLen);
 		}
-//				BT_SendEventExtBtInfoControl(padapter, dataLen, &tmpBuf[0]);
+		BT_SendEventExtBtInfoControl(padapter, dataLen, &tmpBuf[0]);
 	}
-#else
+#else //!CONFIG_BT_COEXIST_SOCKET_TRX
 	ret = _FALSE;
-#endif
+#endif //CONFIG_BT_COEXIST_SOCKET_TRX
 	break;
 
 	case BTC_SET_ACT_CTRL_BT_COEX:
-#if 0
+#ifdef CONFIG_BT_COEXIST_SOCKET_TRX
 	{
 		u8 dataLen = *pU1Tmp;
 		u8 tmpBuf[20];
 		if (dataLen) {
 			_rtw_memcpy(tmpBuf, pU1Tmp+1, dataLen);
 		}
-//				BT_SendEventExtBtCoexControl(padapter, _FALSE, dataLen, &tmpBuf[0]);
+		BT_SendEventExtBtCoexControl(padapter, _FALSE, dataLen, &tmpBuf[0]);
 	}
-#else
+#else //!CONFIG_BT_COEXIST_SOCKET_TRX
 	ret = _FALSE;
-#endif
+#endif //CONFIG_BT_COEXIST_SOCKET_TRX
 	break;
 	case BTC_SET_ACT_CTRL_8723B_ANT:
 #if 0
@@ -1461,6 +1493,8 @@ u8 EXhalbtcoutsrc_InitlizeVariables(void *padapter)
 	GLBtcWiFiInIPS = _FALSE;
 
 	GLBtcWiFiInLPS = _FALSE;
+
+	GLBtcBtCoexAliveRegistered = _FALSE;
 
 	return _TRUE;
 }
@@ -2196,12 +2230,40 @@ void EXhalbtcoutsrc_DbgControl(PBTC_COEXIST pBtCoexist, u8 opCode, u8 opLen, u8 
 //	halbtcoutsrc_NormalLowPower(pBtCoexist);
 }
 
+#if 0
+VOID
+EXhalbtcoutsrc_AntennaDetection(
+    IN	PBTC_COEXIST			pBtCoexist,
+    IN	u4Byte					centFreq,
+    IN	u4Byte					offset,
+    IN	u4Byte					span,
+    IN	u4Byte					seconds
+)
+{
+	if(!halbtcoutsrc_IsBtCoexistAvailable(pBtCoexist))
+		return;
+
+	/* Need to refine the following power save operations to enable this function in the future */
+#if 0
+	IPSDisable(pBtCoexist->Adapter, FALSE, 0);
+	LeisurePSLeave(pBtCoexist->Adapter, LPS_DISABLE_BT_COEX);
+#endif
+
+	if(IS_HARDWARE_TYPE_8723B(pBtCoexist->Adapter)) {
+		if(pBtCoexist->boardInfo.btdmAntNum == 1)
+			EXhalbtc8723b1ant_AntennaDetection(pBtCoexist, centFreq, offset, span, seconds);
+	}
+
+	//IPSReturn(pBtCoexist->Adapter, 0xff);
+}
+#endif
+
 void EXhalbtcoutsrc_StackUpdateProfileInfo(void)
 {
-#if 0
+#ifdef CONFIG_BT_COEXIST_SOCKET_TRX
 	PBTC_COEXIST pBtCoexist = &GLBtCoexist;
-	PADAPTER padapter = (PADAPTER)GLBtCoexist.padapter;
-	PBT_MGNT pBtMgnt = &padapter->MgntInfo.BtInfo.BtMgnt;
+	PADAPTER padapter = (PADAPTER)GLBtCoexist.Adapter;
+	PBT_MGNT pBtMgnt = &padapter->coex_info.BtMgnt;
 	u8 i;
 
 	if (!halbtcoutsrc_IsBtCoexistAvailable(pBtCoexist))
@@ -2244,7 +2306,7 @@ void EXhalbtcoutsrc_StackUpdateProfileInfo(void)
 			pBtCoexist->stackInfo.bUnknownAclExist = _TRUE;
 		}
 	}
-#endif
+#endif //CONFIG_BT_COEXIST_SOCKET_TRX
 }
 
 void EXhalbtcoutsrc_UpdateMinBtRssi(s8 btRssi)
@@ -2383,6 +2445,24 @@ void EXhalbtcoutsrc_DisplayBtCoexInfo(PBTC_COEXIST pBtCoexist)
 			EXhalbtc8812a2ant_DisplayCoexInfo(pBtCoexist);
 		else if (pBtCoexist->boardInfo.btdmAntNum == 1)
 			EXhalbtc8812a1ant_DisplayCoexInfo(pBtCoexist);
+	}
+
+	halbtcoutsrc_NormalLowPower(pBtCoexist);
+}
+
+VOID
+EXhalbtcoutsrc_DisplayAntIsolation(
+    IN	PBTC_COEXIST		pBtCoexist
+)
+{
+	if(!halbtcoutsrc_IsBtCoexistAvailable(pBtCoexist))
+		return;
+
+	halbtcoutsrc_LeaveLowPower(pBtCoexist);
+
+	if(IS_HARDWARE_TYPE_8723B(pBtCoexist->Adapter)) {
+		if(pBtCoexist->boardInfo.btdmAntNum == 1)
+			EXhalbtc8723b1ant_DisplayAntIsolation(pBtCoexist);
 	}
 
 	halbtcoutsrc_NormalLowPower(pBtCoexist);
@@ -2629,6 +2709,11 @@ void hal_btcoex_SwitchBtTRxMask(PADAPTER padapter)
 void hal_btcoex_Hanlder(PADAPTER padapter)
 {
 	EXhalbtcoutsrc_Periodical(&GLBtCoexist);
+}
+
+s32 hal_btcoex_IsBTCoexRejectAMPDU(PADAPTER padapter)
+{
+	return (s32)GLBtCoexist.btInfo.bRejectAggPkt;
 }
 
 s32 hal_btcoex_IsBTCoexCtrlAMPDUSize(PADAPTER padapter)
@@ -2889,15 +2974,30 @@ u8 hal_btcoex_IsBtLinkExist(PADAPTER padapter)
 	return _FALSE;
 }
 
+void hal_btcoex_SetBtPatchVersion(PADAPTER padapter,u16 btHciVer,u16 btPatchVer)
+{
+	EXhalbtcoutsrc_SetBtPatchVersion(btHciVer,btPatchVer);
+}
+
+void hal_btcoex_SetHciVersion(PADAPTER padapter, u16 hciVersion)
+{
+	EXhalbtcoutsrc_SetHciVersion(hciVersion);
+}
+
+void hal_btcoex_StackUpdateProfileInfo(void)
+{
+	EXhalbtcoutsrc_StackUpdateProfileInfo();
+}
+
 /*
  * Description:
  *	Setting BT coex antenna isolation type .
  *                         coex mechanisn/ spital stream/ best throughput
- *      anttype = 0  ,  PSTDMA  / 2SS / 0.5T , bad isolation      (<20dB) for 2,3 antenna
- *      anttype = 1  ,  PSTDMA  / 1SS / 0.5T , normal isolaiton (>20dB) for 2 antenna
- *      anttype = 2  ,  TDMA      / 2SS / T      , normal isolaiton (>20dB) for 3 antenna
- *      anttype = 3  ,  no TDMA / 1SS / 0.5T , good isolation    (>40dB) for 2 antenna
- *      anttype = 4  ,  no TDMA / 2SS / T      , good isolation    (>40dB) for 3 antenna
+ *      anttype = 0  ,  PSTDMA  / 2SS / 0.5T , bad isolation, 	WiFi/BT ANT Distance<15cm, 		(<20dB) for 2,3 antenna
+ *      anttype = 1  ,  PSTDMA  / 1SS / 0.5T , normal isolaiton,	50cm>WiFi/BT ANT Distance>15cm,	(>20dB) for 2 antenna
+ *      anttype = 2  ,  TDMA      / 2SS / T     , normal isolaiton,50cm>WiFi/BT ANT Distance>15cm,	(>20dB) for 3 antenna
+ *      anttype = 3  ,  no TDMA / 1SS / 0.5T , good isolation,	WiFi/BT ANT Distance >50cm,		(>40dB) for 2 antenna
+ *      anttype = 4  ,  no TDMA / 2SS / T      , good isolation,	WiFi/BT ANT Distance >50cm,		(>40dB) for 3 antenna
  *    wifi only throughput ~ T
  *    wifi/BT share one antenna with SPDT
  */
@@ -3021,10 +3121,10 @@ hal_btcoex_AntIsolationConfig_ParaFile(
 	_rtw_memset(pHalData->para_file_buf, 0, MAX_PARA_FILE_BUF_LEN);
 
 
-	rtw_merge_string(s_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
+	rtw_merge_string(rtw_file_path, PATH_LENGTH_MAX, rtw_phy_file_path, pFileName);
 
-	if (rtw_is_file_readable(s_file_path) == _TRUE) {
-		rlen = rtw_retrive_from_file(s_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
+	if (rtw_is_file_readable(rtw_file_path) == _TRUE) {
+		rlen = rtw_retrive_from_file(rtw_file_path, pHalData->para_file_buf, MAX_PARA_FILE_BUF_LEN);
 		if (rlen > 0) {
 			rtStatus = _SUCCESS;
 		}

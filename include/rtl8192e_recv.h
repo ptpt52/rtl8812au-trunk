@@ -151,9 +151,9 @@
 
 
 #ifdef CONFIG_SDIO_HCI
-s32 rtl8812s_init_recv_priv(PADAPTER padapter);
-void rtl8812s_free_recv_priv(PADAPTER padapter);
-void rtl8812s_recv_hdl(PADAPTER padapter, struct recv_buf *precvbuf);
+s32 rtl8192es_init_recv_priv(PADAPTER padapter);
+void rtl8192es_free_recv_priv(PADAPTER padapter);
+void rtl8192es_recv_hdl(PADAPTER padapter, struct recv_buf *precvbuf);
 #endif
 
 #ifdef CONFIG_USB_HCI
@@ -172,7 +172,6 @@ void rtl8192ee_free_recv_priv(PADAPTER padapter);
 #endif
 
 void rtl8192e_query_rx_desc_status(union recv_frame *precvframe, u8 *pdesc);
-void rtl8192e_query_rx_phy_status(union recv_frame *prframe, u8 *pphy_stat);
 
-#endif
+#endif /* __RTL8192E_RECV_H__ */
 

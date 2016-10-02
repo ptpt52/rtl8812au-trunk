@@ -170,8 +170,6 @@ uint	 rtw_hal_init(_adapter *padapter)
 
 	if(status == _SUCCESS) {
 
-		rtw_hal_init_opmode(padapter);
-
 		for (i = 0; i<dvobj->iface_nums; i++)
 			dvobj->padapters[i]->hw_init_completed = _TRUE;
 
@@ -186,6 +184,8 @@ uint	 rtw_hal_init(_adapter *padapter)
 		rtw_led_control(padapter, LED_CTL_POWER_ON);
 
 		init_hw_mlme_ext(padapter);
+
+		rtw_hal_init_opmode(padapter);
 
 #ifdef CONFIG_RF_GAIN_OFFSET
 		rtw_bb_rf_gain_offset(padapter);
@@ -227,7 +227,7 @@ uint rtw_hal_deinit(_adapter *padapter)
 	return status;
 }
 
-void rtw_hal_set_hwreg(_adapter *padapter, u8 variable, u8 *val)
+void rtw_hal_set_hwreg(_adapter *padapter, u8 variable, const u8 *val)
 {
 	if (padapter->HalFunc.SetHwRegHandler)
 		padapter->HalFunc.SetHwRegHandler(padapter, variable, val);
@@ -240,14 +240,14 @@ void rtw_hal_get_hwreg(_adapter *padapter, u8 variable, u8 *val)
 }
 
 #ifdef CONFIG_C2H_PACKET_EN
-void rtw_hal_set_hwreg_with_buf(_adapter *padapter, u8 variable, u8 *pbuf, int len)
+void rtw_hal_set_hwreg_with_buf(_adapter *padapter, u8 variable, const u8 *pbuf, int len)
 {
 	if (padapter->HalFunc.SetHwRegHandlerWithBuf)
 		padapter->HalFunc.SetHwRegHandlerWithBuf(padapter, variable, pbuf, len);
 }
 #endif
 
-u8 rtw_hal_set_def_var(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pValue)
+u8 rtw_hal_set_def_var(_adapter *padapter, HAL_DEF_VARIABLE eVariable, const PVOID pValue)
 {
 	if(padapter->HalFunc.SetHalDefVarHandler)
 		return padapter->HalFunc.SetHalDefVarHandler(padapter,eVariable,pValue);
@@ -260,7 +260,7 @@ u8 rtw_hal_get_def_var(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pVa
 	return _FAIL;
 }
 
-void rtw_hal_set_odm_var(_adapter *padapter, HAL_ODM_VARIABLE eVariable, PVOID pValue1,BOOLEAN bSet)
+void rtw_hal_set_odm_var(_adapter *padapter, HAL_ODM_VARIABLE eVariable, const PVOID pValue1,BOOLEAN bSet)
 {
 	if(padapter->HalFunc.SetHalODMVarHandler)
 		padapter->HalFunc.SetHalODMVarHandler(padapter,eVariable,pValue1,bSet);
@@ -338,7 +338,7 @@ void	rtw_hal_irp_reset(_adapter *padapter)
 		DBG_871X("%s: HalFunc.rtw_hal_irp_reset is NULL!\n", __FUNCTION__);
 }
 
-u8	rtw_hal_intf_ps_func(_adapter *padapter,HAL_INTF_PS_FUNC efunc_id, u8* val)
+u8	rtw_hal_intf_ps_func(_adapter *padapter,HAL_INTF_PS_FUNC efunc_id, const u8* val)
 {
 	if(padapter->HalFunc.interface_ps_func)
 		return padapter->HalFunc.interface_ps_func(padapter,efunc_id,val);
@@ -584,7 +584,7 @@ u8	rtw_hal_antdiv_before_linked(_adapter *padapter)
 		return padapter->HalFunc.AntDivBeforeLinkHandler(padapter);
 	return _FALSE;
 }
-void	rtw_hal_antdiv_rssi_compared(_adapter *padapter, WLAN_BSSID_EX *dst, WLAN_BSSID_EX *src)
+void	rtw_hal_antdiv_rssi_compared(_adapter *padapter, const WLAN_BSSID_EX *dst, const WLAN_BSSID_EX *src)
 {
 	if(padapter->HalFunc.AntDivCompareHandler)
 		padapter->HalFunc.AntDivCompareHandler(padapter, dst, src);
@@ -686,16 +686,16 @@ void rtw_hal_reset_security_engine(_adapter * adapter)
 		adapter->HalFunc.hal_reset_security_engine(adapter);
 }
 
-bool rtw_hal_c2h_valid(_adapter *adapter, u8 *buf)
+bool rtw_hal_c2h_valid(_adapter *adapter, const u8 *buf)
 {
 	HAL_DATA_TYPE *HalData = GET_HAL_DATA(adapter);
 	HAL_VERSION *hal_ver = &HalData->VersionID;
 	bool ret = _FAIL;
 
 	if (IS_81XXC(*hal_ver) || IS_8723_SERIES(*hal_ver) ||IS_92D(*hal_ver) ||IS_8188E(*hal_ver)) {
-		ret = c2h_evt_valid((struct c2h_evt_hdr *)buf);
+		ret = c2h_evt_valid((const struct c2h_evt_hdr *)buf);
 	} else if(IS_8192E(*hal_ver) || IS_8812_SERIES(*hal_ver) || IS_8821_SERIES(*hal_ver) || IS_8723B_SERIES(*hal_ver)) {
-		ret = c2h_evt_valid((struct c2h_evt_hdr_88xx*)buf);
+		ret = c2h_evt_valid((const struct c2h_evt_hdr_88xx*)buf);
 	} else {
 		rtw_warn_on(1);
 	}
@@ -774,7 +774,6 @@ s32 rtw_hal_macid_wakeup(PADAPTER padapter, u8 macid)
 	if (macid >= macid_ctl->num) {
 		DBG_871X_LEVEL(_drv_err_, FUNC_ADPT_FMT": Invalid macid(%u)\n",
 		               FUNC_ADPT_ARG(padapter), macid);
-		dump_stack();
 		return _FAIL;
 	}
 
@@ -796,4 +795,10 @@ s32 rtw_hal_fill_h2c_cmd(PADAPTER padapter, u8 ElementID, u32 CmdLen, u8 *pCmdBu
 
 	return ret;
 }
-
+#ifdef CONFIG_GPIO_API
+void rtw_hal_update_hisr_hsisr_ind(_adapter *padapter, u32 flag)
+{
+	if (padapter->HalFunc.update_hisr_hsisr_ind)
+		padapter->HalFunc.update_hisr_hsisr_ind(padapter, flag);
+}
+#endif

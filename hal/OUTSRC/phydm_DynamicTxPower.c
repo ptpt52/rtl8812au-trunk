@@ -91,7 +91,7 @@ odm_DynamicTxPowerSavePowerIndex(
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE|ODM_WIN))
 	u1Byte		index;
-	const u4Byte		Power_Index_REG[6] = {0xc90, 0xc91, 0xc92, 0xc98, 0xc99, 0xc9a};
+	u4Byte		Power_Index_REG[6] = {0xc90, 0xc91, 0xc92, 0xc98, 0xc99, 0xc9a};
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 	PADAPTER	Adapter = pDM_Odm->Adapter;
@@ -118,7 +118,7 @@ odm_DynamicTxPowerRestorePowerIndex(
 	u1Byte			index;
 	PADAPTER		Adapter = pDM_Odm->Adapter;
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-	const u4Byte			Power_Index_REG[6] = {0xc90, 0xc91, 0xc92, 0xc98, 0xc99, 0xc9a};
+	u4Byte			Power_Index_REG[6] = {0xc90, 0xc91, 0xc92, 0xc98, 0xc99, 0xc9a};
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 	for(index = 0; index< 6; index++)
 		PlatformEFIOWrite1Byte(Adapter, Power_Index_REG[index], pHalData->PowerIndex_backup[index]);
@@ -137,7 +137,7 @@ odm_DynamicTxPowerWritePowerIndex(
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	u1Byte			index;
-	const u4Byte			Power_Index_REG[6] = {0xc90, 0xc91, 0xc92, 0xc98, 0xc99, 0xc9a};
+	u4Byte			Power_Index_REG[6] = {0xc90, 0xc91, 0xc92, 0xc98, 0xc99, 0xc9a};
 
 	for(index = 0; index< 6; index++)
 		//PlatformEFIOWrite1Byte(Adapter, Power_Index_REG[index], Value);
@@ -236,8 +236,8 @@ odm_DynamicTxPowerAP(
 	if(!priv->pshare->rf_ft_var.tx_pwr_ctrl)
 		return;
 
-#if ((RTL8812E_SUPPORT==1) || (RTL8881A_SUPPORT==1))
-	if (pDM_Odm->SupportICType & (ODM_RTL8812 | ODM_RTL8881A))
+#if ((RTL8812E_SUPPORT==1) || (RTL8881A_SUPPORT==1) || (RTL8814A_SUPPORT==1))
+	if (pDM_Odm->SupportICType & (ODM_RTL8812 | ODM_RTL8881A | ODM_RTL8814A))
 		pwr_thd = TX_POWER_NEAR_FIELD_THRESH_8812;
 #endif
 

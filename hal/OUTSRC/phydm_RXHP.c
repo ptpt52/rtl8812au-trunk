@@ -360,7 +360,7 @@ odm_PSD_Monitor(
 	static u8Byte		lastTxOkCnt=0, lastRxOkCnt=0;
 	u1Byte 			H2C_PSD_DATA[5]= {0,0,0,0,0};
 	static u1Byte		H2C_PSD_DATA_last[5] = {0,0,0,0,0};
-	const u1Byte			idx[20]= {96,99,102,106,109,112,115,118,122,125,
+	u1Byte			idx[20]= {96,99,102,106,109,112,115,118,122,125,
 	                          0,3,6,10,13,16,19,22,26,29
 	                  };
 	u1Byte			n, i, channel, BBReset,tone_idx;
@@ -897,8 +897,8 @@ odm_PSD_RXHP(
 	//--------------2G band synthesizer for 92D switch RF channel using-----------------
 	u1Byte			group_idx=0;
 	u4Byte			SYN_RF25=0, SYN_RF26=0, SYN_RF27=0, SYN_RF2B=0, SYN_RF2C=0;
-	const u4Byte			SYN[5] = {0x25, 0x26, 0x27, 0x2B, 0x2C};    // synthesizer RF register for 2G channel
-	const u4Byte			SYN_group[3][5] = {{0x643BC, 0xFC038, 0x77C1A, 0x41289, 0x01840},     // For CH1,2,4,9,10.11.12   {0x643BC, 0xFC038, 0x77C1A, 0x41289, 0x01840}
+	u4Byte			SYN[5] = {0x25, 0x26, 0x27, 0x2B, 0x2C};    // synthesizer RF register for 2G channel
+	u4Byte			SYN_group[3][5] = {{0x643BC, 0xFC038, 0x77C1A, 0x41289, 0x01840},     // For CH1,2,4,9,10.11.12   {0x643BC, 0xFC038, 0x77C1A, 0x41289, 0x01840}
 		{0x643BC, 0xFC038, 0x07C1A, 0x41289, 0x01840},     // For CH3,13,14
 		{0x243BC, 0xFC438, 0x07C1A, 0x4128B, 0x0FC41}
 	};   // For Ch5,6,7,8
@@ -1182,7 +1182,7 @@ void odm_RXHP(
 	PMGNT_INFO	pMgntInfo = &(Adapter->MgntInfo);
 	pDIG_T		pDM_DigTable = &pDM_Odm->DM_DigTable;
 	pRXHP_T		pRX_HP_Table  = &pDM_Odm->DM_RXHP_Table;
-	PFALSE_ALARM_STATISTICS		FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm , PhyDM_FalseAlmCnt);
+	PFALSE_ALARM_STATISTICS		FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm , PHYDM_FALSEALMCNT);
 
 	u1Byte              	i, j, sum;
 	u1Byte			Is40MHz;

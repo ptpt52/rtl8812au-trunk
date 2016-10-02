@@ -629,7 +629,7 @@ typedef struct hal_com_data {
 #endif // CONFIG_BT_COEXIST
 
 #if defined(CONFIG_RTL8723A) || defined(CONFIG_RTL8723B)
-#ifndef CONFIG_PCI_HCI	// mutual exclusive with PCI -- so they're SDIO and GSPI 
+#ifndef CONFIG_PCI_HCI	// mutual exclusive with PCI -- so they're SDIO and GSPI
 	// Interrupt relatd register information.
 	u32			SysIntrStatus;
 	u32			SysIntrMask;
@@ -672,7 +672,7 @@ typedef struct hal_com_data {
 	BOOLEAN		bSupportRemoteWakeUp;
 	BOOLEAN		bInSetPower;
 	u8	RTSInitRate;	 // 2010.11.24.by tynli.
-#endif //CONFIG_RTL8192D 
+#endif //CONFIG_RTL8192D
 
 #endif //defined(CONFIG_RTL8192C) ||defined(CONFIG_RTL8192D)
 

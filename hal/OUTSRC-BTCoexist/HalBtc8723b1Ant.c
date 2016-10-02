@@ -20,6 +20,9 @@ static COEX_DM_8723B_1ANT		GLCoexDm8723b1Ant;
 static PCOEX_DM_8723B_1ANT 	pCoexDm=&GLCoexDm8723b1Ant;
 static COEX_STA_8723B_1ANT		GLCoexSta8723b1Ant;
 static PCOEX_STA_8723B_1ANT	pCoexSta=&GLCoexSta8723b1Ant;
+static PSDSCAN_STA_8723B_1ANT	GLPsdScan8723b1Ant;
+static PPSDSCAN_STA_8723B_1ANT pPsdScan = &GLPsdScan8723b1Ant;
+
 
 const char *const GLBtInfoSrc8723b1Ant[]= {
 	"BT Info[wifi fw]",
@@ -27,8 +30,8 @@ const char *const GLBtInfoSrc8723b1Ant[]= {
 	"BT Info[bt auto report]",
 };
 
-u4Byte	GLCoexVerDate8723b1Ant=20140725;
-u4Byte	GLCoexVer8723b1Ant=0x53;
+u4Byte	GLCoexVerDate8723b1Ant=20140929;
+u4Byte	GLCoexVer8723b1Ant=0x54;
 
 //============================================================
 // local function proto type if needed
@@ -493,6 +496,9 @@ halbtc8723b1ant_MonitorWiFiCtr(
 			pCoexSta->bCCKLock = TRUE;
 	}
 
+	if  (pCoexSta->bCCKLock)
+		pCoexSta->bCCKEverLock = TRUE;
+
 	pCoexSta->bPreCCKLock =  pCoexSta->bCCKLock;
 
 
@@ -905,13 +911,13 @@ halbtc8723b1ant_CoexTableWithType(
 		halbtc8723b1ant_CoexTable(pBtCoexist, bForceExec, 0x55555555, 0x5a5a5a5a, 0xffffff, 0x3);
 		break;
 	case 4:
-		if(pCoexSta->nScanAPNum > 5)
-			halbtc8723b1ant_CoexTable(pBtCoexist, bForceExec, 0x55555555, 0xaaaa5a5a, 0xffffff, 0x3);
-		else
+		if ((pCoexSta->nScanAPNum <= 5) || ( pCoexSta->bCCKEverLock) )
 			halbtc8723b1ant_CoexTable(pBtCoexist, bForceExec, 0x55555555, 0xaaaaaaaa, 0xffffff, 0x3);
+		else
+			halbtc8723b1ant_CoexTable(pBtCoexist, bForceExec, 0x55555555, 0xaaaa5a5a, 0xffffff, 0x3);
 		break;
 	case 5:
-		halbtc8723b1ant_CoexTable(pBtCoexist, bForceExec, 0x5a5a5a5a, 0xaa5a5a5a, 0xffffff, 0x3);
+		halbtc8723b1ant_CoexTable(pBtCoexist, bForceExec, 0x5a5a5a5a, 0xaaaa5a5a, 0xffffff, 0x3);
 		break;
 	case 6:
 		halbtc8723b1ant_CoexTable(pBtCoexist, bForceExec, 0x55555555, 0xaaaaaaaa, 0xffffff, 0x3);
@@ -1522,19 +1528,7 @@ halbtc8723b1ant_PsTdma(
 	pCoexDm->bPrePsTdmaOn = pCoexDm->bCurPsTdmaOn;
 	pCoexDm->prePsTdma = pCoexDm->curPsTdma;
 }
-#if 0
-VOID
-halbtc8723b1ant_CoexAllOff(
-    IN	PBTC_COEXIST		pBtCoexist
-)
-{
-	// sw all off
-	halbtc8723b1ant_SwMechanism(pBtCoexist, FALSE);
 
-	// hw all off
-	halbtc8723b1ant_CoexTableWithType(pBtCoexist, FORCE_EXEC, 0);
-}
-#endif
 BOOLEAN
 halbtc8723b1ant_IsCommonAction(
     IN	PBTC_COEXIST		pBtCoexist
@@ -1667,7 +1661,7 @@ halbtc8723b1ant_TdmaDurationAdjustForAcl(
 			if (dn <= 0)
 				dn = 0;
 
-			if(up >= n) {	// if Â³sÃ„Ã² n Â­Ã“2Â¬Ã­ retry countÂ¬Â°0, Â«hÂ½Ã•Â¼eWiFi duration
+			if(up >= n) {	// if ³sÄò n ­Ó2¬í retry count¬°0, «h½Õ¼eWiFi duration
 				WaitCount = 0;
 				n = 3;
 				up = 0;
@@ -1682,13 +1676,13 @@ halbtc8723b1ant_TdmaDurationAdjustForAcl(
 			if (up <= 0)
 				up = 0;
 
-			if (dn == 2) {	// if Â³sÃ„Ã² 2 Â­Ã“2Â¬Ã­ retry count< 3, Â«hÂ½Ã•Â¯Â¶WiFi duration
+			if (dn == 2) {	// if ³sÄò 2 ­Ó2¬í retry count< 3, «h½Õ¯¶WiFi duration
 				if (WaitCount <= 2)
-					m++; // ÃÃ—Â§KÂ¤@ÂªÂ½Â¦bÂ¨Ã¢Â­Ã“levelÂ¤Â¤Â¨Ã“Â¦^
+					m++; // Á×§K¤@ª½¦b¨â­Ólevel¤¤¨Ó¦^
 				else
 					m = 1;
 
-				if ( m >= 20) //m Â³ÃŒÂ¤jÂ­Ãˆ = 20 ' Â³ÃŒÂ¤j120Â¬Ã­ recheckÂ¬OÂ§_Â½Ã•Â¾Ã£ WiFi duration.
+				if ( m >= 20) //m ³Ì¤j­È = 20 ' ³Ì¤j120¬í recheck¬O§_½Õ¾ã WiFi duration.
 					m = 20;
 
 				n = 3*m;
@@ -1698,13 +1692,13 @@ halbtc8723b1ant_TdmaDurationAdjustForAcl(
 				result = -1;
 				BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE_FW_DETAIL, ("[BTCoex], Decrease wifi duration for retryCounter<3!!\n"));
 			}
-		} else { //retry count > 3, Â¥uÂ­n1Â¦Â¸ retry count > 3, Â«hÂ½Ã•Â¯Â¶WiFi duration
+		} else { //retry count > 3, ¥u­n1¦¸ retry count > 3, «h½Õ¯¶WiFi duration
 			if (WaitCount == 1)
-				m++; // ÃÃ—Â§KÂ¤@ÂªÂ½Â¦bÂ¨Ã¢Â­Ã“levelÂ¤Â¤Â¨Ã“Â¦^
+				m++; // Á×§K¤@ª½¦b¨â­Ólevel¤¤¨Ó¦^
 			else
 				m = 1;
 
-			if ( m >= 20) //m Â³ÃŒÂ¤jÂ­Ãˆ = 20 ' Â³ÃŒÂ¤j120Â¬Ã­ recheckÂ¬OÂ§_Â½Ã•Â¾Ã£ WiFi duration.
+			if ( m >= 20) //m ³Ì¤j­È = 20 ' ³Ì¤j120¬í recheck¬O§_½Õ¾ã WiFi duration.
 				m = 20;
 
 			n = 3*m;
@@ -2508,7 +2502,7 @@ halbtc8723b1ant_RunCoexistMechanism(
 	if ( (pBtLinkInfo->bBtLinkExist) && (bWifiConnected) ) {
 		halbtc8723b1ant_LimitedTx(pBtCoexist, NORMAL_EXEC, 1, 1, 0, 1);
 
-		if (pBtLinkInfo->bBtHiPriLinkExist)
+		if(pBtLinkInfo->bScoExist)//if (pBtLinkInfo->bBtHiPriLinkExist)
 			halbtc8723b1ant_LimitedRx(pBtCoexist, NORMAL_EXEC, TRUE, FALSE, 0x5);
 		else
 			halbtc8723b1ant_LimitedRx(pBtCoexist, NORMAL_EXEC, FALSE, FALSE, 0x5);
@@ -2567,6 +2561,58 @@ halbtc8723b1ant_RunCoexistMechanism(
 	}
 }
 
+u4Byte
+halbtc8723b1ant_Log2Base(
+    IN	PBTC_COEXIST		pBtCoexist,
+    IN	u4Byte				val
+
+)
+{
+	u1Byte 	i,j;
+	u4Byte	tmp, tmp2, val_integerdB=0, tindex, shiftcount=0;
+	u4Byte 	result,val_fractiondB=0,Table_fraction[21]= {0,432, 332, 274, 232, 200,
+	                                                     174, 151,132,115,100,86,74,62,51,42,
+	                                                     32,23,15,7,0
+	                                                    };
+
+	if (val == 0)
+		return 0;
+
+	tmp = val;
+
+	while(1) {
+		if (tmp == 1)
+			break;
+		else {
+			tmp = (tmp >> 1);
+			shiftcount++;
+		}
+	}
+
+
+	val_integerdB = shiftcount+1;
+
+	tmp2=1;
+	for (j=1; j<= val_integerdB; j++)
+		tmp2 = tmp2*2;
+
+	tmp = (val*100) /tmp2;
+	tindex = tmp/5;
+
+	if (tindex > 20)
+		tindex = 20;
+
+	val_fractiondB = Table_fraction[tindex];
+
+	result = val_integerdB*100 - val_fractiondB;
+
+	return (result);
+
+
+}
+
+
+
 VOID
 halbtc8723b1ant_InitCoexDm(
     IN	PBTC_COEXIST		pBtCoexist
@@ -2597,6 +2643,8 @@ halbtc8723b1ant_InitHwConfig(
 	u1Byte				H2C_Parameter[2] = {0};
 
 	BTC_PRINT(BTC_MSG_INTERFACE, INTF_INIT, ("[BTCoex], 1Ant Init HW Config!!\n"));
+
+	pPsdScan->bIsAntDetEnable = FALSE;
 #if 0//move to BTC_MEDIA_CONNECT
 	if(bBackUp) {
 		pCoexDm->backupArfrCnt1 = pBtCoexist->fBtcRead4Byte(pBtCoexist, 0x430);
@@ -2647,16 +2695,468 @@ halbtc8723b1ant_InitHwConfig(
 	          u4Tmp,  u1Tmpa, u1Tmpb));
 }
 
-/*
 VOID
-halbtc8723b1ant_WifiOffHwCfg(
-	IN	PBTC_COEXIST		pBtCoexist
-	)
+halbtc8723b1ant_ShowPSDData(
+    IN	PBTC_COEXIST		pBtCoexist
+)
 {
-	// set wlan_act to low
-	//pBtCoexist->fBtcWrite1Byte(pBtCoexist, 0x76e, 0x4);
+	pu1Byte		cliBuf=pBtCoexist->cliBuf;
+	u4Byte		nDeltaFreqPerPoint;
+	u4Byte		freq,freq1,freq2,n=0,i=0, j=0, m=0, PsdRep1, PsdRep2;
+
+	DbgPrint("xxxxxxxxxxxxxxxx DisplayAntIsolation()\n");
+
+	CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n============[Antenna Detection info]  (%d/%d)============\n",
+	           pPsdScan->nPSDGenCount, pPsdScan->nPSDGenTotalCount);
+	CL_PRINTF(cliBuf);
+
+	if (pPsdScan->nPSDGenTotalCount == 0) {
+		CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n No Data !!\n");
+		CL_PRINTF(cliBuf);
+		return;
+	}
+
+	if (pPsdScan->nPSDPoint == 0)
+		nDeltaFreqPerPoint = 0;
+	else
+		nDeltaFreqPerPoint = pPsdScan->nPSDBandWidth/pPsdScan->nPSDPoint;
+
+	if (pPsdScan->bIsPSDShowMaxOnly) {
+		PsdRep1 = pPsdScan->nPSDMaxValue/100;
+		PsdRep2 = pPsdScan->nPSDMaxValue - PsdRep1 * 100;
+
+		freq = ((pPsdScan->realcentFreq-20) * 1000000 + pPsdScan->nPSDMaxValuePoint * nDeltaFreqPerPoint);
+		freq1 = freq/1000000;
+		freq2 = freq/1000 - freq1 * 1000;
+
+		if (freq2 < 100)
+			CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n Freq = %d.0%d MHz",
+			           freq1, freq2);
+		else
+			CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n Freq = %d.%d MHz",
+			           freq1, freq2);
+
+		if (PsdRep2 < 10)
+			CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, ", Value = %d.0%d dB, (%d/%d) \n",
+			           PsdRep1, PsdRep2, pPsdScan->nPSDGenCount, pPsdScan->nPSDGenTotalCount);
+		else
+			CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, ", Value = %d.%d dB, %d, (%d/%d)\n",
+			           PsdRep1, PsdRep2, pPsdScan->nPSDMaxValue, pPsdScan->nPSDGenCount, pPsdScan->nPSDGenTotalCount);
+
+		CL_PRINTF(cliBuf);
+	} else {
+		m = pPsdScan->nPSDStartPoint;
+		n = pPsdScan->nPSDStartPoint;
+		i = 1;
+		j = 1;
+
+		while(1) {
+			do {
+				freq = ((pPsdScan->realcentFreq-20) * 1000000 + m * nDeltaFreqPerPoint);
+				freq1 = freq/1000000;
+				freq2 = freq/1000 - freq1 * 1000;
+
+				if (i ==1) {
+					if (freq2 == 0)
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n Freq%6d.000", freq1);
+					else if (freq2 < 100)
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n Freq%6d.0%2d", freq1,freq2);
+					else
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n Freq%6d.%3d", freq1,freq2);
+				} else if  ( (i%8 == 0) || (m == pPsdScan->nPSDStopPoint) ) {
+					if (freq2 == 0)
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "%6d.000\n", freq1);
+					else if (freq2 < 100)
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "%6d.0%2d\n", freq1,freq2);
+					else
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "%6d.%3d\n", freq1,freq2);
+				} else {
+					if (freq2 == 0)
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "%6d.000", freq1);
+					else if (freq2 < 100)
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "%6d.0%2d", freq1,freq2);
+					else
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "%6d.%3d", freq1,freq2);
+				}
+
+				i++;
+				m++;
+				CL_PRINTF(cliBuf);
+
+			} while(  (i <= 8) && (m <= pPsdScan->nPSDStopPoint));
+
+
+			do {
+				PsdRep1 = pPsdScan->nPSDReport_MaxHold[n]/100;
+				PsdRep2 = pPsdScan->nPSDReport_MaxHold[n] - PsdRep1 * 100;
+
+				if (j ==1) {
+					if (PsdRep2 <10)
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n Val %7d.0%d", PsdRep1,PsdRep2);
+					else
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n Val %7d.%d", PsdRep1,PsdRep2);
+				} else if ( (j%8 == 0)  || (n == pPsdScan->nPSDStopPoint) ) {
+					if (PsdRep2 <10)
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "%7d.0%d\n", PsdRep1,PsdRep2);
+					else
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "%7d.%d\n", PsdRep1,PsdRep2);
+				} else {
+					if (PsdRep2 <10)
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "%7d.0%d", PsdRep1,PsdRep2);
+					else
+						CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "%7d.%d", PsdRep1,PsdRep2);
+				}
+
+				j++;
+				n++;
+				CL_PRINTF(cliBuf);
+
+			} while(  (j <= 8) && (n <= pPsdScan->nPSDStopPoint));
+
+			if  ( (m > pPsdScan->nPSDStopPoint) || (n > pPsdScan->nPSDStopPoint) )
+				break;
+			else {
+				i = 1;
+				j = 1;
+			}
+
+		}
+	}
+
+
 }
-*/
+
+u4Byte
+halbtc8723b1ant_GetPSDData(
+    IN	PBTC_COEXIST		pBtCoexist,
+    IN	u4Byte				nPoint
+)
+{
+	//reg 0x808[9:0]: FFT data x
+	//reg 0x808[22]: 0-->1 to get 1 FFT data y
+	//reg 0x8b4[15:0]: FFT data y report
+
+	u4Byte val = 0, psd_report =0;
+
+	val = pBtCoexist->fBtcRead4Byte(pBtCoexist, 0x808);
+
+	val &= 0xffbffc00;
+	val |= nPoint;
+
+	pBtCoexist->fBtcWrite4Byte(pBtCoexist, 0x808, val);
+
+	val |= 0x00400000;
+	pBtCoexist->fBtcWrite4Byte(pBtCoexist, 0x808, val);
+
+
+	val = pBtCoexist->fBtcRead4Byte(pBtCoexist, 0x8b4);
+
+	psd_report = val & 0x0000ffff;
+
+	return psd_report;
+}
+
+
+void
+halbtc8723b1ant_SweepPSDPoint(
+    IN	PBTC_COEXIST			pBtCoexist,
+    IN	u4Byte				centFreq,
+    IN	u4Byte				offset,
+    IN	u4Byte				span,
+    IN	u4Byte				points,
+    IN	u4Byte				avgnum
+)
+{
+	u4Byte	 i,val,n,k=0;
+	u4Byte	nPoints=0, psd_report=0;
+	u4Byte	nStartP=0, nStopP=0, nDeltaFreqPerPoint=156250;
+	u4Byte    nPSDCenterFreq=20*10^6, freq,freq1,freq2;
+	BOOLEAN outloop = FALSE;
+	u1Byte	 flag = 0;
+	u4Byte 	tmp, PsdRep1, PsdRep2;
+
+	pPsdScan->bIsPSDRunning = TRUE;
+
+	do {
+		switch(flag) {
+		case 0:  //Get PSD parameters
+		default:
+			DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), centFreq=0x%x, offset=0x%x, span=0x%x\n",
+			         centFreq, offset, span);
+
+			pPsdScan->nPSDBandWidth = 40*1000000;
+			pPsdScan->nPSDPoint = points;
+			pPsdScan->nPSDStartBase = points/2;
+			pPsdScan->nPSDAvgNum = avgnum;
+
+			nPoints = pPsdScan->nPSDPoint;
+			nDeltaFreqPerPoint = pPsdScan->nPSDBandWidth/pPsdScan->nPSDPoint;
+
+			//PSD point setup
+			val = pBtCoexist->fBtcRead4Byte(pBtCoexist, 0x808);
+			val &= 0xffff0fff;
+
+			switch(pPsdScan->nPSDPoint) {
+			case 128:
+				val |= 0x0;
+				break;
+			case 256:
+			default:
+				val |=0x00004000;
+				break;
+			case 512:
+				val |= 0x00008000;
+				break;
+			case 1024:
+				val |= 0x0000c000;
+				break;
+			}
+
+			switch(pPsdScan->nPSDAvgNum) {
+			case 1:
+				val |= 0x0;
+				break;
+			case 8:
+				val |=0x00001000;
+				break;
+			case 16:
+				val |= 0x00002000;
+				break;
+			case 32:
+			default:
+				val |= 0x00003000;
+				break;
+			}
+			pBtCoexist->fBtcWrite4Byte(pBtCoexist, 0x808, val);
+
+			DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), PSD BW= %d, DeltaFreq=%d\n"
+			         , pPsdScan->nPSDBandWidth, nDeltaFreqPerPoint);
+			flag = 1;
+			break;
+		case 1:	  //calculate the PSD point index from freq/offset/span
+			nPSDCenterFreq = pPsdScan->nPSDBandWidth /2 +offset*(1000000);
+			DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), PSD Center Freq = %d\n", (centFreq + offset));
+
+			nStartP = pPsdScan->nPSDStartBase + (nPSDCenterFreq - span *(1000000)/2) /nDeltaFreqPerPoint;
+			pPsdScan->nPSDStartPoint = nStartP - pPsdScan->nPSDStartBase;
+			DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), Start PSD Poin Matrix Index = %d\n", pPsdScan->nPSDStartPoint);
+
+			nStopP = pPsdScan->nPSDStartBase + (nPSDCenterFreq + span *(1000000)/2) /nDeltaFreqPerPoint;
+			pPsdScan->nPSDStopPoint = nStopP - pPsdScan->nPSDStartBase-1;
+			DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), Stop PSD Poin Matrix Index = %d\n",pPsdScan->nPSDStopPoint);
+
+			flag = 2;
+			break;
+		case 2:  //set RF channel/BW/Mode
+
+			//set 3-wire off
+			val = pBtCoexist->fBtcRead4Byte(pBtCoexist, 0x88c);
+			val |= 0x00300000;
+			pBtCoexist->fBtcWrite4Byte(pBtCoexist,0x88c,val);
+
+			//CCK off
+			val = pBtCoexist->fBtcRead4Byte(pBtCoexist, 0x800);
+			val &= 0xfeffffff;
+			pBtCoexist->fBtcWrite4Byte(pBtCoexist,0x800,val);
+
+			//Set RF channel
+			if (centFreq == 2484)
+				pBtCoexist->fBtcSetRfReg(pBtCoexist, BTC_RF_A, 0x18, 0x3ff, 0xe); //WiFi TRx Mask on
+			else
+				pBtCoexist->fBtcSetRfReg(pBtCoexist, BTC_RF_A, 0x18, 0x3ff, (centFreq-2412)/5 + 1); //WiFi TRx Mask on
+
+			//Set  RF mode = Rx, RF Gain = 0x8a0
+			pBtCoexist->fBtcSetRfReg(pBtCoexist, BTC_RF_A, 0x0, 0xfffff, 0x308a0);
+
+			//Set TRx mask off
+			//un-lock TRx Mask setup
+			pBtCoexist->fBtcSetRfReg(pBtCoexist, BTC_RF_A, 0xdd, 0x80, 0x1);
+			pBtCoexist->fBtcSetRfReg(pBtCoexist, BTC_RF_A, 0xdf, 0x1, 0x1);
+
+			pBtCoexist->fBtcSetRfReg(pBtCoexist, BTC_RF_A, 0x1, 0xfffff, 0x0);
+
+			flag = 3;
+			break;
+		case 3:
+			memset(pPsdScan->nPSDReport,0, pPsdScan->nPSDPoint*sizeof(u4Byte));
+			nStartP = pPsdScan->nPSDStartPoint + pPsdScan->nPSDStartBase;
+			nStopP = pPsdScan->nPSDStopPoint +  pPsdScan->nPSDStartBase + 1;
+
+			i = nStartP;
+
+			while (i < nStopP) {
+				if (i >= nPoints) {
+					psd_report = halbtc8723b1ant_GetPSDData(pBtCoexist,i-nPoints);
+				} else {
+					psd_report = halbtc8723b1ant_GetPSDData(pBtCoexist,i);
+				}
+
+				if (psd_report == 0)
+					tmp = 0;
+				else
+					//tmp =  20*log10((double)psd_report);
+					//20*log2(x)/log2(10), log2Base return theresult of the psd_report*100
+					tmp = 6 * halbtc8723b1ant_Log2Base(pBtCoexist, psd_report);
+
+
+				n = i-pPsdScan->nPSDStartBase;
+				pPsdScan->nPSDReport[n] =  tmp;
+				PsdRep1 = pPsdScan->nPSDReport[n] /100;
+				PsdRep2 = pPsdScan->nPSDReport[n] - PsdRep1 * 100;
+
+				freq =  ((centFreq-20) * 1000000 + n * nDeltaFreqPerPoint);
+				freq1 = freq/1000000;
+				freq2 = freq/1000 - freq1 * 1000;
+
+				if (freq2 < 100)
+					DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), i = %d (%d.0%d MHz)", n, freq1, freq2);
+				else
+					DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), i = %d (%d.%d MHz)", n, freq1, freq2);
+
+				if (PsdRep2 < 10)
+					DbgPrint(", PSDReport = %d (%d.0%d dB)\n",psd_report, PsdRep1, PsdRep2);
+				else
+					DbgPrint(", PSDReport = %d (%d.%d dB)\n",psd_report, PsdRep1,PsdRep2);
+
+				i++;
+
+				k=0;
+
+				//Add Delay between PSD point
+				while(1) {
+					if (k++ > 20000)
+						break;
+				}
+
+				DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint()==============\n");
+			}
+
+			flag = 100;
+			break;
+		case 99:	//error
+
+			outloop = TRUE;
+			break;
+		case 100: //recovery
+
+			//set 3-wire on
+			val = pBtCoexist->fBtcRead4Byte(pBtCoexist, 0x88c);
+			val &=0xffcfffff;
+			pBtCoexist->fBtcWrite4Byte(pBtCoexist,0x88c,val);
+
+			//CCK on
+			val = pBtCoexist->fBtcRead4Byte(pBtCoexist, 0x800);
+			val |= 0x01000000;
+			pBtCoexist->fBtcWrite4Byte(pBtCoexist,0x800,val);
+
+			//PSD off
+			val = pBtCoexist->fBtcRead4Byte(pBtCoexist, 0x808);
+			val &=0xffbfffff;
+			pBtCoexist->fBtcWrite4Byte(pBtCoexist,0x808,val);
+
+			//TRx Mask on
+			pBtCoexist->fBtcSetRfReg(pBtCoexist, BTC_RF_A, 0xdd, 0x80, 0x0);
+			pBtCoexist->fBtcSetRfReg(pBtCoexist, BTC_RF_A, 0xdf, 0x1, 0x0);
+
+			pBtCoexist->fBtcSetRfReg(pBtCoexist, BTC_RF_A, 0x1, 0xfffff, 0x780);
+
+			outloop = TRUE;
+			break;
+
+		}
+
+	} while (!outloop);
+
+
+
+	pPsdScan->bIsPSDRunning = FALSE;
+
+
+}
+
+VOID
+halbtc8723b1ant_AntennaDetection(
+    IN	PBTC_COEXIST			pBtCoexist,
+    IN	u4Byte					centFreq,
+    IN	u4Byte					offset,
+    IN	u4Byte					span,
+    IN	u4Byte					seconds
+)
+{
+	u4Byte realseconds = 0, i=0, i_max=0, val_max=0, j;
+
+	//Stop Coex DM
+	pBtCoexist->bStopCoexDm = TRUE;
+
+	//Set Antenna path, switch WiFi to un-certain antenna port
+	halbtc8723b1ant_SetAntPath(pBtCoexist, BTC_ANT_PATH_BT, FORCE_EXEC, FALSE, FALSE);
+
+	//Mailbox handshake
+	pBtCoexist->fBtcFillH2c(pBtCoexist, 0x62, 1, 0x0);
+	DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), Set BT LE Tx\n");
+
+	//sweep PSD
+	DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), \n");
+	DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), \n");
+	DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), \n");
+
+
+	//Analysis Data
+
+	do {
+		halbtc8723b1ant_SweepPSDPoint(pBtCoexist, centFreq, offset,span, BT_8723B_1ANT_ANTDET_PSD_POINTS, BT_8723B_1ANT_ANTDET_PSD_AVGNUM);
+
+		DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), PSDGenCount = %d\n ", pPsdScan->nPSDGenCount);
+
+		if (pPsdScan->nPSDGenCount == 0) {
+			memcpy(pPsdScan->nPSDReport_MaxHold, pPsdScan->nPSDReport, BT_8723B_1ANT_ANTDET_PSD_POINTS*sizeof(u4Byte));
+
+			for (i= pPsdScan->nPSDStartPoint; i<=pPsdScan->nPSDStopPoint; i++) {
+				DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), Max_Hold i = %d, PSDReport = %d dB\n", i,  pPsdScan->nPSDReport_MaxHold[i]);
+			}
+		} else {
+			for (i= pPsdScan->nPSDStartPoint; i<=pPsdScan->nPSDStopPoint; i++) {
+				if (pPsdScan->nPSDReport[i] > pPsdScan->nPSDReport_MaxHold[i])
+					pPsdScan->nPSDReport_MaxHold[i] = pPsdScan->nPSDReport[i];
+
+				//search Max Value
+				if (i ==pPsdScan->nPSDStartPoint ) {
+					i_max = i;
+					val_max = pPsdScan->nPSDReport_MaxHold[i];
+				} else {
+					if (pPsdScan->nPSDReport_MaxHold[i] > val_max) {
+						i_max = i;
+						val_max = pPsdScan->nPSDReport_MaxHold[i];
+					}
+				}
+
+				DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), Max_Hold i = %d, PSDReport = %d dB\n", i,  pPsdScan->nPSDReport_MaxHold[i]);
+
+			}
+
+			pPsdScan->nPSDMaxValuePoint = i_max;
+			pPsdScan->nPSDMaxValue = val_max;
+
+			DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), Max_Hold i_Max = %d, PSDReport_Max = %d dB, TotalCnt = %d\n", pPsdScan->nPSDMaxValuePoint
+			         ,pPsdScan->nPSDMaxValue, pPsdScan->nPSDGenTotalCount);
+		}
+
+		if (pPsdScan->nPSDGenCount+1 <=  pPsdScan->realseconds) {
+			pPsdScan->nPSDGenCount++;
+			pPsdScan->nPSDGenTotalCount++;
+		} else {
+			break;
+		}
+
+	} while (1);
+	//Set Antenna Path
+	halbtc8723b1ant_SetAntPath(pBtCoexist, BTC_ANT_PATH_PTA, FORCE_EXEC, FALSE, FALSE);
+
+	//Resume Coex DM
+	pBtCoexist->bStopCoexDm = FALSE;
+
+}
+
 
 //============================================================
 // work around function start with wa_halbtc8723b1ant_
@@ -2769,6 +3269,11 @@ EXhalbtc8723b1ant_DisplayCoexInfo(
 	u4Byte				fwVer=0, btPatchVer=0;
 	static u1Byte			PopReportIn10s = 0;
 
+	if (pPsdScan->bIsAntDetEnable == TRUE) {
+		halbtc8723b1ant_ShowPSDData(pBtCoexist);
+		return;
+	}
+
 	CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n ============[BT Coexist info]============");
 	CL_PRINTF(cliBuf);
 
@@ -2803,9 +3308,10 @@ EXhalbtc8723b1ant_DisplayCoexInfo(
 	           pCoexDm->wifiChnlInfo[0], pCoexDm->wifiChnlInfo[1],
 	           pCoexDm->wifiChnlInfo[2]);
 	CL_PRINTF(cliBuf);
-	CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n %-35s = %s/ %s", "Wifi bHi-Pri/ Wifi CCK locked", \
+	CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n %-35s = %s/ %s/ %s", "Wifi bHi-Pri/ CCK lock/ CCK ever-lock", \
 	           (pCoexSta->bWiFiIsHighPriTask? "Yes":"No"),
-	           (pCoexSta->bCCKLock? "Lock":"noLock") );
+	           (pCoexSta->bCCKLock? "Yes":"No"),
+	           (pCoexSta->bCCKEverLock? "Yes":"No"));
 	CL_PRINTF(cliBuf);
 
 	// wifi status
@@ -3234,6 +3740,8 @@ EXhalbtc8723b1ant_MediaStatusNotify(
 
 		pBtCoexist->fBtcWrite1Byte(pBtCoexist, 0x6cd, 0x0); //CCK Tx
 		pBtCoexist->fBtcWrite1Byte(pBtCoexist, 0x6cf, 0x0); //CCK Rx
+
+		pCoexSta->bCCKEverLock = FALSE;
 	}
 
 	// only 2.4G we need to inform bt the chnl mask
@@ -3455,8 +3963,14 @@ EXhalbtc8723b1ant_BtInfoNotify(
 		else
 			pCoexSta->bScoExist = FALSE;
 
+		if ( (pCoexSta->bHidExist == FALSE) && (pCoexSta->bC2hBtInquiryPage == FALSE) ) {
+			if (pCoexSta->highPriorityTx  + pCoexSta->highPriorityRx >= 160)
+				pCoexSta->bHidExist = TRUE;
+		}
+
 		//Add Hi-Pri Tx/Rx counter to avoid false detection
-		if ( ( (pCoexSta->bHidExist) || (pCoexSta->bScoExist) ) && (pCoexSta->highPriorityTx > 60)  &&  (pCoexSta->highPriorityRx > 60))
+		if ( ( (pCoexSta->bHidExist) || (pCoexSta->bScoExist) ) && (pCoexSta->highPriorityTx > 60)  &&  (pCoexSta->highPriorityRx > 60)
+		     && (!pCoexSta->bC2hBtInquiryPage))
 			pCoexSta->bBtHiPriLinkExist = TRUE;
 	}
 
@@ -3633,7 +4147,121 @@ EXhalbtc8723b1ant_Periodical(
 	}
 
 	pCoexSta->specialPktPeriodCnt++;
+
+	/*
+		if (pPsdScan->bIsAntDetEnable)
+		{
+			 if (pPsdScan->nPSDGenCount > pPsdScan->realseconds)
+				pPsdScan->nPSDGenCount = 0;
+
+			halbtc8723b1ant_AntennaDetection(pBtCoexist, pPsdScan->realcentFreq,  pPsdScan->realoffset, pPsdScan->realspan,  pPsdScan->realseconds);
+			pPsdScan->nPSDGenTotalCount +=2;
+			pPsdScan->nPSDGenCount += 2;
+		}
+	*/
 #endif
+}
+
+VOID
+EXhalbtc8723b1ant_AntennaDetection(
+    IN	PBTC_COEXIST			pBtCoexist,
+    IN	u4Byte					centFreq,
+    IN	u4Byte					offset,
+    IN	u4Byte					span,
+    IN	u4Byte					seconds
+)
+{
+	pPsdScan->bIsAntDetEnable	= FALSE;
+
+	//do antenna detection periodically (every 2 seconds)
+	if (centFreq == 0) {
+		return;
+	} else {
+		//parse parameter
+		pPsdScan->realcentFreq = ((centFreq & 0xf000) >> 12) * 1000 + ((centFreq & 0xf00) >> 8) * 100 +
+		                         ((centFreq & 0xf0) >> 4) * 10 + (centFreq & 0xf);
+		DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), real freq = %d\n", pPsdScan->realcentFreq);
+
+
+		pPsdScan->realoffset =( (offset & 0x70) >> 4) * 10 + (offset & 0xf);
+		if (offset & 0x80)
+			pPsdScan->realoffset = 0 - pPsdScan->realoffset;
+		DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), real offst = %d\n", pPsdScan->realoffset);
+
+		if (span & 0x80)
+			pPsdScan->bIsPSDShowMaxOnly = TRUE;
+		else
+			pPsdScan->bIsPSDShowMaxOnly = FALSE;
+		pPsdScan->realspan = ((span & 0x70) >> 4) * 10 + (span & 0xf);
+		DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), real span = %d\n", pPsdScan->realspan);
+
+		if ( (pPsdScan->realcentFreq < 2412) || ( (pPsdScan->realcentFreq > 2472) && (pPsdScan->realcentFreq != 2484) ) ) {
+			DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), center freq is not valid!!\n");
+			return;
+
+		} else if ( ( (pPsdScan->realcentFreq - 2412) % 5 != 0 ) && (pPsdScan->realcentFreq != 2484) ) {
+			DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), center freq is not valid!!\n");
+			return;
+		}
+
+		if ( (pPsdScan->realoffset > 20) || (pPsdScan->realoffset < -20) ) {
+			DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), freq offset is not valid!!\n");
+			return;
+		}
+
+		if (pPsdScan->realspan > 40) {
+			DbgPrint("xxxxxxxxxxxxxxxx SweepPSDPoint(), freq span is not valid!!\n");
+			return;
+		}
+
+		pPsdScan->realseconds =( (seconds & 0xf0) >> 4) * 10 + (seconds & 0xf);
+		pPsdScan->nPSDGenCount = 0;
+		pPsdScan->nPSDGenTotalCount= 0;
+	}
+
+
+	pPsdScan->bIsAntDetEnable	= TRUE;
+
+
+	halbtc8723b1ant_AntennaDetection(pBtCoexist, pPsdScan->realcentFreq,   pPsdScan->realoffset, pPsdScan->realspan,  pPsdScan->realseconds);
+
+
+
+}
+
+VOID
+EXhalbtc8723b1ant_AntennaIsolation(
+    IN	PBTC_COEXIST			pBtCoexist,
+    IN	u4Byte					centFreq,
+    IN	u4Byte					offset,
+    IN	u4Byte					span,
+    IN	u4Byte					seconds
+)
+{
+
+
+}
+
+VOID
+EXhalbtc8723b1ant_PSDScan(
+    IN	PBTC_COEXIST			pBtCoexist,
+    IN	u4Byte					centFreq,
+    IN	u4Byte					offset,
+    IN	u4Byte					span,
+    IN	u4Byte					seconds
+)
+{
+
+
+}
+
+VOID
+EXhalbtc8723b1ant_DisplayAntIsolation(
+    IN	PBTC_COEXIST			pBtCoexist
+)
+{
+
+	//halbtc8723b1ant_ShowPSDData(pBtCoexist);
 }
 
 

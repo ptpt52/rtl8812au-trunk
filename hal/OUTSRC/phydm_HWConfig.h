@@ -77,7 +77,7 @@ typedef struct _Phy_Status_Rpt_8192cd {
 	u1Byte 	r_ant_train_en:1;
 	u1Byte 	ant_sel_b:1;
 	u1Byte 	ant_sel:1;
-#else	// _BIG_ENDIAN_	
+#else	// _BIG_ENDIAN_
 	u1Byte 	ant_sel:1;
 	u1Byte 	ant_sel_b:1;
 	u1Byte 	r_ant_train_en:1;
@@ -112,7 +112,7 @@ typedef struct _Phy_Status_Rpt_8812 {
 	u1Byte 	antidx_anta:3;
 	u1Byte 	antidx_antb:3;
 	u1Byte 	rsvd_5:2;
-#else	// _BIG_ENDIAN_	
+#else	// _BIG_ENDIAN_
 	u1Byte 	rsvd_5:2;
 	u1Byte 	antidx_antb:3;
 	u1Byte 	antidx_anta:3;
@@ -127,7 +127,7 @@ typedef struct _Phy_Status_Rpt_8812 {
 	u2Byte			chl_num:10;
 	u2Byte			sub_chnl:4;
 	u2Byte			r_RFMOD:2;
-#else	// _BIG_ENDIAN_	
+#else	// _BIG_ENDIAN_
 	u2Byte			r_RFMOD:2;
 	u2Byte			sub_chnl:4;
 	u2Byte			chl_num:10;

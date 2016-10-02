@@ -92,9 +92,7 @@ typedef enum _HW_VARIABLES {
 	HW_VAR_FWLPS_RF_ON,
 	HW_VAR_H2C_FW_P2P_PS_OFFLOAD,
 	HW_VAR_TDLS_WRCR,
-	HW_VAR_TDLS_INIT_CH_SEN,
 	HW_VAR_TDLS_RS_RCR,
-	HW_VAR_TDLS_DONE_CH_SEN,
 	HW_VAR_INITIAL_GAIN,
 	HW_VAR_TRIGGER_GPIO_0,
 	HW_VAR_BT_SET_COEXIST,
@@ -120,6 +118,9 @@ typedef enum _HW_VARIABLES {
 #endif
 #ifdef CONFIG_AP_WOWLAN
 	HW_VAR_AP_WOWLAN,
+#endif
+#ifdef CONFIG_GPIO_WAKEUP
+	HW_SET_GPIO_WL_CTRL,
 #endif
 	HW_VAR_SYS_CLKR,
 	HW_VAR_NAV_UPPER,
@@ -248,32 +249,32 @@ struct hal_ops {
 	void	(*hal_dm_watchdog_in_lps)(_adapter *padapter);
 
 
-	void	(*SetHwRegHandler)(_adapter *padapter, u8	variable, const u8* val);
-	void	(*GetHwRegHandler)(_adapter *padapter, u8	variable, u8* val);
+	void	(*SetHwRegHandler)(_adapter *padapter, u8	variable,const u8* val);
+	void	(*GetHwRegHandler)(_adapter *padapter, u8	variable,u8* val);
 
 #ifdef CONFIG_C2H_PACKET_EN
 	void	(*SetHwRegHandlerWithBuf)(_adapter *padapter, u8 variable, const u8* pbuf, int len);
 #endif
 
 	u8	(*GetHalDefVarHandler)(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pValue);
-	u8	(*SetHalDefVarHandler)(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pValue);
+	u8	(*SetHalDefVarHandler)(_adapter *padapter, HAL_DEF_VARIABLE eVariable, const PVOID pValue);
 
 	void	(*GetHalODMVarHandler)(_adapter *padapter, HAL_ODM_VARIABLE eVariable, PVOID pValue1,PVOID pValue2);
-	void	(*SetHalODMVarHandler)(_adapter *padapter, HAL_ODM_VARIABLE eVariable, PVOID pValue1,BOOLEAN bSet);
+	void	(*SetHalODMVarHandler)(_adapter *padapter, HAL_ODM_VARIABLE eVariable, const PVOID pValue1,BOOLEAN bSet);
 
 	void	(*UpdateRAMaskHandler)(_adapter *padapter, u32 mac_id, u8 rssi_level);
 	void	(*SetBeaconRelatedRegistersHandler)(_adapter *padapter);
 
-	void	(*Add_RateATid)(_adapter *padapter, u32 bitmap, u8* arg, u8 rssi_level);
+	void	(*Add_RateATid)(_adapter *padapter, u32 bitmap, const u8* arg, u8 rssi_level);
 
 	void	(*run_thread)(_adapter *padapter);
 	void	(*cancel_thread)(_adapter *padapter);
 
 #ifdef CONFIG_ANTENNA_DIVERSITY
 	u8	(*AntDivBeforeLinkHandler)(_adapter *padapter);
-	void	(*AntDivCompareHandler)(_adapter *padapter, WLAN_BSSID_EX *dst, WLAN_BSSID_EX *src);
+	void	(*AntDivCompareHandler)(_adapter *padapter, const WLAN_BSSID_EX *dst, const WLAN_BSSID_EX *src);
 #endif
-	u8	(*interface_ps_func)(_adapter *padapter,HAL_INTF_PS_FUNC efunc_id, u8* val);
+	u8	(*interface_ps_func)(_adapter *padapter,HAL_INTF_PS_FUNC efunc_id, const u8* val);
 
 	s32	(*hal_xmit)(_adapter *padapter, struct xmit_frame *pxmitframe);
 	/*
@@ -297,9 +298,9 @@ struct hal_ops {
 	void (*EFUSEGetEfuseDefinition)(_adapter *padapter, u8 efuseType, u8 type, void *pOut, BOOLEAN bPseudoTest);
 	u16	(*EfuseGetCurrentSize)(_adapter *padapter, u8 efuseType, BOOLEAN bPseudoTest);
 	int 	(*Efuse_PgPacketRead)(_adapter *padapter, u8 offset, u8 *data, BOOLEAN bPseudoTest);
-	int 	(*Efuse_PgPacketWrite)(_adapter *padapter, u8 offset, u8 word_en, u8 *data, BOOLEAN bPseudoTest);
-	u8	(*Efuse_WordEnableDataWrite)(_adapter *padapter, u16 efuse_addr, u8 word_en, u8 *data, BOOLEAN bPseudoTest);
-	BOOLEAN	(*Efuse_PgPacketWrite_BT)(_adapter *padapter, u8 offset, u8 word_en, u8 *data, BOOLEAN bPseudoTest);
+	int 	(*Efuse_PgPacketWrite)(_adapter *padapter, u8 offset, u8 word_en, const u8 *data, BOOLEAN bPseudoTest);
+	u8	(*Efuse_WordEnableDataWrite)(_adapter *padapter, u16 efuse_addr, u8 word_en, const u8 *data, BOOLEAN bPseudoTest);
+	BOOLEAN	(*Efuse_PgPacketWrite_BT)(_adapter *padapter, u8 offset, u8 word_en, const u8 *data, BOOLEAN bPseudoTest);
 
 #ifdef DBG_CONFIG_ERROR_DETECT
 	void (*sreset_init_value)(_adapter *padapter);
@@ -323,6 +324,15 @@ struct hal_ops {
 	s32 (*c2h_handler)(_adapter *padapter, u8 *c2h_evt);
 	c2h_id_filter c2h_id_filter_ccx;
 	s32 (*fill_h2c_cmd)(PADAPTER, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer);
+	void (*fill_fake_txdesc)(PADAPTER, u8 *pDesc, u32 BufferLen,
+	                         u8 IsPsPoll, u8 IsBTQosNull, u8 bDataFrame);
+#ifdef CONFIG_WOWLAN
+	void (*hal_set_wowlan_fw)(_adapter *adapter, u8 sleep);
+#endif //CONFIG_WOWLAN
+	u8 (*hal_get_tx_buff_rsvd_page_num)(_adapter *adapter, bool wowlan);
+#ifdef CONFIG_GPIO_API
+	void (*update_hisr_hsisr_ind)(PADAPTER padapter, u32 flag);
+#endif
 };
 
 typedef	enum _RT_EEPROM_TYPE {
@@ -525,21 +535,21 @@ void rtw_hal_power_off(_adapter *padapter);
 uint rtw_hal_init(_adapter *padapter);
 uint rtw_hal_deinit(_adapter *padapter);
 void rtw_hal_stop(_adapter *padapter);
-void rtw_hal_set_hwreg(PADAPTER padapter, u8 variable, u8 *val);
+void rtw_hal_set_hwreg(PADAPTER padapter, u8 variable, const u8 *val);
 void rtw_hal_get_hwreg(PADAPTER padapter, u8 variable, u8 *val);
 
 #ifdef CONFIG_C2H_PACKET_EN
-void rtw_hal_set_hwreg_with_buf(_adapter *padapter, u8 variable, u8 *pbuf, int len);
+void rtw_hal_set_hwreg_with_buf(_adapter *padapter, u8 variable, const u8 *pbuf, int len);
 #endif
 
 void rtw_hal_chip_configure(_adapter *padapter);
 void rtw_hal_read_chip_info(_adapter *padapter);
 void rtw_hal_read_chip_version(_adapter *padapter);
 
-u8 rtw_hal_set_def_var(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pValue);
+u8 rtw_hal_set_def_var(_adapter *padapter, HAL_DEF_VARIABLE eVariable, const PVOID pValue);
 u8 rtw_hal_get_def_var(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pValue);
 
-void rtw_hal_set_odm_var(_adapter *padapter, HAL_ODM_VARIABLE eVariable, PVOID pValue1,BOOLEAN bSet);
+void rtw_hal_set_odm_var(_adapter *padapter, HAL_ODM_VARIABLE eVariable, const PVOID pValue1,BOOLEAN bSet);
 void	rtw_hal_get_odm_var(_adapter *padapter, HAL_ODM_VARIABLE eVariable, PVOID pValue1,PVOID pValue2);
 
 void rtw_hal_enable_interrupt(_adapter *padapter);
@@ -552,7 +562,7 @@ u32	rtw_hal_inirp_deinit(_adapter *padapter);
 
 void	rtw_hal_irp_reset(_adapter *padapter);
 
-u8	rtw_hal_intf_ps_func(_adapter *padapter,HAL_INTF_PS_FUNC efunc_id, u8* val);
+u8	rtw_hal_intf_ps_func(_adapter *padapter,HAL_INTF_PS_FUNC efunc_id, const u8* val);
 
 s32	rtw_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
 s32	rtw_hal_xmit(_adapter *padapter, struct xmit_frame *pxmitframe);
@@ -626,7 +636,7 @@ s32 rtw_hal_xmit_thread_handler(_adapter *padapter);
 void rtw_hal_notch_filter(_adapter * adapter, bool enable);
 void rtw_hal_reset_security_engine(_adapter * adapter);
 
-bool rtw_hal_c2h_valid(_adapter *adapter, u8 *buf);
+bool rtw_hal_c2h_valid(_adapter *adapter, const u8 *buf);
 s32 rtw_hal_c2h_evt_read(_adapter *adapter, u8 *buf);
 s32 rtw_hal_c2h_handler(_adapter *adapter, u8 *c2h_evt);
 c2h_id_filter rtw_hal_c2h_id_filter_ccx(_adapter *adapter);
@@ -637,6 +647,8 @@ s32 rtw_hal_macid_sleep(PADAPTER padapter, u8 macid);
 s32 rtw_hal_macid_wakeup(PADAPTER padapter, u8 macid);
 
 s32 rtw_hal_fill_h2c_cmd(PADAPTER, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer);
-
+#ifdef CONFIG_GPIO_API
+void rtw_hal_update_hisr_hsisr_ind(_adapter *padapter, u32 flag);
+#endif
 #endif //__HAL_INTF_H__
 

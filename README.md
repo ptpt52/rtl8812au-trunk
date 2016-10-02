@@ -1,6 +1,6 @@
 # rtl8812au
 
-rtl8812au driver base on RTL8812AU_linux_v4.3.8_12175.20140902.zip
+rtl8812au driver base on version 4.3.14
 
 for AC1200 (801.11ac) Wireless Dual-Band USB Adapter
 

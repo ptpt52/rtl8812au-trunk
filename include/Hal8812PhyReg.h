@@ -37,8 +37,9 @@
 
 // BW and sideband setting
 #define rBWIndication_Jaguar		0x834
-#define rL1PeakTH_Jaguar		0x848
-#define rRFMOD_Jaguar			0x8ac	//RF mode 
+#define rL1PeakTH_Jaguar			0x848
+#define rFPGA0_XA_LSSIReadBack	0x8a0	/*Tranceiver LSSI Readback*/
+#define rRFMOD_Jaguar			0x8ac	//RF mode
 #define rADC_Buf_Clk_Jaguar		0x8c4
 #define rRFECTRL_Jaguar			0x900
 #define bRFMOD_Jaguar			0xc3
@@ -156,16 +157,16 @@
 #define bAGC_table_Jaguar			0x3
 #define b_sel5g_Jaguar    				0x1000 // sel5g
 #define b_LNA_sw_Jaguar				0x8000 // HW/WS control for LNA
-#define rFc_area_Jaguar				0x860   // fc_area 
+#define rFc_area_Jaguar				0x860   // fc_area
 #define bFc_area_Jaguar				0x1ffe000
 #define rSingleTone_ContTx_Jaguar	0x914
 
 // RFE
 #define rA_RFE_Pinmux_Jaguar	0xcb0  // Path_A RFE cotrol pinmux
 #define rB_RFE_Pinmux_Jaguar	0xeb0 // Path_B RFE control pinmux
-#define rA_RFE_Inv_Jaguar		0xcb4  // Path_A RFE cotrol   
+#define rA_RFE_Inv_Jaguar		0xcb4  // Path_A RFE cotrol
 #define rB_RFE_Inv_Jaguar		0xeb4 // Path_B RFE control
-#define rA_RFE_Jaguar			0xcb8  // Path_A RFE cotrol   
+#define rA_RFE_Jaguar			0xcb8  // Path_A RFE cotrol
 #define rB_RFE_Jaguar			0xeb8 // Path_B RFE control
 #define r_ANTSEL_SW_Jaguar		0x900 // ANTSEL SW Control
 #define bMask_RFEInv_Jaguar		0x3ff00000
@@ -275,12 +276,12 @@
 
 // RF Register
 //
-#define RF_AC_Jaguar				0x00	// 
-#define RF_RF_Top_Jaguar			0x07	// 
-#define RF_TXLOK_Jaguar				0x08	// 
+#define RF_AC_Jaguar				0x00	//
+#define RF_RF_Top_Jaguar			0x07	//
+#define RF_TXLOK_Jaguar				0x08	//
 #define RF_TXAPK_Jaguar				0x0B
 #define RF_CHNLBW_Jaguar 			0x18	// RF channel and BW switch
-#define RF_RCK1_Jaguar				0x1c	// 
+#define RF_RCK1_Jaguar				0x1c	//
 #define RF_RCK2_Jaguar				0x1d
 #define RF_RCK3_Jaguar   			0x1e
 #define RF_ModeTableAddr			0x30
@@ -298,12 +299,12 @@
 //
 // RL6052 Register definition
 //
-#define RF_AC						0x00	// 
-#define RF_IPA_A					0x0C	// 
+#define RF_AC						0x00	//
+#define RF_IPA_A					0x0C	//
 #define RF_TXBIAS_A					0x0D
 #define RF_BS_PA_APSET_G9_G11		0x0E
-#define RF_MODE1					0x10	// 
-#define RF_MODE2					0x11	// 
+#define RF_MODE1					0x10	//
+#define RF_MODE2					0x11	//
 #define RF_CHNLBW					0x18	// RF channel and BW switch
 #define RF_RCK_OS					0x30	// RF TX PA control
 #define RF_TXPA_G1					0x31	// RF TX PA control
@@ -474,7 +475,7 @@
 #define rOFDM0_XDRxIQImbalance    	0xc2c
 
 #define rOFDM0_RxDetector1			0xc30  //PD,BW & SBD	// DM tune init gain
-#define rOFDM0_RxDetector2			0xc34  //SBD & Fame Sync. 
+#define rOFDM0_RxDetector2			0xc34  //SBD & Fame Sync.
 #define rOFDM0_RxDetector3			0xc38  //Frame Sync.
 #define rOFDM0_RxDetector4			0xc3c  //PD, SBD, Frame Sync & Short-GI
 

@@ -43,6 +43,7 @@
 #define REG_SYS_FUNC_EN				0x0002
 #define REG_APS_FSMCO					0x0004
 #define REG_SYS_CLKR					0x0008
+#define REG_SYS_CLK_CTRL				REG_SYS_CLKR
 #define REG_9346CR						0x000A
 #define REG_SYS_EEPROM_CTRL			0x000A
 #define REG_EE_VPD						0x000C
@@ -188,7 +189,7 @@
 //
 //-----------------------------------------------------
 #define REG_PCIE_CTRL_REG				0x0300
-#define REG_INT_MIG						0x0304	// Interrupt Migration 
+#define REG_INT_MIG						0x0304	// Interrupt Migration
 #define REG_BCNQ_DESA					0x0308	// TX Beacon Descriptor Address
 #define REG_HQ_DESA					0x0310	// TX High Queue Descriptor Address
 #define REG_MGQ_DESA					0x0318	// TX Manage Queue Descriptor Address
@@ -800,7 +801,7 @@ Default: 00b.
 // 10. Power Save Control Registers
 //
 #define WOW_PMEN				BIT0 // Power management Enable.
-#define WOW_WOMEN				BIT1 // WoW function on or off. 
+#define WOW_WOMEN				BIT1 // WoW function on or off.
 #define WOW_MAGIC				BIT2 // Magic packet
 #define WOW_UWF				BIT3 // Unicast Wakeup frame.
 
@@ -830,7 +831,7 @@ Default: 00b.
 #define IMR_TIMEOUT2			BIT17		// Timeout interrupt 2
 #define IMR_TIMEOUT1			BIT16		// Timeout interrupt 1
 #define IMR_TXFOVW				BIT15		// Transmit FIFO Overflow
-#define IMR_PSTIMEOUT			BIT14		// Power save time out interrupt 
+#define IMR_PSTIMEOUT			BIT14		// Power save time out interrupt
 #define IMR_BcnInt				BIT13		// Beacon DMA Interrupt 0
 #define IMR_RXFOVW				BIT12		// Receive FIFO Overflow
 #define IMR_RDU					BIT11		// Receive Descriptor Unavailable
@@ -974,29 +975,29 @@ Default: 00b.
 //----------------------------------------------------------------------------
 #define IMR_DISABLED_88E			0x0
 // IMR DW0(0x0060-0063) Bit 0-31
-#define IMR_TXCCK_88E				BIT30		// TXRPT interrupt when CCX bit of the packet is set	
+#define IMR_TXCCK_88E				BIT30		// TXRPT interrupt when CCX bit of the packet is set
 #define IMR_PSTIMEOUT_88E			BIT29		// Power Save Time Out Interrupt
-#define IMR_GTINT4_88E				BIT28		// When GTIMER4 expires, this bit is set to 1	
-#define IMR_GTINT3_88E				BIT27		// When GTIMER3 expires, this bit is set to 1	
-#define IMR_TBDER_88E				BIT26		// Transmit Beacon0 Error			
-#define IMR_TBDOK_88E				BIT25		// Transmit Beacon0 OK			
-#define IMR_TSF_BIT32_TOGGLE_88E	BIT24		// TSF Timer BIT32 toggle indication interrupt			
-#define IMR_BCNDMAINT0_88E		BIT20		// Beacon DMA Interrupt 0			
+#define IMR_GTINT4_88E				BIT28		// When GTIMER4 expires, this bit is set to 1
+#define IMR_GTINT3_88E				BIT27		// When GTIMER3 expires, this bit is set to 1
+#define IMR_TBDER_88E				BIT26		// Transmit Beacon0 Error
+#define IMR_TBDOK_88E				BIT25		// Transmit Beacon0 OK
+#define IMR_TSF_BIT32_TOGGLE_88E	BIT24		// TSF Timer BIT32 toggle indication interrupt
+#define IMR_BCNDMAINT0_88E		BIT20		// Beacon DMA Interrupt 0
 #define IMR_BCNDERR0_88E			BIT16		// Beacon Queue DMA Error 0
-#define IMR_HSISR_IND_ON_INT_88E	BIT15		// HSISR Indicator (HSIMR & HSISR is true, this bit is set to 1)			
-#define IMR_BCNDMAINT_E_88E		BIT14		// Beacon DMA Interrupt Extension for Win7			
+#define IMR_HSISR_IND_ON_INT_88E	BIT15		// HSISR Indicator (HSIMR & HSISR is true, this bit is set to 1)
+#define IMR_BCNDMAINT_E_88E		BIT14		// Beacon DMA Interrupt Extension for Win7
 #define IMR_ATIMEND_88E			BIT12		// CTWidnow End or ATIM Window End
 #define IMR_HISR1_IND_INT_88E		BIT11		// HISR1 Indicator (HISR1 & HIMR1 is true, this bit is set to 1)
-#define IMR_C2HCMD_88E				BIT10		// CPU to Host Command INT Status, Write 1 clear	
-#define IMR_CPWM2_88E				BIT9			// CPU power Mode exchange INT Status, Write 1 clear	
-#define IMR_CPWM_88E				BIT8			// CPU power Mode exchange INT Status, Write 1 clear	
-#define IMR_HIGHDOK_88E			BIT7			// High Queue DMA OK	
-#define IMR_MGNTDOK_88E			BIT6			// Management Queue DMA OK	
-#define IMR_BKDOK_88E				BIT5			// AC_BK DMA OK		
-#define IMR_BEDOK_88E				BIT4			// AC_BE DMA OK	
-#define IMR_VIDOK_88E				BIT3			// AC_VI DMA OK		
-#define IMR_VODOK_88E				BIT2			// AC_VO DMA OK	
-#define IMR_RDU_88E					BIT1			// Rx Descriptor Unavailable	
+#define IMR_C2HCMD_88E				BIT10		// CPU to Host Command INT Status, Write 1 clear
+#define IMR_CPWM2_88E				BIT9			// CPU power Mode exchange INT Status, Write 1 clear
+#define IMR_CPWM_88E				BIT8			// CPU power Mode exchange INT Status, Write 1 clear
+#define IMR_HIGHDOK_88E			BIT7			// High Queue DMA OK
+#define IMR_MGNTDOK_88E			BIT6			// Management Queue DMA OK
+#define IMR_BKDOK_88E				BIT5			// AC_BK DMA OK
+#define IMR_BEDOK_88E				BIT4			// AC_BE DMA OK
+#define IMR_VIDOK_88E				BIT3			// AC_VI DMA OK
+#define IMR_VODOK_88E				BIT2			// AC_VO DMA OK
+#define IMR_RDU_88E					BIT1			// Rx Descriptor Unavailable
 #define IMR_ROK_88E					BIT0			// Receive DMA OK
 
 // IMR DW1(0x00B4-00B7) Bit 0-31
@@ -1061,7 +1062,7 @@ Current IOREG MAP
 //       8192C (RCR) Receive Configuration Register	(Offset 0x608, 32 bits)
 //----------------------------------------------------------------------------
 #define RCR_APPFCS				BIT31	// WMAC append FCS after pauload
-#define RCR_APP_MIC				BIT30	// MACRX will retain the MIC at the bottom of the packet. 
+#define RCR_APP_MIC				BIT30	// MACRX will retain the MIC at the bottom of the packet.
 #define RCR_APP_ICV				BIT29	// MACRX will retain the ICV at the bottom of the packet.
 #define RCR_APP_PHYST_RXFF		BIT28	// PHY Status is appended before RX packet in RXFF
 #define RCR_APP_BA_SSN			BIT27	// SSN of previous TXBA is appended as after original RXDESC as the 4-th DW of RXDESC.
@@ -1083,16 +1084,16 @@ Current IOREG MAP
 #define RCR_ADF					BIT11	// Accept data type frame. This bit also regulates BA, BAR, and PS-Poll (AP mode only).
 #define RCR_RSVD_BIT10			BIT10	// Reserved
 #define RCR_AICV					BIT9		// Accept ICV error packet
-#define RCR_ACRC32				BIT8		// Accept CRC32 error packet 
+#define RCR_ACRC32				BIT8		// Accept CRC32 error packet
 #define RCR_CBSSID_BCN			BIT7		// Accept BSSID match packet (Rx beacon, probe rsp)
 #define RCR_CBSSID_DATA		BIT6		// Accept BSSID match packet (Data)
 #define RCR_CBSSID				RCR_CBSSID_DATA	// Accept BSSID match packet
 #define RCR_APWRMGT			BIT5		// Accept power management packet
 #define RCR_ADD3				BIT4		// Accept address 3 match packet
-#define RCR_AB					BIT3		// Accept broadcast packet 
-#define RCR_AM					BIT2		// Accept multicast packet 
+#define RCR_AB					BIT3		// Accept broadcast packet
+#define RCR_AM					BIT2		// Accept multicast packet
 #define RCR_APM					BIT1		// Accept physical match packet
-#define RCR_AAP					BIT0		// Accept all unicast packet 
+#define RCR_AAP					BIT0		// Accept all unicast packet
 
 
 //-----------------------------------------------------

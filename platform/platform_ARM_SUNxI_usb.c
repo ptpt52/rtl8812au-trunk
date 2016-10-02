@@ -136,7 +136,7 @@ void platform_wifi_power_off(void)
 	sunxi_usb_disable_hcd(item.val);
 #endif
 	wifi_pm_power(0);
-#endif //defined(CONFIG_PLATFORM_ARM_SUN8I) 
+#endif //defined(CONFIG_PLATFORM_ARM_SUN8I)
 
 }
 

@@ -54,6 +54,7 @@
 #define RTL8812_PHY_REG_PG					"rtl8812a/PHY_REG_PG.txt"
 #define RTL8812_PHY_REG_MP 				"rtl8812a/PHY_REG_MP.txt"
 #define RTL8812_TXPWR_LMT					"rtl8812a/TXPWR_LMT.txt"
+#define RTL8812_WIFI_ANT_ISOLATION		"rtl8812a/wifi_ant_isolation.txt"
 
 //---------------------------------------------------------------------
 //		RTL8821U From file
@@ -157,6 +158,12 @@ typedef struct _RT_FIRMWARE_8812 {
 //for 8812
 // TX 128K, RX 16K, Page size 512B for TX, 128B for RX
 #define MAX_RX_DMA_BUFFER_SIZE_8812	0x3E80   //0x3FFF	// RX 16K
+#ifdef CONFIG_FW_C2H_DEBUG
+#define RX_DMA_RESERVED_SIZE_8812	0x100	// 256B, reserved for c2h debug message
+#else
+#define RX_DMA_RESERVED_SIZE_8812	0x0	// 0B
+#endif
+#define RX_DMA_BOUNDARY_8812		(MAX_RX_DMA_BUFFER_SIZE_8812 - RX_DMA_RESERVED_SIZE_8812 - 1)
 
 #define BCNQ_PAGE_NUM_8812		0x07
 
@@ -193,6 +200,12 @@ typedef struct _RT_FIRMWARE_8812 {
 #define PAGE_SIZE_RX_8821A					128
 
 #define MAX_RX_DMA_BUFFER_SIZE_8821			0x3E80	// RX 16K
+#ifdef CONFIG_FW_C2H_DEBUG
+#define RX_DMA_RESERVED_SIZE_8821	0x100	// 256B, reserved for c2h debug message
+#else
+#define RX_DMA_RESERVED_SIZE_8821	0x0	// 0B
+#endif
+#define RX_DMA_BOUNDARY_8821		(MAX_RX_DMA_BUFFER_SIZE_8821 - RX_DMA_RESERVED_SIZE_8821 - 1)
 
 #define BCNQ_PAGE_NUM_8821		0x08
 #ifdef CONFIG_CONCURRENT_MODE
@@ -312,7 +325,7 @@ void InitDefaultValue8821A(PADAPTER padapter);
 
 void SetHwReg8812A(PADAPTER padapter, u8 variable, const u8 *pval);
 void GetHwReg8812A(PADAPTER padapter, u8 variable, u8 *pval);
-u8 SetHalDefVar8812A(PADAPTER padapter, HAL_DEF_VARIABLE variable, const void *pval);
+u8 SetHalDefVar8812A(PADAPTER padapter, HAL_DEF_VARIABLE variable, void *pval);
 u8 GetHalDefVar8812A(PADAPTER padapter, HAL_DEF_VARIABLE variable, void *pval);
 s32 c2h_id_filter_ccx_8812a(u8 *buf);
 void rtl8812_set_hal_ops(struct hal_ops *pHalFunc);
@@ -327,6 +340,11 @@ void rtl8812_stop_thread(PADAPTER padapter);
 BOOLEAN	InterruptRecognized8812AE(PADAPTER Adapter);
 VOID	UpdateInterruptMask8812AE(PADAPTER Adapter, u32 AddMSR, u32 AddMSR1, u32 RemoveMSR, u32 RemoveMSR1);
 #endif
+
+#ifdef CONFIG_BT_COEXIST
+void rtl8812a_combo_card_WifiOnlyHwInit(PADAPTER Adapter);
+#endif
+
 
 #endif //__RTL8188E_HAL_H__
 

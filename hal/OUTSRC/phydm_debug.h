@@ -88,6 +88,7 @@
 #define ODM_COMP_CFO_TRACKING		BIT15
 #define ODM_COMP_ACS					BIT16
 #define PHYDM_COMP_ADAPTIVITY			BIT17
+#define PHYDM_COMP_RA_DBG				BIT18
 //MAC Functions
 #define ODM_COMP_EDCA_TURBO			BIT20
 #define ODM_COMP_EARLY_MODE			BIT21
@@ -96,6 +97,7 @@
 #define ODM_COMP_RX_GAIN_TRACK		BIT25
 #define ODM_COMP_CALIBRATION			BIT26
 //Common Functions
+#define	BEAMFORMING_DEBUG			BIT29
 #define ODM_COMP_COMMON				BIT30
 #define ODM_COMP_INIT					BIT31
 
@@ -135,6 +137,8 @@
 				DbgPrint("[ODM-8821] ");											\
 			else if(pDM_Odm->SupportICType == ODM_RTL8814A)							\
 				DbgPrint("[ODM-8814] ");											\
+			else if(pDM_Odm->SupportICType == ODM_RTL8822B)							\
+				DbgPrint("[ODM-8822] ");											\
 			RT_PRINTK fmt;															\
 		}
 
@@ -183,7 +187,93 @@ PHYDM_InitDebugSetting(IN		PDM_ODM_T		pDM_Odm);
 
 #define	BB_TMP_BUF_SIZE		100
 VOID phydm_BB_Debug_Info(IN PDM_ODM_T pDM_Odm);
-VOID phydm_BasicProfile(IN		PVOID			pDM_VOID);
 VOID phydm_BasicDbgMessage(	IN		PVOID			pDM_VOID);
+
+#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
+#define	PHYDM_DBGPRINT		0
+#define	PHYDM_SSCANF(x, y, z)	DCMD_Scanf(x, y, z)
+#if (PHYDM_DBGPRINT == 1)
+#define	PHYDM_SNPRINTF(msg)	\
+		{\
+			rsprintf msg;\
+			DbgPrint(output);\
+		}
+#else
+#define	PHYDM_SNPRINTF(msg)	\
+		{\
+			rsprintf msg;\
+			DCMD_Printf(output);\
+		}
+#endif
+#else
+#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
+#define	PHYDM_DBGPRINT		0
+#else
+#define	PHYDM_DBGPRINT		1
+#endif
+#define	MAX_ARGC				20
+#define	MAX_ARGV				16
+#define	DCMD_DECIMAL			"%d"
+#define	DCMD_CHAR				"%c"
+#define	DCMD_HEX				"%x"
+
+#define	PHYDM_SSCANF(x, y, z)	sscanf(x, y, z)
+#if (PHYDM_DBGPRINT == 1)
+#define	PHYDM_SNPRINTF(msg)\
+		{\
+			snprintf msg;\
+			DbgPrint(output);\
+		}
+#else
+#define	PHYDM_SNPRINTF(msg)\
+		{\
+			if(out_len > used)\
+				used+=snprintf msg;\
+		}
+#endif
+#endif
+
+
+VOID phydm_BasicProfile(
+    IN		PVOID			pDM_VOID,
+    IN		u4Byte			*_used,
+    OUT		char				*output,
+    IN		u4Byte			*_out_len
+);
+#if(DM_ODM_SUPPORT_TYPE & (ODM_CE|ODM_AP))
+s4Byte
+phydm_cmd(
+    IN PDM_ODM_T	pDM_Odm,
+    IN char		*input,
+    IN u4Byte	in_len,
+    IN u1Byte	flag,
+    OUT char	*output,
+    IN u4Byte	out_len
+);
+#endif
+VOID
+phydm_cmd_parser(
+    IN PDM_ODM_T	pDM_Odm,
+    IN char		input[][16],
+    IN u4Byte	input_num,
+    IN u1Byte	flag,
+    OUT char	*output,
+    IN u4Byte	out_len
+);
+
+#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
+void phydm_sbd_check(
+    IN	PDM_ODM_T					pDM_Odm
+);
+
+void phydm_sbd_callback(
+    PRT_TIMER		pTimer
+);
+
+void phydm_sbd_workitem_callback(
+    IN PVOID            pContext
+);
+#endif
+
 #endif	// __ODM_DBG_H__
 

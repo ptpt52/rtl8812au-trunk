@@ -54,7 +54,7 @@ PHYDM_InitDebugSetting(
 //									ODM_COMP_CFO_TRACKING		|
 //									ODM_COMP_ACS					|
 //									PHYDM_COMP_ADAPTIVITY			|
-
+//									PHYDM_COMP_RA_DBG				|
 //MAC Functions
 //									ODM_COMP_EDCA_TURBO			|
 //									ODM_COMP_EARLY_MODE			|
@@ -638,103 +638,53 @@ phydm_BB_Debug_Info(IN PDM_ODM_T pDM_Odm)
 
 }
 
-
-VOID phydm_BasicProfile(
-    IN		PVOID			pDM_VOID
+void phydm_sbd_check(
+    IN	PDM_ODM_T					pDM_Odm
 )
 {
-	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	PADAPTER		       Adapter = pDM_Odm->Adapter;
-	char* Cut = NULL;
-	char* ICType = NULL;
+	static u4Byte	pkt_cnt = 0;
+	static BOOLEAN sbd_state = 0;
+	u4Byte	sym_count, count, value32;
 
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n%-35s", "% Basic Profile %");
-	DCMD_Printf(BbDbgBuf);
+	if(sbd_state == 0) {
+		pkt_cnt++;
+		if(pkt_cnt%5 == 0) { //read SBD conter once every 5 packets
+			ODM_SetTimer(pDM_Odm,&pDM_Odm->sbdcnt_timer, 0); //ms
+			sbd_state = 1;
+		}
+	} else { //read counter
+		value32 = ODM_GetBBReg(pDM_Odm, 0xF98, bMaskDWord);
+		sym_count = (value32 & 0x7C000000)>>26;
+		count = (value32 & 0x3F00000) >> 20;
+		DbgPrint("#SBD#    sym_count   %d   count   %d\n", sym_count, count);
+		sbd_state = 0;
+	}
+}
 
-	if(pDM_Odm->SupportICType == ODM_RTL8192C)
-		ICType = "RTL8192C";
-	else if(pDM_Odm->SupportICType == ODM_RTL8192D)
-		ICType = "RTL8192D";
-	else if(pDM_Odm->SupportICType == ODM_RTL8723A)
-		ICType = "RTL8723A";
-	else if(pDM_Odm->SupportICType == ODM_RTL8188E)
-		ICType = "RTL8188E";
-	else if(pDM_Odm->SupportICType == ODM_RTL8812)
-		ICType = "RTL8812A";
-	else if(pDM_Odm->SupportICType == ODM_RTL8821)
-		ICType = "RTL8821A";
-	else if(pDM_Odm->SupportICType == ODM_RTL8192E)
-		ICType = "RTL8192E";
-	else if(pDM_Odm->SupportICType == ODM_RTL8723B)
-		ICType = "RTL8723B";
-	else if(pDM_Odm->SupportICType == ODM_RTL8814A)
-		ICType = "RTL8814A";
-	else if(pDM_Odm->SupportICType == ODM_RTL8881A)
-		ICType = "RTL8881A";
-	else if(pDM_Odm->SupportICType == ODM_RTL8821B)
-		ICType = "RTL8821B";
-	else if(pDM_Odm->SupportICType == ODM_RTL8822B)
-		ICType = "RTL8822B";
-	else if(pDM_Odm->SupportICType == ODM_RTL8703B)
-		ICType = "RTL8703B";
-	else if(pDM_Odm->SupportICType == ODM_RTL8195A)
-		ICType = "RTL8195A";
-	else if(pDM_Odm->SupportICType == ODM_RTL8188F)
-		ICType = "RTL8188F";
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s (MP Chip: %s)","IC Type", ICType, pDM_Odm->bIsMPChip?"Yes":"No");
-	DCMD_Printf(BbDbgBuf);
+void phydm_sbd_callback(
+    PRT_TIMER		pTimer
+)
+{
+	PADAPTER		Adapter = (PADAPTER)pTimer->Adapter;
+	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
+	PDM_ODM_T		pDM_Odm = &pHalData->DM_OutSrc;
 
-	if(pDM_Odm->CutVersion==ODM_CUT_A)
-		Cut = "A";
-	else if(pDM_Odm->CutVersion==ODM_CUT_B)
-		Cut = "B";
-	else if(pDM_Odm->CutVersion==ODM_CUT_C)
-		Cut = "C";
-	else if(pDM_Odm->CutVersion==ODM_CUT_D)
-		Cut = "D";
-	else if(pDM_Odm->CutVersion==ODM_CUT_E)
-		Cut = "E";
-	else if(pDM_Odm->CutVersion==ODM_CUT_F)
-		Cut = "F";
-	else if(pDM_Odm->CutVersion==ODM_CUT_I)
-		Cut = "I";
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","Cut Version", Cut);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %d","PHY Parameter Version", ODM_GetHWImgVersion(pDM_Odm));
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %d (Subversion: %d)","FW Version", Adapter->MgntInfo.FirmwareVersion, Adapter->MgntInfo.FirmwareSubVersion);
-	DCMD_Printf(BbDbgBuf);
+#if USE_WORKITEM
+	ODM_ScheduleWorkItem(&pDM_Odm->sbdcnt_workitem);
+#else
+	phydm_sbd_check(pDM_Odm);
+#endif
+}
 
-	//1 PHY DM Version List
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n%-35s","% PHYDM Version %");
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","Adaptivity", ADAPTIVITY_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","DIG", DIG_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","Dynamic BB PowerSaving", DYNAMIC_BBPWRSAV_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","CFO Tracking", CFO_TRACKING_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","Antenna Diversity", ANTDIV_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","Power Tracking", POWRTRACKING_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","Dynamic TxPower", DYNAMIC_TXPWR_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","RA Info", RAINFO_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","Antenna Detection", ANTDECT_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","Auto Channel Selection", ACS_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","EDCA Turbo", EDCATURBO_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","Path Diversity", PATHDIV_VERSION);
-	DCMD_Printf(BbDbgBuf);
-	rsprintf(BbDbgBuf, BT_TMP_BUF_SIZE, "\r\n  %-35s: %s","RxHP", RXHP_VERSION);
-	DCMD_Printf(BbDbgBuf);
+void phydm_sbd_workitem_callback(
+    IN PVOID            pContext
+)
+{
+	PADAPTER	pAdapter = (PADAPTER)pContext;
+	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
+	PDM_ODM_T		pDM_Odm = &pHalData->DM_OutSrc;
 
+	phydm_sbd_check(pDM_Odm);
 }
 #endif
 VOID
@@ -743,10 +693,10 @@ phydm_BasicDbgMessage
     IN		PVOID			pDM_VOID
 )
 {
-#if( DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
-	//PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
-	//PFALSE_ALARM_STATISTICS FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm , PhyDM_FalseAlmCnt);
-	//pDIG_T	pDM_DigTable = &pDM_Odm->DM_DigTable;
+#if(DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE)) && DBG
+	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
+	PFALSE_ALARM_STATISTICS FalseAlmCnt = (PFALSE_ALARM_STATISTICS)PhyDM_Get_Structure( pDM_Odm , PHYDM_FALSEALMCNT);
+	pDIG_T	pDM_DigTable = &pDM_Odm->DM_DigTable;
 
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD, ("odm_BasicDbgMsg==>\n"));
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD, ("bLinked = %d, RSSI_Min = %d, CurrentIGI = 0x%x \n",
@@ -758,3 +708,264 @@ phydm_BasicDbgMessage
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_COMMON, ODM_DBG_LOUD, ("RSSI_C = %d, RSSI_D = %d\n", pDM_Odm->RSSI_C, pDM_Odm->RSSI_D));
 #endif
 }
+
+
+VOID phydm_BasicProfile(
+    IN		PVOID			pDM_VOID,
+    IN		u4Byte			*_used,
+    OUT		char				*output,
+    IN		u4Byte			*_out_len
+)
+{
+	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
+	char* Cut = NULL;
+	char* ICType = NULL;
+	u4Byte used = *_used;
+	u4Byte out_len = *_out_len;
+
+	PHYDM_SNPRINTF((output+used, out_len-used,"%-35s\n", "% Basic Profile %"));
+
+	if(pDM_Odm->SupportICType == ODM_RTL8192C)			ICType = "RTL8192C";
+	else if(pDM_Odm->SupportICType == ODM_RTL8192D)		ICType = "RTL8192D";
+	else if(pDM_Odm->SupportICType == ODM_RTL8723A)		ICType = "RTL8723A";
+	else if(pDM_Odm->SupportICType == ODM_RTL8188E)		ICType = "RTL8188E";
+	else if(pDM_Odm->SupportICType == ODM_RTL8812)		ICType = "RTL8812A";
+	else if(pDM_Odm->SupportICType == ODM_RTL8821)		ICType = "RTL8821A";
+	else if(pDM_Odm->SupportICType == ODM_RTL8192E)		ICType = "RTL8192E";
+	else if(pDM_Odm->SupportICType == ODM_RTL8723B)		ICType = "RTL8723B";
+	else if(pDM_Odm->SupportICType == ODM_RTL8814A)		ICType = "RTL8814A";
+	else if(pDM_Odm->SupportICType == ODM_RTL8881A)		ICType = "RTL8881A";
+	else if(pDM_Odm->SupportICType == ODM_RTL8821B)		ICType = "RTL8821B";
+	else if(pDM_Odm->SupportICType == ODM_RTL8822B)		ICType = "RTL8822B";
+	else if(pDM_Odm->SupportICType == ODM_RTL8703B)		ICType = "RTL8703B";
+	else if(pDM_Odm->SupportICType == ODM_RTL8195A)		ICType = "RTL8195A";
+	else if(pDM_Odm->SupportICType == ODM_RTL8188F)		ICType = "RTL8188F";
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s (MP Chip: %s)\n","IC Type", ICType, pDM_Odm->bIsMPChip?"Yes":"No"));
+
+	if(pDM_Odm->CutVersion==ODM_CUT_A)			Cut = "A";
+	else if(pDM_Odm->CutVersion==ODM_CUT_B)            Cut = "B";
+	else if(pDM_Odm->CutVersion==ODM_CUT_C)            Cut = "C";
+	else if(pDM_Odm->CutVersion==ODM_CUT_D)            Cut = "D";
+	else if(pDM_Odm->CutVersion==ODM_CUT_E)            Cut = "E";
+	else if(pDM_Odm->CutVersion==ODM_CUT_F)            Cut = "F";
+	else if(pDM_Odm->CutVersion==ODM_CUT_I)            Cut = "I";
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","Cut Version", Cut));
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %d\n","PHY Parameter Version", ODM_GetHWImgVersion(pDM_Odm)));
+#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
+	{
+		PADAPTER		       Adapter = pDM_Odm->Adapter;
+		PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %d (Subversion: %d)\n","FW Version", Adapter->MgntInfo.FirmwareVersion, Adapter->MgntInfo.FirmwareSubVersion));
+	}
+#elif (DM_ODM_SUPPORT_TYPE & ODM_AP)
+	{
+		struct rtl8192cd_priv *priv = pDM_Odm->priv;
+		PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %d (Subversion: %d)\n","FW Version", priv->pshare->fw_version, priv->pshare->fw_sub_version));
+	}
+#else
+	{
+		PADAPTER		       Adapter = pDM_Odm->Adapter;
+		HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
+		PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %d (Subversion: %d)\n","FW Version", pHalData->FirmwareVersion, pHalData->FirmwareSubVersion));
+	}
+#endif
+	//1 PHY DM Version List
+	PHYDM_SNPRINTF((output+used, out_len-used, "%-35s\n","% PHYDM Version %"));
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","Adaptivity", ADAPTIVITY_VERSION));
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","DIG", DIG_VERSION));
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","Dynamic BB PowerSaving", DYNAMIC_BBPWRSAV_VERSION));
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","CFO Tracking", CFO_TRACKING_VERSION));
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","Antenna Diversity", ANTDIV_VERSION));
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","Power Tracking", POWRTRACKING_VERSION));
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","Dynamic TxPower", DYNAMIC_TXPWR_VERSION));
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","RA Info", RAINFO_VERSION));
+#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","Antenna Detection", ANTDECT_VERSION));
+#endif
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","Auto Channel Selection", ACS_VERSION));
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","EDCA Turbo", EDCATURBO_VERSION));
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","Path Diversity", PATHDIV_VERSION));
+#if(DM_ODM_SUPPORT_TYPE & ODM_WIN)
+	PHYDM_SNPRINTF((output+used, out_len-used, "  %-35s: %s\n","RxHP", RXHP_VERSION));
+#endif
+	*_used = used;
+	*_out_len = out_len;
+
+}
+
+struct _PHYDM_COMMAND {
+	char name[16];
+	u1Byte id;
+};
+
+enum PHYDM_CMD_ID {
+	PHYDM_DEMO,
+	PHYDM_RA,
+	PHYDM_PROFILE,
+	PHYDM_PATHDIV
+};
+
+struct _PHYDM_COMMAND phy_dm_ary[] = {
+	{"demo", PHYDM_DEMO},
+	{"ra", PHYDM_RA},
+	{"profile", PHYDM_PROFILE},
+	{"pathdiv",PHYDM_PATHDIV}
+};
+
+VOID
+phydm_cmd_parser(
+    IN PDM_ODM_T	pDM_Odm,
+    IN char		input[][MAX_ARGV],
+    IN u4Byte	input_num,
+    IN u1Byte	flag,
+    OUT char	*output,
+    IN u4Byte	out_len
+)
+{
+	u4Byte used = 0;
+	u1Byte id = 0;
+	int var1[5] = {0};
+	int i, input_idx = 0;
+
+	if (flag == 0) {
+		PHYDM_SNPRINTF((output+used, out_len-used, "GET, nothing to print\n"));
+		return;
+	}
+
+	PHYDM_SNPRINTF((output+used, out_len-used, "\n"));
+
+	//Parsing Cmd ID
+	if (input_num) {
+		int n, i;
+		n = sizeof(phy_dm_ary)/sizeof(struct _PHYDM_COMMAND);
+		for (i = 0; i < n; i++) {
+			if (strcmp(phy_dm_ary[i].name, input[0]) == 0) {
+				id = phy_dm_ary[i].id;
+				break;
+			}
+		}
+		if (i == n) {
+			PHYDM_SNPRINTF((output+used, out_len-used, "SET, command not found!\n"));
+			return;
+		}
+	}
+
+	switch (id) {
+	case PHYDM_DEMO: { //echo demo 10 0x3a z abcde >cmd
+		u4Byte   directory;
+#if(DM_ODM_SUPPORT_TYPE & (ODM_CE|ODM_AP))
+		char   char_temp;
+#else
+		u4Byte char_temp;
+#endif
+		PHYDM_SSCANF(input[1], DCMD_DECIMAL, &directory);
+		PHYDM_SNPRINTF((output+used, out_len-used, "Decimal Value = %d\n", directory));
+		PHYDM_SSCANF(input[2], DCMD_HEX, &directory);
+		PHYDM_SNPRINTF((output+used, out_len-used, "Hex Value = 0x%x\n", directory));
+		PHYDM_SSCANF(input[3], DCMD_CHAR, &char_temp);
+		PHYDM_SNPRINTF((output+used, out_len-used, "Char = %c\n", char_temp));
+		PHYDM_SNPRINTF((output+used, out_len-used, "String = %s\n", input[4]));
+	}
+	break;
+
+	case PHYDM_RA:
+
+		for(i=0; i<5; i++) {
+			if(input[i+1]) {
+				PHYDM_SSCANF(input[i+1], DCMD_DECIMAL, &var1[i]);
+
+				PHYDM_SNPRINTF((output+used, out_len-used, "new SET, RA_var[%d]= (( %d ))\n", i , var1[i]));
+				input_idx++;
+			}
+		}
+
+		if(input_idx>=1) {
+			PHYDM_SNPRINTF((output+used, out_len-used, "odm_RA_debug\n"));
+#if (defined(CONFIG_RA_DBG_CMD))
+			odm_RA_debug(pDM_Odm, var1);
+#endif
+		}
+
+
+		break;
+
+	case PHYDM_PATHDIV:
+
+		for(i=0; i<5; i++) {
+			if(input[i+1]) {
+				PHYDM_SSCANF(input[i+1], DCMD_HEX, &var1[i]);
+
+				PHYDM_SNPRINTF((output+used, out_len-used, "new SET, PATHDIV_var[%d]= (( %d ))\n", i , var1[i]));
+				input_idx++;
+			}
+		}
+
+		if(input_idx>=1) {
+			PHYDM_SNPRINTF((output+used, out_len-used, "odm_PATHDIV_debug\n"));
+#if (defined(CONFIG_PATH_DIVERSITY))
+			odm_pathdiv_debug(pDM_Odm, var1);
+#endif
+		}
+
+
+		break;
+
+	case PHYDM_PROFILE: //echo profile, >cmd
+		phydm_BasicProfile(pDM_Odm, &used, output, &out_len);
+		break;
+
+	default:
+		PHYDM_SNPRINTF((output+used, out_len-used, "SET, unknown command!\n"));
+		break;
+
+	}
+}
+
+#ifdef __ECOS
+char *strsep(char **s, const char *ct)
+{
+	char *sbegin = *s;
+	char *end;
+
+	if (sbegin == NULL)
+		return NULL;
+
+	end = strpbrk(sbegin, ct);
+	if (end)
+		*end++ = '\0';
+	*s = end;
+	return sbegin;
+}
+#endif
+
+#if(DM_ODM_SUPPORT_TYPE & (ODM_CE|ODM_AP))
+s4Byte
+phydm_cmd(
+    IN PDM_ODM_T	pDM_Odm,
+    IN char		*input,
+    IN u4Byte	in_len,
+    IN u1Byte	flag,
+    OUT char	*output,
+    IN u4Byte	out_len
+)
+{
+	char *token;
+	u4Byte	Argc = 0;
+	char		Argv[MAX_ARGC][MAX_ARGV];
+
+	do {
+		token = strsep(&input, ", ");
+		if(token) {
+			strcpy(Argv[Argc], token);
+			Argc++;
+		} else
+			break;
+	} while(Argc < MAX_ARGC);
+
+	if(Argc == 1)
+		Argv[0][strlen(Argv[0])-1] = '\0';
+
+	phydm_cmd_parser(pDM_Odm, Argv, Argc, flag, output, out_len);
+
+	return 0;
+}
+#endif

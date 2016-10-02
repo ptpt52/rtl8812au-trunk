@@ -37,8 +37,7 @@
 //============================================================
 
 
-static inline VOID
-dm_CheckProtection(
+static inline VOID dm_CheckProtection(
     IN	PADAPTER	Adapter
 )
 {

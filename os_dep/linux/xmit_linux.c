@@ -268,9 +268,9 @@ void rtw_os_xmit_complete(_adapter *padapter, struct xmit_frame *pxframe)
 
 void rtw_os_xmit_schedule(_adapter *padapter)
 {
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	_adapter *pri_adapter = padapter;
+	//_adapter *pri_adapter = padapter;
 
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	if(!padapter)
 		return;
 
@@ -440,7 +440,7 @@ int _rtw_xmit_entry(_pkt *pkt, _nic_hdl pnetdev)
 #ifdef CONFIG_TX_MCAST2UNI
 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
 	extern int rtw_mc2u_disable;
-#endif	// CONFIG_TX_MCAST2UNI	
+#endif	// CONFIG_TX_MCAST2UNI
 	s32 res = 0;
 #if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,35))
 	//u16 queue;
@@ -488,7 +488,7 @@ int _rtw_xmit_entry(_pkt *pkt, _nic_hdl pnetdev)
 			DBG_COUNTER(padapter->tx_logs.os_tx_m2u_stop);
 		}
 	}
-#endif	// CONFIG_TX_MCAST2UNI	
+#endif	// CONFIG_TX_MCAST2UNI
 
 	res = rtw_xmit(padapter, &pkt);
 	if (res < 0) {

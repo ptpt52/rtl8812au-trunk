@@ -153,7 +153,7 @@ void sreset_restore_security_station(_adapter *padapter)
 				//DEBUG_ERR( ("Set wpa_set_encryption: Obtain Sta_info fail \n"));
 			} else {
 				//pairwise key
-				rtw_setstakey_cmd(padapter, psta, _TRUE,_FALSE);
+				rtw_setstakey_cmd(padapter, psta, UNICAST_KEY,_FALSE);
 				//group key
 				rtw_set_key(padapter,&padapter->securitypriv,padapter->securitypriv.dot118021XGrpKeyid, 0,_FALSE);
 			}

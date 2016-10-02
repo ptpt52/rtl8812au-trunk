@@ -79,7 +79,7 @@
 #define MAX_FW_8188E_SIZE			0x8000 //32768,32k / 16384,16k
 
 #define FW_8188E_SIZE				0x4000 //16384,16k
-#define FW_8188E_SIZE_2			0x8000 //32768,32k 
+#define FW_8188E_SIZE_2			0x8000 //32768,32k
 
 #define FW_8188E_START_ADDRESS	0x1000
 #define FW_8188E_END_ADDRESS		0x1FFF //0x5FFF
@@ -141,7 +141,7 @@ typedef struct _RT_8188E_FIRMWARE_HDR {
 #define MAX_RX_DMA_BUFFER_SIZE_88E(__Adapter)	((!IS_VENDOR_8188E_I_CUT_SERIES(__Adapter))?0x2400:0x3C00)
 
 
-#define MAX_TX_REPORT_BUFFER_SIZE			0x0400 // 1k 
+#define MAX_TX_REPORT_BUFFER_SIZE			0x0400 // 1k
 
 
 // Note: We will divide number of page equally for each queue other than public queue!

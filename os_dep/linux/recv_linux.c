@@ -168,8 +168,6 @@ int rtw_os_recvbuf_resource_alloc(_adapter *padapter, struct recv_buf *precvbuf)
 
 	precvbuf->pskb = NULL;
 
-	precvbuf->reuse = _FALSE;
-
 	precvbuf->pallocated_buf  = precvbuf->pbuf = NULL;
 
 	precvbuf->pdata = precvbuf->phead = precvbuf->ptail = precvbuf->pend = NULL;
@@ -522,6 +520,52 @@ static void rtw_os_ksocket_send(_adapter *padapter, union recv_frame *precv_fram
 }
 #endif //CONFIG_AUTO_AP_MODE
 
+int rtw_recv_monitor(_adapter *padapter, union recv_frame *precv_frame)
+{
+	int ret = _FAIL;
+	struct recv_priv *precvpriv;
+	_queue	*pfree_recv_queue;
+	_pkt *skb;
+	//struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+	struct rx_pkt_attrib *pattrib;
+
+	if (NULL == precv_frame)
+		goto _recv_drop;
+
+	pattrib = &precv_frame->u.hdr.attrib;
+	precvpriv = &(padapter->recvpriv);
+	pfree_recv_queue = &(precvpriv->free_recv_queue);
+
+	skb = precv_frame->u.hdr.pkt;
+	if (skb == NULL) {
+		DBG_871X("%s :skb==NULL something wrong!!!!\n", __func__);
+		goto _recv_drop;
+	}
+
+	skb->data = precv_frame->u.hdr.rx_data;
+	skb_set_tail_pointer(skb, precv_frame->u.hdr.len);
+	skb->len = precv_frame->u.hdr.len;
+	skb->ip_summed = CHECKSUM_NONE;
+	skb->pkt_type = PACKET_OTHERHOST;
+	skb->protocol = htons(0x0019); /* ETH_P_80211_RAW */
+
+	rtw_netif_rx(padapter->pnetdev, skb);
+
+	/* pointers to NULL before rtw_free_recvframe() */
+	precv_frame->u.hdr.pkt = NULL;
+
+	ret = _SUCCESS;
+
+_recv_drop:
+
+	/* enqueue back to free_recv_queue */
+	if (precv_frame)
+		rtw_free_recvframe(precv_frame, pfree_recv_queue);
+
+	return ret;
+
+}
+
 int rtw_recv_indicatepkt(_adapter *padapter, union recv_frame *precv_frame)
 {
 	struct recv_priv *precvpriv;
@@ -624,7 +668,6 @@ void rtw_os_read_port(_adapter *padapter, struct recv_buf *precvbuf)
 	rtw_skb_free(precvbuf->pskb);
 
 	precvbuf->pskb = NULL;
-	precvbuf->reuse = _FALSE;
 
 	if(precvbuf->irp_pending == _FALSE) {
 		rtw_read_port(padapter, precvpriv->ff_hwaddr, 0, (unsigned char *)precvbuf);

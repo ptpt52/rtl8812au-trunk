@@ -103,6 +103,8 @@ typedef enum _ODM_H2C_CMD {
 	ODM_H2C_PathDiv = 2,
 	ODM_H2C_WIFI_CALIBRATION = 3,
 	ODM_H2C_IQ_CALIBRATION = 4,
+	ODM_H2C_RA_PARA_ADJUST=5,
+	PHYDM_H2C_DYNAMIC_TX_PATH=6,
 	ODM_MAX_H2CCMD
 } ODM_H2C_CMD;
 
@@ -253,20 +255,20 @@ VOID
 ODM_MoveMemory(
     IN 	PDM_ODM_T	pDM_Odm,
     OUT PVOID		pDest,
-    IN	const u8 *pSrc,
+    IN  PVOID		pSrc,
     IN  u4Byte		Length
 );
 
 s4Byte ODM_CompareMemory(
     IN 	PDM_ODM_T	pDM_Odm,
-    IN	const PVOID	pBuf1,
-    IN	const PVOID	pBuf2,
+    IN	PVOID           pBuf1,
+    IN	PVOID           pBuf2,
     IN	u4Byte          length
 );
 
 void ODM_Memory_Set
 (IN 	PDM_ODM_T	pDM_Odm,
- IN  PVOID pbuf,
+ IN  PVOID	pbuf,
  IN  s1Byte	value,
  IN  u4Byte	length);
 
@@ -377,7 +379,6 @@ ODM_ReleaseTimer(
 //
 // ODM FW relative API.
 //
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN|ODM_CE))
 VOID
 ODM_FillH2CCmd(
     IN	PDM_ODM_T		pDM_Odm,
@@ -385,18 +386,6 @@ ODM_FillH2CCmd(
     IN	u4Byte 			CmdLen,
     IN	pu1Byte			pCmdBuffer
 );
-#else
-u4Byte
-ODM_FillH2CCmd(
-    IN	pu1Byte		pH2CBuffer,
-    IN	u4Byte		H2CBufferLen,
-    IN	u4Byte		CmdNum,
-    IN	pu4Byte		pElementID,
-    IN	pu4Byte		pCmdLen,
-    IN	pu1Byte*		pCmbBuffer,
-    IN	pu1Byte		CmdStartSeq
-);
-#endif
 
 u8Byte
 ODM_GetCurrentTime(

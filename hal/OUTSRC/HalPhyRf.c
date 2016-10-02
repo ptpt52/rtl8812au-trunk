@@ -37,12 +37,74 @@
 							_offset = _size-1;\
 					} while(0)
 
+#if (RTL8192C_SUPPORT||RTL8192D_SUPPORT||RTL8723A_SUPPORT)
+void phydm_txpwrtrack_setpwr_dummy(
+    PDM_ODM_T			pDM_Odm,
+    PWRTRACK_METHOD 	Method,
+    u1Byte 				RFPath,
+    u1Byte 				ChannelMappedIndex
+)
+{
+};
+
+void doiqk_dummy(
+    PDM_ODM_T	pDM_Odm,
+    u1Byte 		DeltaThermalIndex,
+    u1Byte		ThermalValue,
+    u1Byte 		Threshold
+)
+{
+};
+
+VOID phy_lccalibrate_dummy(
+    IN PDM_ODM_T		pDM_Odm
+)
+{
+};
+
+VOID get_delta_swing_table_dummy(
+    IN 	PDM_ODM_T			pDM_Odm,
+    OUT pu1Byte 			*TemperatureUP_A,
+    OUT pu1Byte 			*TemperatureDOWN_A,
+    OUT pu1Byte 			*TemperatureUP_B,
+    OUT pu1Byte 			*TemperatureDOWN_B
+)
+{
+};
+
+void configure_txpower_track_dummy(
+    PTXPWRTRACK_CFG	pConfig
+)
+{
+
+	pConfig->ODM_TxPwrTrackSetPwr = phydm_txpwrtrack_setpwr_dummy;
+	pConfig->DoIQK = doiqk_dummy;
+	pConfig->PHY_LCCalibrate = phy_lccalibrate_dummy;
+	pConfig->GetDeltaSwingTable = get_delta_swing_table_dummy;
+}
+#endif
 
 void ConfigureTxpowerTrack(
     IN 	PDM_ODM_T		pDM_Odm,
     OUT	PTXPWRTRACK_CFG	pConfig
 )
 {
+
+#if RTL8192C_SUPPORT
+	if(pDM_Odm->SupportICType==ODM_RTL8192C)
+		configure_txpower_track_dummy(pConfig);
+#endif
+
+#if RTL8192D_SUPPORT
+	if(pDM_Odm->SupportICType==ODM_RTL8192D)
+		configure_txpower_track_dummy(pConfig);
+#endif
+
+#if RTL8723A_SUPPORT
+	if(pDM_Odm->SupportICType==ODM_RTL8723A)
+		configure_txpower_track_dummy(pConfig);
+#endif
+
 #if RTL8192E_SUPPORT
 	if(pDM_Odm->SupportICType==ODM_RTL8192E)
 		ConfigureTxpowerTrack_8192E(pConfig);

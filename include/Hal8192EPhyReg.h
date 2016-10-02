@@ -199,7 +199,7 @@
 #define		rOFDM0_XDRxIQImbalance    		0xc2c
 
 #define		rOFDM0_RxDetector1			0xc30  //PD,BW & SBD	// DM tune init gain
-#define		rOFDM0_RxDetector2			0xc34  //SBD & Fame Sync. 
+#define		rOFDM0_RxDetector2			0xc34  //SBD & Fame Sync.
 #define		rOFDM0_RxDetector3			0xc38  //Frame Sync.
 #define		rOFDM0_RxDetector4			0xc3c  //PD, SBD, Frame Sync & Short-GI
 
@@ -379,55 +379,55 @@
 //
 // RL6052 Register definition
 //
-#define		RF_AC						0x00	// 
+#define		RF_AC						0x00	//
 
-#define		RF_IQADJ_G1					0x01	// 
-#define		RF_IQADJ_G2					0x02	// 
+#define		RF_IQADJ_G1					0x01	//
+#define		RF_IQADJ_G2					0x02	//
 
-#define		RF_POW_TRSW				0x05	// 
+#define		RF_POW_TRSW				0x05	//
 
-#define		RF_GAIN_RX					0x06	// 
-#define		RF_GAIN_TX					0x07	// 
+#define		RF_GAIN_RX					0x06	//
+#define		RF_GAIN_TX					0x07	//
 
-#define		RF_TXM_IDAC					0x08	// 
-#define		RF_IPA_G						0x09	// 
+#define		RF_TXM_IDAC					0x08	//
+#define		RF_IPA_G						0x09	//
 #define		RF_TXBIAS_G					0x0A
 #define		RF_TXPA_AG					0x0B
-#define		RF_IPA_A						0x0C	// 
+#define		RF_IPA_A						0x0C	//
 #define		RF_TXBIAS_A					0x0D
 #define		RF_BS_PA_APSET_G9_G11		0x0E
-#define		RF_BS_IQGEN					0x0F	// 
+#define		RF_BS_IQGEN					0x0F	//
 
-#define		RF_MODE1					0x10	// 
-#define		RF_MODE2					0x11	// 
+#define		RF_MODE1					0x10	//
+#define		RF_MODE2					0x11	//
 
-#define		RF_RX_AGC_HP				0x12	// 
-#define		RF_TX_AGC					0x13	// 
-#define		RF_BIAS						0x14	// 
-#define		RF_IPA						0x15	// 
+#define		RF_RX_AGC_HP				0x12	//
+#define		RF_TX_AGC					0x13	//
+#define		RF_BIAS						0x14	//
+#define		RF_IPA						0x15	//
 #define		RF_TXBIAS					0x16
-#define		RF_POW_ABILITY				0x17	// 
+#define		RF_POW_ABILITY				0x17	//
 #define		RF_CHNLBW					0x18	// RF channel and BW switch
-#define		RF_TOP						0x19	// 
+#define		RF_TOP						0x19	//
 
-#define		RF_RX_G1					0x1A	// 
-#define		RF_RX_G2					0x1B	// 
+#define		RF_RX_G1					0x1A	//
+#define		RF_RX_G2					0x1B	//
 
-#define		RF_RX_BB2					0x1C	// 
-#define		RF_RX_BB1					0x1D	// 
+#define		RF_RX_BB2					0x1C	//
+#define		RF_RX_BB1					0x1D	//
 
-#define		RF_RCK1						0x1E	// 
-#define		RF_RCK2						0x1F	// 
+#define		RF_RCK1						0x1E	//
+#define		RF_RCK2						0x1F	//
 
-#define		RF_TX_G1						0x20	// 
-#define		RF_TX_G2						0x21	// 
-#define		RF_TX_G3						0x22	// 
+#define		RF_TX_G1						0x20	//
+#define		RF_TX_G2						0x21	//
+#define		RF_TX_G3						0x22	//
 
-#define		RF_TX_BB1					0x23	// 
+#define		RF_TX_BB1					0x23	//
 
-#define		RF_T_METER_8192E			0x42	// 
+#define		RF_T_METER_8192E			0x42	//
 #define		RF_T_METER_88E				0x42	//
-#define		RF_T_METER					0x24	// 
+#define		RF_T_METER					0x24	//
 
 //#endif
 
@@ -447,7 +447,7 @@
 #define		RF_TX_BIAS_A					0x35
 #define		RF_TX_BIAS_D					0x36
 #define		RF_LOBF_9					0x38
-#define		RF_RXRF_A3					0x3C	//	
+#define		RF_RXRF_A3					0x3C	//
 #define		RF_TRSW						0x3F
 
 #define		RF_TXRF_A2					0x41
@@ -597,7 +597,7 @@
 #define		bLSSIReadBackData         		0xfffff		// T65 RF
 
 #define		bLSSIReadOKFlag           		0x1000	// Useless now
-#define		bCCKSampleRate            		0x8       //0: 44MHz, 1:88MHz       		
+#define		bCCKSampleRate            		0x8       //0: 44MHz, 1:88MHz
 #define		bRegulator0Standby        		0x1
 #define		bRegulatorPLLStandby      	0x2
 #define		bRegulator1Standby        		0x4

@@ -30,7 +30,7 @@
 
 #define	EEPROM_MAX_SIZE			HWSET_MAX_SIZE_512
 
-#define	CLOCK_RATE					50			//100us		
+#define	CLOCK_RATE					50			//100us
 
 //- EEPROM opcodes
 #define EEPROM_READ_OPCODE		06
@@ -41,7 +41,7 @@
 
 //Country codes
 #define USA							0x555320
-#define EUROPE						0x1 //temp, should be provided later	
+#define EUROPE						0x1 //temp, should be provided later
 #define JAPAN						0x2 //temp, should be provided later
 
 #ifdef CONFIG_SDIO_HCI

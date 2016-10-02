@@ -245,6 +245,8 @@ typedef enum _BT_ANT_TYPE {
 	BTC_ANT_TYPE_0,
 	BTC_ANT_TYPE_1,
 	BTC_ANT_TYPE_2,
+	BTC_ANT_TYPE_3,
+	BTC_ANT_TYPE_4,
 	BTC_ANT_TYPE_MAX
 } BT_ANT_TYPE,*PBT_ANT_TYPE;
 
@@ -265,6 +267,7 @@ typedef enum _BTC_GET_TYPE {
 	BTC_GET_BL_WIFI_UNDER_B_MODE,
 	BTC_GET_BL_EXT_SWITCH,
 	BTC_GET_BL_WIFI_IS_IN_MP_MODE,
+	BTC_GET_BL_IS_ASUS_8723B,
 
 	// type s4Byte
 	BTC_GET_S4_WIFI_RSSI,
@@ -719,6 +722,14 @@ EXhalbtcoutsrc_DbgControl(
     IN	pu1Byte				pData
 );
 VOID
+EXhalbtcoutsrc_AntennaDetection(
+    IN	PBTC_COEXIST			pBtCoexist,
+    IN	u4Byte					centFreq,
+    IN	u4Byte					offset,
+    IN	u4Byte					span,
+    IN	u4Byte					seconds
+);
+VOID
 EXhalbtcoutsrc_StackUpdateProfileInfo(
     VOID
 );
@@ -756,6 +767,10 @@ EXhalbtcoutsrc_SetSingleAntPath(
 );
 VOID
 EXhalbtcoutsrc_DisplayBtCoexInfo(
+    IN	PBTC_COEXIST		pBtCoexist
+);
+VOID
+EXhalbtcoutsrc_DisplayAntIsolation(
     IN	PBTC_COEXIST		pBtCoexist
 );
 

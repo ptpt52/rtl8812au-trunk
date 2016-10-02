@@ -152,7 +152,7 @@ do{\
 // For Buffer Descriptor ring architecture
 #ifdef BUF_DESC_ARCH
 #if defined (CONFIG_RTL8192E)
-#define TX_BUFFER_SEG_NUM 	1 // 0:2 seg, 1: 4 seg, 2: 8 seg.  	
+#define TX_BUFFER_SEG_NUM 	1 // 0:2 seg, 1: 4 seg, 2: 8 seg.
 #endif
 #endif
 
@@ -163,7 +163,7 @@ do{\
 #ifdef CONFIG_PCI_HCI
 #define TXDESC_SIZE ((TX_BUFFER_SEG_NUM ==0)?16: ((TX_BUFFER_SEG_NUM ==1)? 32:64) )
 #define TX_WIFI_INFO_SIZE 40
-#else  //USB or SDIO
+#else  //8192E USB or SDIO
 #define TXDESC_SIZE 40
 #endif
 //8192EE_TODO
@@ -341,6 +341,7 @@ struct pkt_attrib {
 	u8	dhcp_pkt;
 	u16	ether_type;
 	u16	seqnum;
+	u8 	hw_ssn_sel;	//for HW_SEQ0,1,2,3
 	u16	pkt_hdrlen;	//the original 802.3 pkt header len
 	u16	hdrlen;		//the WLAN Header Len
 	u32	pktlen;		//the original 802.3 pkt raw_data len (not include ether_hdr data)
@@ -631,6 +632,8 @@ enum cmdbuf_type {
 	CMDBUF_MAX
 };
 
+u8 rtw_get_hwseq_no(_adapter *padapter);
+
 struct	xmit_priv {
 
 	_lock	lock;
@@ -742,14 +745,14 @@ struct	xmit_priv {
 	uint free_xmit_extbuf_cnt;
 
 	struct xmit_buf	pcmd_xmitbuf[CMDBUF_MAX];
-
+	u8   hw_ssn_seq_no;//mapping to REG_HW_SEQ 0,1,2,3
 	u16	nqos_ssn;
 #ifdef CONFIG_TX_EARLY_MODE
 
 #ifdef CONFIG_SDIO_HCI
 #define MAX_AGG_PKT_NUM 20
 #else
-#define MAX_AGG_PKT_NUM 256 //Max tx ampdu coounts		
+#define MAX_AGG_PKT_NUM 256 //Max tx ampdu coounts
 #endif
 
 	struct agg_pkt_info agg_pkt[MAX_AGG_PKT_NUM];
@@ -767,7 +770,13 @@ struct	xmit_priv {
 extern struct xmit_frame *__rtw_alloc_cmdxmitframe(struct xmit_priv *pxmitpriv,
         enum cmdbuf_type buf_type);
 #define rtw_alloc_cmdxmitframe(p) __rtw_alloc_cmdxmitframe(p, CMDBUF_RSVD)
+#if defined(CONFIG_RTL8192E) && defined(CONFIG_PCI_HCI)
+extern struct xmit_frame *__rtw_alloc_cmdxmitframe_8192ee(struct xmit_priv *pxmitpriv,
+        enum cmdbuf_type buf_type);
+#define rtw_alloc_bcnxmitframe(p) __rtw_alloc_cmdxmitframe_8192ee(p, CMDBUF_BEACON)
+#else
 #define rtw_alloc_bcnxmitframe(p) __rtw_alloc_cmdxmitframe(p, CMDBUF_BEACON)
+#endif
 
 extern struct xmit_buf *rtw_alloc_xmitbuf_ext(struct xmit_priv *pxmitpriv);
 extern s32 rtw_free_xmitbuf_ext(struct xmit_priv *pxmitpriv, struct xmit_buf *pxmitbuf);
@@ -777,8 +786,6 @@ extern s32 rtw_free_xmitbuf(struct xmit_priv *pxmitpriv, struct xmit_buf *pxmitb
 
 void rtw_count_tx_stats(_adapter *padapter, struct xmit_frame *pxmitframe, int sz);
 extern void rtw_update_protection(_adapter *padapter, u8 *ie, uint ie_len);
-//static s32 update_attrib_sec_info(_adapter *padapter, struct pkt_attrib *pattrib, struct sta_info *psta);
-//static void update_attrib_phy_info(_adapter *padapter, struct pkt_attrib *pattrib, struct sta_info *psta);
 extern s32 rtw_make_wlanhdr(_adapter *padapter, u8 *hdr, struct pkt_attrib *pattrib);
 extern s32 rtw_put_snap(u8 *data, u16 h_proto);
 
@@ -842,7 +849,6 @@ sint	check_pending_xmitbuf(struct xmit_priv *pxmitpriv);
 thread_return	rtw_xmit_thread(thread_context context);
 #endif
 
-//static void do_queue_select(_adapter * padapter, struct pkt_attrib * pattrib);
 u32	rtw_get_ff_hwaddr(struct xmit_frame	*pxmitframe);
 
 #ifdef CONFIG_XMIT_ACK

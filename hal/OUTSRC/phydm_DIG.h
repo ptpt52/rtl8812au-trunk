@@ -21,7 +21,7 @@
 #ifndef	__PHYDMDIG_H__
 #define    __PHYDMDIG_H__
 
-#define DIG_VERSION	"1.0"
+#define DIG_VERSION	"1.3"
 
 typedef struct _Dynamic_Initial_Gain_Threshold_ {
 	BOOLEAN		bStopDIG;		// for debug
@@ -254,39 +254,7 @@ odm_DIGbyRSSI_LPS(
 );
 
 VOID
-odm_DigForBtHsMode(
-    IN		PVOID					pDM_VOID
-);
-
-VOID
 odm_FalseAlarmCounterStatistics(
-    IN		PVOID					pDM_VOID
-);
-
-VOID
-odm_FAThresholdCheck(
-    IN		PVOID					pDM_VOID,
-    IN		BOOLEAN					bDFSBand,
-    IN		BOOLEAN					bPerformance,
-    IN		u4Byte					RxTp,
-    IN		u4Byte					TxTp,
-    OUT		u4Byte*					dm_FA_thres
-);
-
-u1Byte
-odm_ForbiddenIGICheck(
-    IN		PVOID					pDM_VOID,
-    IN		u1Byte					DIG_Dynamic_MIN,
-    IN		u1Byte					CurrentIGI
-);
-
-VOID
-odm_InbandNoiseCalculate (
-    IN		PVOID					pDM_VOID
-);
-
-BOOLEAN
-odm_DigAbort(
     IN		PVOID					pDM_VOID
 );
 

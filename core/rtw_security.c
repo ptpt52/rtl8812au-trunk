@@ -1031,6 +1031,8 @@ static void next_key(u8 *key, sint round);
 static void byte_sub(u8 *in, u8 *out);
 static void shift_row(u8 *in, u8 *out);
 static void mix_column(u8 *in, u8 *out);
+#ifndef PLATFORM_FREEBSD
+#endif //PLATFORM_FREEBSD
 static void aes128k128d(u8 *key, u8 *data, u8 *ciphertext);
 
 
@@ -1675,8 +1677,9 @@ u32	rtw_aes_encrypt(_adapter *padapter, u8 *pxmitframe)
 				prwskey=pattrib->dot118021x_UncstKey.skey;
 			}
 
-#ifdef CONFIG_TDLS	//swencryption
+#ifdef CONFIG_TDLS
 			{
+				/* Swencryption */
 				struct	sta_info		*ptdls_sta;
 				ptdls_sta=rtw_get_stainfo(&padapter->stapriv ,&pattrib->dst[0] );
 				if((ptdls_sta != NULL) && (ptdls_sta->tdls_sta_state & TDLS_LINKED_STATE) ) {
@@ -3035,14 +3038,14 @@ int tdls_verify_mic(u8 *kck, u8 trans_seq,
 
 	if (lnkid == NULL || rsnie == NULL ||
 	    timeoutie == NULL || ftie == NULL) {
-		return 0;
+		return _FAIL;
 	}
 
 	len = 2 * ETH_ALEN + 1 + 2 + 18 + 2 + *(rsnie+1) + 2 + *(timeoutie+1) + 2 + *(ftie+1);
 
 	buf = rtw_zmalloc(len);
 	if (buf == NULL)
-		return 0;
+		return _FAIL;
 
 	pos = buf;
 	/* 1) TDLS initiator STA MAC address */
@@ -3072,17 +3075,17 @@ int tdls_verify_mic(u8 *kck, u8 trans_seq,
 	ret = omac1_aes_128(kck, buf, pos - buf, mic);
 	rtw_mfree(buf, len);
 	if (ret)
-		return 0;
+		return _FAIL;
 	rx_ftie = ftie+4;
 
 	if (os_memcmp(mic, rx_ftie, 16) == 0) {
 		//Valid MIC
-		return 1;
+		return _SUCCESS;
 	}
 
 	//Invalid MIC
 	DBG_871X( "[%s] Invalid MIC\n", __FUNCTION__);
-	return 0;
+	return _FAIL;
 
 }
 #endif //CONFIG_TDLS
