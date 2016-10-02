@@ -212,7 +212,7 @@ mptbt_BtFwOpCodeProcess(
 	PBT_H2C				pH2c=(PBT_H2C)&H2C_Parameter[0];
 	PMPT_CONTEXT		pMptCtx=&(Adapter->mppriv.MptCtx);
 	PBT_EXT_C2H			pExtC2h=(PBT_EXT_C2H)&pMptCtx->c2hBuf[0];
-	u2Byte				paraLen=0,i;
+	u2Byte				i;
 	BT_CTRL_STATUS	h2cStatus=BT_STATUS_H2C_SUCCESS, c2hStatus=BT_STATUS_C2H_SUCCESS;
 	BT_CTRL_STATUS	retStatus=BT_STATUS_H2C_BT_NO_RSP;
 
@@ -562,7 +562,7 @@ mptbt_BtGetGeneral(
 	u4Byte				regAddr=0, regValue=0;
 	pu4Byte 			pu4Tmp;
 	pu2Byte 			pu2Tmp;
-	pu1Byte 			pu1Tmp;
+	//pu1Byte 			pu1Tmp;
 
 	//
 	// check upper layer parameters
@@ -864,8 +864,8 @@ mptbt_BtSetGeneral(
 	u1Byte				regType=0, bdAddr[6]= {0}, calVal=0;
 	u4Byte				regAddr=0, regValue=0;
 	pu4Byte 			pu4Tmp;
-	pu2Byte 			pu2Tmp;
-	pu1Byte 			pu1Tmp;
+	//pu2Byte 			pu2Tmp;
+	//pu1Byte 			pu1Tmp;
 
 	//
 	// check upper layer parameters
@@ -1165,7 +1165,7 @@ mptbt_BtSetTxRxPars(
 	u1Byte				btOpcodeVer=0;
 	PBT_TXRX_PARAMETERS pTxRxPars=(PBT_TXRX_PARAMETERS)&pBtReq->pParamStart[0];
 	u2Byte				lenTxRx=sizeof(BT_TXRX_PARAMETERS);
-	u1Byte				i;
+	//u1Byte				i;
 	u1Byte				bdAddr[6]= {0};
 
 	//
@@ -1508,7 +1508,7 @@ mptbt_TestBT(
 	u1Byte				retStatus=BT_STATUS_BT_OP_SUCCESS;
 	u1Byte				btOpcode;
 	u1Byte				btOpcodeVer=0;
-	u1Byte				testCtrl=0;
+	//u1Byte				testCtrl=0;
 
 	// 1. fill h2c parameters
 	btOpcode =  0x11;
@@ -1539,12 +1539,12 @@ mptbt_BtControlProcess(
     PVOID		pInBuf
 )
 {
-	u1Byte			H2C_Parameter[6] = {0};
-	PBT_H2C 		pH2c=(PBT_H2C)&H2C_Parameter[0];
+	//u1Byte			H2C_Parameter[6] = {0};
+	//PBT_H2C 		pH2c=(PBT_H2C)&H2C_Parameter[0];
 	PMPT_CONTEXT	pMptCtx=&(Adapter->mppriv.MptCtx);
 	PBT_REQ_CMD 	pBtReq=(PBT_REQ_CMD)pInBuf;
 	PBT_RSP_CMD 	pBtRsp;
-	u1Byte			i;
+	//u1Byte			i;
 
 
 	DBG_8192C("[MPT], mptbt_BtControlProcess()=========>\n");

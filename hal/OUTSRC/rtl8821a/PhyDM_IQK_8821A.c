@@ -761,7 +761,7 @@ PHY_IQCalibrate_8821A(
 {
 #if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 	PADAPTER 		pAdapter = pDM_Odm->Adapter;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 	u4Byte			counter = 0;

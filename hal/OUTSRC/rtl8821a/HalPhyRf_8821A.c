@@ -49,7 +49,7 @@ ODM_TxPwrTrackSetPwr8821A(
 	u1Byte			TxRate = 0xFF;
 	u1Byte			Final_OFDM_Swing_Index = 0;
 	u1Byte			Final_CCK_Swing_Index = 0;
-	u1Byte			i = 0;
+	//u1Byte			i = 0;
 	u4Byte			finalBbSwingIdx[1];
 
 

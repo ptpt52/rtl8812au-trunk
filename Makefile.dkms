@@ -1,4 +1,4 @@
-modname := rtl8812au
+modname := rtl8821au
 DKMS := dkms
 modver := 4.3.14
 

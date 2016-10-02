@@ -29,7 +29,7 @@ CONFIG_RTL8192D = n
 CONFIG_RTL8723A = n
 CONFIG_RTL8188E = n
 CONFIG_RTL8812A = y
-CONFIG_RTL8821A = n
+CONFIG_RTL8821A = y
 CONFIG_RTL8192E = n
 CONFIG_RTL8723B = n
 ######################### Interface ###########################
@@ -1544,11 +1544,11 @@ ifeq ($(CONFIG_RTL8821A), y)
 $(MODULE_NAME)-$(CONFIG_MP_INCLUDED)+= core/rtw_bt_mp.o
 endif
 
-obj-$(CONFIG_RTL8812AU) := $(MODULE_NAME).o
+obj-$(CONFIG_RTL8821AU) := $(MODULE_NAME).o
 
 endif
 
-export CONFIG_RTL8812AU = m
+export CONFIG_RTL8821AU = m
 
 all: modules
 

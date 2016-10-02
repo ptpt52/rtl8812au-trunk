@@ -2005,7 +2005,6 @@ phy_SwChnlAndSetBwMode8812(
 )
 {
 	HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
-	//PDM_ODM_T			pDM_Odm = &pHalData->odmpriv;
 	//DBG_871X("phy_SwChnlAndSetBwMode8812(): bSwChnl %d, bSetChnlBW %d \n", pHalData->bSwChnl, pHalData->bSetChnlBW);
 	if ( Adapter->bNotifyChannelChange ) {
 		DBG_871X( "[%s] bSwChnl=%d, ch=%d, bSetChnlBW=%d, bw=%d\n",
@@ -2047,6 +2046,7 @@ phy_SwChnlAndSetBwMode8812(
 #endif
 		} else if(IS_HARDWARE_TYPE_8821(Adapter)) {
 #if (RTL8821A_SUPPORT == 1)
+			PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
 			PHY_IQCalibrate_8821A(pDM_Odm, _FALSE);
 #endif
 		}
