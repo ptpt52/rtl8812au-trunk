@@ -803,8 +803,6 @@ void rtw_set_fw_in_ips_mode(PADAPTER padapter, u8 enable)
 void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode, const char *msg)
 {
 	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
-	//struct dvobj_priv *psdpriv = padapter->dvobj;
-	//struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
 #ifdef CONFIG_P2P
 	struct wifidirect_info	*pwdinfo = &( padapter->wdinfo );
 #endif //CONFIG_P2P
@@ -893,6 +891,8 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 			if (pwrpriv->wowlan_mode == _TRUE ||
 			    pwrpriv->wowlan_ap_mode == _TRUE ||
 			    pwrpriv->wowlan_p2p_mode == _TRUE) {
+				struct dvobj_priv *psdpriv = padapter->dvobj;
+				struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
 				u32 start_time, delay_ms;
 				u8 val8;
 				delay_ms = 20;

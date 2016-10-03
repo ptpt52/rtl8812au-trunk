@@ -3693,8 +3693,11 @@ int rtw_resume_process_wow(_adapter *padapter)
 
 	if (pwrpriv->wowlan_wake_reason == RX_PNOWakeUp) {
 #ifdef CONFIG_IOCTL_CFG80211
-		cfg80211_disconnected(padapter->pnetdev, 0, NULL, 0,
-		                      GFP_ATOMIC);
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 2, 0))
+		cfg80211_disconnected(padapter->pnetdev, 0, NULL, 0, true, GFP_ATOMIC);
+#else
+		cfg80211_disconnected(padapter->pnetdev, 0, NULL, 0, GFP_ATOMIC);
+#endif
 #endif
 		rtw_lock_ext_suspend_timeout(10000);
 	}
