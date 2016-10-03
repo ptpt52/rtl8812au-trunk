@@ -12123,7 +12123,7 @@ u8 join_cmd_hdl(_adapter *padapter, u8 *pbuf)
 		}
 
 		i += (pIE->Length + 2);
-	} while (pnetwork->IELength-i);
+	} while (pnetwork->IELength - i > 0);
 #if 0
 	if (padapter->registrypriv.wifi_spec) {
 		// for WiFi test, follow WMM test plan spec
