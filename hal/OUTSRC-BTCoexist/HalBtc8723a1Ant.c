@@ -473,7 +473,7 @@ halbtc8723a1ant_MonitorBtCtr(
 {
 	u4Byte 			regHPTxRx, regLPTxRx, u4Tmp;
 	u4Byte			regHPTx=0, regHPRx=0, regLPTx=0, regLPRx=0;
-	u1Byte			u1Tmp;
+	//u1Byte			u1Tmp;
 
 	regHPTxRx = 0x770;
 	regLPTxRx = 0x774;

@@ -10750,7 +10750,9 @@ bool rtw_port_switch_chk(_adapter *adapter)
 #ifdef CONFIG_CONCURRENT_MODE
 #ifdef CONFIG_RUNTIME_PORT_SWITCH
 	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
-	//struct pwrctrl_priv *pwrctl = dvobj_to_pwrctl(dvobj);
+#if defined(CONFIG_WOWLAN) || defined(DBG_RUNTIME_PORT_SWITCH)
+	struct pwrctrl_priv *pwrctl = dvobj_to_pwrctl(dvobj);
+#endif
 	_adapter *if_port0 = NULL;
 	_adapter *if_port1 = NULL;
 	struct mlme_ext_info *if_port0_mlmeinfo = NULL;

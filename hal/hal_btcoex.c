@@ -122,7 +122,7 @@ static void DBG_BT_INFO_INIT(PBTCDBGINFO pinfo, u8 *pbuf, u32 size)
 void DBG_BT_INFO(u8 *dbgmsg)
 {
 	PBTCDBGINFO pinfo;
-	u32 msglen, buflen;
+	u32 msglen;
 	u8 *pbuf;
 
 
@@ -188,7 +188,7 @@ static u8 halbtcoutsrc_IsCsrBtCoex(PBTC_COEXIST pBtCoexist)
 	return _FALSE;
 }
 
-static u8 halbtcoutsrc_IsHwMailboxExist(PBTC_COEXIST pBtCoexist)
+static inline u8 halbtcoutsrc_IsHwMailboxExist(PBTC_COEXIST pBtCoexist)
 {
 	if (pBtCoexist->boardInfo.btChipType == BTC_CHIP_CSR_BC4
 	    || pBtCoexist->boardInfo.btChipType == BTC_CHIP_CSR_BC8
@@ -476,9 +476,9 @@ u32 halbtcoutsrc_GetWifiLinkStatus(PBTC_COEXIST pBtCoexist)
 
 u32 halbtcoutsrc_GetBtPatchVer(PBTC_COEXIST pBtCoexist)
 {
-	u16 btRealFwVer = 0x0;
-	u8 btFwVer = 0x0;
-	u8 cnt = 0;
+	//u16 btRealFwVer = 0x0;
+	//u8 btFwVer = 0x0;
+	//u8 cnt = 0;
 
 #ifdef CONFIG_BT_COEXIST_SOCKET_TRX
 	if (!pBtCoexist->btInfo.btRealFwVer && cnt<=5) {
@@ -1101,15 +1101,15 @@ void halbtcoutsrc_DisplayBtLinkInfo(PBTC_COEXIST pBtCoexist)
 
 void halbtcoutsrc_DisplayWifiStatus(PBTC_COEXIST pBtCoexist)
 {
-	PADAPTER	padapter = pBtCoexist->Adapter;
-	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
+	//PADAPTER	padapter = pBtCoexist->Adapter;
+	//struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
 	u8* 			cliBuf=pBtCoexist->cliBuf;
 	s32			wifiRssi=0, btHsRssi=0;
 	BOOLEAN	bScan=_FALSE, bLink=_FALSE, bRoam=_FALSE, bWifiBusy=_FALSE, bWifiUnderBMode=_FALSE;
 	u32			wifiBw=BTC_WIFI_BW_HT20, wifiTrafficDir=BTC_WIFI_TRAFFIC_TX, wifiFreq=BTC_FREQ_2_4G;
 	u32			wifiLinkStatus=0x0;
-	BOOLEAN	bBtHsOn=_FALSE, bLowPower=_FALSE;
-	u8			wifiChnl=0, wifiHsChnl=0, nScanAPNum = 0, FwPSState;
+	BOOLEAN	bBtHsOn=_FALSE;
+	u8			wifiChnl=0, wifiHsChnl=0, nScanAPNum = 0;
 
 	wifiLinkStatus = halbtcoutsrc_GetWifiLinkStatus(pBtCoexist);
 	CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n %-35s = %d/ %d/ %d/ %d/ %d", "STA/vWifi/HS/p2pGo/p2pGc", \
@@ -1408,7 +1408,7 @@ void halbtcoutsrc_FillH2cCmd(void *pBtcContext, u8 elementId, u32 cmdLen, u8 *pC
 u8 EXhalbtcoutsrc_BindBtCoexWithAdapter(void *padapter)
 {
 	PBTC_COEXIST		pBtCoexist=&GLBtCoexist;
-	u1Byte	antNum=2, chipType;
+	//u1Byte	antNum=2, chipType;
 
 	if(pBtCoexist->bBinded)
 		return _FALSE;
@@ -3025,7 +3025,7 @@ hal_btcoex_ParseAntIsolationConfigFile(
 	char	*szLine, *ptmp;
 	int	rtStatus = _SUCCESS;
 	char param_value_string[10];
-	u8 param_value;
+	//u8 param_value;
 	u8 anttype = 4;
 
 	u8 ant_num=3, ant_distance=50;

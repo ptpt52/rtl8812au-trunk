@@ -430,7 +430,7 @@ halbtc8192e2ant_MonitorBtCtr(
 {
 	u4Byte 			regHPTxRx, regLPTxRx, u4Tmp;
 	u4Byte			regHPTx=0, regHPRx=0, regLPTx=0, regLPRx=0;
-	u1Byte			u1Tmp;
+	//u1Byte			u1Tmp;
 
 	regHPTxRx = 0x770;
 	regLPTxRx = 0x774;
@@ -1033,7 +1033,7 @@ halbtc8192e2ant_SetAgcTable(
     IN	BOOLEAN			bAgcTableEn
 )
 {
-	u1Byte		rssiAdjustVal=0;
+	//u1Byte		rssiAdjustVal=0;
 
 	//=================BB AGC Gain Table
 	if(bAgcTableEn) {
@@ -1370,8 +1370,8 @@ halbtc8192e2ant_PsTdma(
     IN	u1Byte			type
 )
 {
-	BOOLEAN			bTurnOnByCnt=FALSE;
-	u1Byte			psTdmaTypeByCnt=0;
+	//BOOLEAN			bTurnOnByCnt=FALSE;
+	//u1Byte			psTdmaTypeByCnt=0;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE_FW, ("[BTCoex], %s turn %s PS TDMA, type=%d\n",
 	          (bForceExec? "force to":""), (bTurnOn? "ON":"OFF"), type));
@@ -2942,8 +2942,8 @@ halbtc8192e2ant_RunCoexistMechanism(
     IN	PBTC_COEXIST		pBtCoexist
 )
 {
-	BOOLEAN				bWifiUnder5G=FALSE;
-	u1Byte				btInfoOriginal=0, btRetryCnt=0;
+	//BOOLEAN				bWifiUnder5G=FALSE;
+	//u1Byte				btInfoOriginal=0, btRetryCnt=0;
 	u1Byte				algorithm=0;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE, ("[BTCoex], RunCoexistMechanism()===>\n"));
@@ -3037,7 +3037,7 @@ halbtc8192e2ant_InitHwConfig(
     IN	BOOLEAN				bBackUp
 )
 {
-	u4Byte	u4Tmp=0;
+	//u4Byte	u4Tmp=0;
 	u2Byte	u2Tmp=0;
 	u1Byte	u1Tmp=0;
 
@@ -3138,7 +3138,7 @@ EXhalbtc8192e2ant_DisplayCoexInfo(
 	u1Byte				u1Tmp[4], i, btInfoExt, psTdmaCase=0;
 	u2Byte				u2Tmp[4];
 	u4Byte				u4Tmp[4];
-	u4Byte				faOfdm, faCck;
+	//u4Byte				faOfdm, faCck;
 	u4Byte				fwVer=0, btPatchVer=0;
 
 	CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n ============[BT Coexist info]============");
@@ -3434,7 +3434,7 @@ EXhalbtc8192e2ant_BtInfoNotify(
     IN	u1Byte			length
 )
 {
-	PBTC_BT_LINK_INFO	pBtLinkInfo=&pBtCoexist->btLinkInfo;
+	//PBTC_BT_LINK_INFO	pBtLinkInfo=&pBtCoexist->btLinkInfo;
 	u1Byte			btInfo=0;
 	u1Byte			i, rspSource=0;
 	BOOLEAN			bBtBusy=FALSE, bLimitedDig=FALSE;
@@ -3589,8 +3589,8 @@ EXhalbtc8192e2ant_Periodical(
 {
 	static u1Byte		disVerInfoCnt=0;
 	u4Byte				fwVer=0, btPatchVer=0;
-	PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
-	PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
+	//PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
+	//PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE, ("[BTCoex], ==========================Periodical===========================\n"));
 

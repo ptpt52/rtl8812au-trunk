@@ -8809,11 +8809,11 @@ static int rtw_wowlan_ctrl(struct net_device *dev,
 	struct wowlan_ioctl_param poidparam;
 	struct pwrctrl_priv *pwrctrlpriv = adapter_to_pwrctl(padapter);
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-	struct net_device *pnetdev = padapter->pnetdev;
+	//struct net_device *pnetdev = padapter->pnetdev;
 #ifdef CONFIG_CONCURRENT_MODE
-	struct net_device *pbuddy_netdev = padapter->pbuddy_adapter->pnetdev;
+	//struct net_device *pbuddy_netdev = padapter->pbuddy_adapter->pnetdev;
 #endif
-	struct sta_info	*psta = NULL;
+	//struct sta_info	*psta = NULL;
 	int ret = 0;
 	u32 start_time = rtw_get_current_time();
 	poidparam.subcode = 0;
@@ -8864,7 +8864,7 @@ _rtw_wowlan_ctrl_exit_free:
 	DBG_871X("-rtw_wowlan_ctrl( subcode = %d)\n", poidparam.subcode);
 	DBG_871X_LEVEL(_drv_always_, "%s in %d ms\n", __func__,
 	               rtw_get_passing_time_ms(start_time));
-_rtw_wowlan_ctrl_exit:
+//_rtw_wowlan_ctrl_exit:
 	return ret;
 }
 #endif //CONFIG_WOWLAN
@@ -10541,7 +10541,9 @@ static int rtw_mp_start(struct net_device *dev,
 	//u8 val8;
 	PADAPTER padapter = rtw_netdev_priv(dev);
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-	//struct dm_priv	*pdmpriv = &pHalData->dmpriv;
+#ifdef CONFIG_BT_COEXIST
+	struct dm_priv	*pdmpriv = &pHalData->dmpriv;
+#endif
 	struct hal_ops *pHalFunc = &padapter->HalFunc;
 
 	rtw_pm_set_ips(padapter,IPS_NONE);
@@ -11052,10 +11054,12 @@ static int rtw_mp_disable_bt_coexist(struct net_device *dev,
                                      struct iw_request_info *info,
                                      union iwreq_data *wrqu, char *extra)
 {
-	//PADAPTER padapter = (PADAPTER)rtw_netdev_priv(dev);
-	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-	//struct dm_priv	*pdmpriv = &pHalData->dmpriv;
+#ifdef CONFIG_BT_COEXIST
+	PADAPTER padapter = (PADAPTER)rtw_netdev_priv(dev);
+	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
+	struct dm_priv	*pdmpriv = &pHalData->dmpriv;
 	//struct hal_ops *pHalFunc = &padapter->HalFunc;
+#endif
 
 	u8 input[wrqu->data.length];
 	u32 bt_coexist;
@@ -13687,8 +13691,9 @@ static int rtw_test(
 	u8 *pbuf, *pch;
 	char *ptmp;
 	u8 *delim = ",";
-	//PADAPTER padapter = rtw_netdev_priv(dev);
-
+#if defined(CONFIG_BT_COEXIST) || defined(CONFIG_MAC_LOOPBACK_DRIVER)
+	PADAPTER padapter = rtw_netdev_priv(dev);
+#endif
 
 	DBG_871X("+%s\n", __func__);
 	len = wrqu->data.length;

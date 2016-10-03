@@ -2599,18 +2599,18 @@ void SetHwReg8812AU(PADAPTER Adapter, u8 variable, const u8* val)
 	//struct dm_priv	*pdmpriv = &pHalData->dmpriv;
 	//DM_ODM_T 		*podmpriv = &pHalData->odmpriv;
 #if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN) || defined(CONFIG_P2P_WOWLAN)
-	const struct wowlan_ioctl_param *poidparam;
-	struct recv_buf *precvbuf;
-	struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(Adapter);
-	struct mlme_priv	*pmlmepriv = &Adapter->mlmepriv;
-	struct sta_info *psta = NULL;
-	int res, i;
-	u32 tmp;
-	u16 len = 0;
-	u16 media_status_rpt;
-	u8 mstatus = (*(const u8 *)val);
-	u8 trycnt = 100;
-	u8 data[4];
+	//const struct wowlan_ioctl_param *poidparam;
+	//struct recv_buf *precvbuf;
+	//struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(Adapter);
+	//struct mlme_priv	*pmlmepriv = &Adapter->mlmepriv;
+	//struct sta_info *psta = NULL;
+	//int res, i;
+	//u32 tmp;
+	//u16 len = 0;
+	//u16 media_status_rpt;
+	//u8 mstatus = (*(const u8 *)val);
+	//u8 trycnt = 100;
+	//u8 data[4];
 #endif
 	_func_enter_;
 

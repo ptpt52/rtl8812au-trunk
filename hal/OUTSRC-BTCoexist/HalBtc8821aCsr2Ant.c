@@ -250,7 +250,7 @@ halbtc8821aCsr2ant_MonitorBtCtr(
 {
 	u4Byte 			regHPTxRx, regLPTxRx, u4Tmp;
 	u4Byte			regHPTx=0, regHPRx=0, regLPTx=0, regLPRx=0;
-	u1Byte			u1Tmp;
+	//u1Byte			u1Tmp;
 
 	regHPTxRx = 0x770;
 	regLPTxRx = 0x774;
@@ -1272,8 +1272,8 @@ halbtc8821aCsr2ant_PsTdma(
     IN	u1Byte			type
 )
 {
-	BOOLEAN			bTurnOnByCnt=FALSE;
-	u1Byte			psTdmaTypeByCnt=0;
+	//BOOLEAN			bTurnOnByCnt=FALSE;
+	//u1Byte			psTdmaTypeByCnt=0;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE_FW, ("[BTCoex], %s turn %s PS TDMA, type=%d\n",
 	          (bForceExec? "force to":""), (bTurnOn? "ON":"OFF"), type));
@@ -2194,8 +2194,8 @@ halbtc8821aCsr2ant_ActionSco(
     IN	PBTC_COEXIST		pBtCoexist
 )
 {
-	u1Byte	wifiRssiState,btRssiState;
-	u4Byte	wifiBw;
+	//u1Byte	wifiRssiState,btRssiState;
+	//u4Byte	wifiBw;
 
 	halbtc8821aCsr2ant_CoexTable(pBtCoexist, NORMAL_EXEC, 0x55555555, 0x55555555, 0xffffff, 0x3);
 	halbtc8821aCsr2ant_PsTdma(pBtCoexist, NORMAL_EXEC, FALSE, 0);
@@ -2363,8 +2363,8 @@ halbtc8821aCsr2ant_ActionA2dp(
     IN	PBTC_COEXIST		pBtCoexist
 )
 {
-	u1Byte		wifiRssiState, btRssiState;
-	u4Byte		wifiBw;
+	//u1Byte		wifiRssiState, btRssiState;
+	//u4Byte		wifiBw;
 
 	halbtc8821aCsr2ant_LimitedRx(pBtCoexist, NORMAL_EXEC, FALSE, TRUE, 0x8);
 
@@ -2963,9 +2963,9 @@ halbtc8821aCsr2ant_RunCoexistMechanism(
     IN	PBTC_COEXIST		pBtCoexist
 )
 {
-	PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
+	//PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
 	BOOLEAN				bWifiUnder5G=FALSE;
-	u1Byte				btInfoOriginal=0, btRetryCnt=0;
+	//u1Byte				btInfoOriginal=0, btRetryCnt=0;
 	u1Byte				algorithm=0;
 
 	if(pBtCoexist->bManualControl) {
@@ -3074,11 +3074,11 @@ EXhalbtc8821aCsr2ant_InitHwConfig(
     IN	BOOLEAN				bWifiOnly
 )
 {
-	PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
-	u4Byte	u4Tmp=0;
-	u2Byte				u2Tmp=0;
-	u1Byte	u1Tmp=0;
-	u1Byte				H2C_Parameter[2] = {0};
+	//PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
+	//u4Byte	u4Tmp=0;
+	//u2Byte				u2Tmp=0;
+	//u1Byte	u1Tmp=0;
+	//u1Byte				H2C_Parameter[2] = {0};
 
 
 	BTC_PRINT(BTC_MSG_INTERFACE, INTF_INIT, ("[BTCoex], 2Ant Init HW Config!!\n"));
@@ -3603,8 +3603,8 @@ EXhalbtc8821aCsr2ant_Periodical(
 {
 	static u1Byte		disVerInfoCnt=0;
 	u4Byte				fwVer=0, btPatchVer=0;
-	PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
-	PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
+	//PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
+	//PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE, ("[BTCoex], ==========================Periodical===========================\n"));
 

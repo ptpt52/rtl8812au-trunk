@@ -358,7 +358,9 @@ void rtl8812_set_FwPwrMode_cmd(PADAPTER padapter, u8 PSMode)
 	u8	u1H2CSetPwrMode[H2C_PWRMODE_LEN]= {0};
 	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
 	u8	Mode = 0, RLBM = 0, PowerState = 0, LPSAwakeIntvl = 2, pwrModeByte5 = 0;
-	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
+#ifdef CONFIG_BT_COEXIST
+	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
+#endif
 
 	_func_enter_;
 
@@ -1554,9 +1556,9 @@ error:
 
 static void rtl8812_set_FwAoacRsvdPage_cmd(PADAPTER padapter, PRSVDPAGE_LOC rsvdpageloc)
 {
-	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
+	//struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-	u8	res = 0, count = 0;
+	//u8	res = 0, count = 0;
 #ifdef CONFIG_WOWLAN
 	u8 u1H2CAoacRsvdPageParm[H2C_AOAC_RSVDPAGE_LOC_LEN]= {0};
 
@@ -1610,7 +1612,7 @@ static void rtl8812_set_FwAoacRsvdPage_cmd(PADAPTER padapter, PRSVDPAGE_LOC rsvd
 // Description:
 //	Construct the ARP response packet to support ARP offload.
 //
-static void ConstructARPResponse(
+static inline void ConstructARPResponse(
     PADAPTER padapter,
     u8			*pframe,
     u32			*pLength,
@@ -1619,9 +1621,9 @@ static void ConstructARPResponse(
 {
 	struct rtw_ieee80211_hdr	*pwlanhdr;
 	u16						*fctrl;
-	u32						pktlen;
+	//u32						pktlen;
 	struct mlme_priv		*pmlmepriv = &padapter->mlmepriv;
-	struct wlan_network		*cur_network = &pmlmepriv->cur_network;
+	//struct wlan_network		*cur_network = &pmlmepriv->cur_network;
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct security_priv *psecuritypriv = &padapter->securitypriv;
@@ -1787,9 +1789,10 @@ static void rtl8812_set_FwRsvdPagePkt(PADAPTER padapter, BOOLEAN bDLFinished)
 	struct mlme_ext_info	*pmlmeinfo;
 	struct pwrctrl_priv *pwrctl;
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-	u32	BeaconLength=0, ProbeRspLength=0, PSPollLength=0;
+	//u32	BeaconLength=0, ProbeRspLength=0, PSPollLength=0;
+	u32	BeaconLength=0, PSPollLength=0;
 	u32	NullDataLength=0, QosNullLength=0, BTQosNullLength=0;
-	u32	ProbeReqLength=0;
+	//u32	ProbeReqLength=0;
 	u8	*ReservedPagePacket;
 	u8	TxDescLen = TXDESC_SIZE, TxDescOffset = TXDESC_OFFSET;
 	u8	TotalPageNum=0, CurtPktPageNum=0, RsvdPageNum=0;
@@ -1797,11 +1800,11 @@ static void rtl8812_set_FwRsvdPagePkt(PADAPTER padapter, BOOLEAN bDLFinished)
 	u32	TotalPacketLen, MaxRsvdPageBufSize=0;
 	RSVDPAGE_LOC	RsvdPageLoc;
 #ifdef CONFIG_WOWLAN
-	u32	ARPLegnth = 0, GTKLegnth = 0, PNOLength = 0, ScanInfoLength = 0;
-	u32	SSIDLegnth = 0;
-	struct security_priv *psecuritypriv = &padapter->securitypriv; //added by xx
-	u8 currentip[4];
-	u8 cur_dot11txpn[8];
+	//u32	ARPLegnth = 0, GTKLegnth = 0, PNOLength = 0, ScanInfoLength = 0;
+	//u32	SSIDLegnth = 0;
+	//struct security_priv *psecuritypriv = &padapter->securitypriv; //added by xx
+	//u8 currentip[4];
+	//u8 cur_dot11txpn[8];
 #ifdef CONFIG_GTK_OL
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct sta_info * psta;
@@ -2226,7 +2229,7 @@ static void rtl8812_set_FwRemoteWakeCtrl_Cmd(PADAPTER padapter, u8 benable)
 	u8 u1H2CRemoteWakeCtrlParm[H2C_REMOTE_WAKE_CTRL_LEN]= {0};
 	struct security_priv* psecuritypriv=&(padapter->securitypriv);
 	struct pwrctrl_priv *ppwrpriv = adapter_to_pwrctl(padapter);
-	u8 res = 0, count = 0;
+	//u8 res = 0, count = 0;
 
 	DBG_871X("%s(): Enable=%d\n", __func__, benable);
 
@@ -2255,7 +2258,7 @@ static void rtl8812_set_FwRemoteWakeCtrl_Cmd(PADAPTER padapter, u8 benable)
 			SET_H2CCMD_REMOTE_WAKE_CTRL_ARP_ACTION(u1H2CRemoteWakeCtrlParm, 1);
 		}
 	}
-exit:
+//exit:
 	DBG_871X("H2C  81[0]:%02x , 81[2]:%02x\n", u1H2CRemoteWakeCtrlParm[0], u1H2CRemoteWakeCtrlParm[2]);
 	RT_PRINT_DATA(_module_hal_init_c_, _drv_always_, "u1H2CRemoteWakeCtrlParm:", u1H2CRemoteWakeCtrlParm, H2C_REMOTE_WAKE_CTRL_LEN);
 	FillH2CCmd_8812(padapter, H2C_REMOTE_WAKE_CTRL,
@@ -2327,9 +2330,9 @@ static void rtl8812_set_FwKeepAlive_cmd(PADAPTER padapter, u8 benable, u8 pkt_ty
 static void rtl8812_set_FwWoWlanCtrl_Cmd(PADAPTER padapter, u8 bFuncEn)
 {
 	struct security_priv *psecpriv = &padapter->securitypriv;
-	struct pwrctrl_priv *ppwrpriv = adapter_to_pwrctl(padapter);
+	//struct pwrctrl_priv *ppwrpriv = adapter_to_pwrctl(padapter);
 	u8 u1H2CWoWlanCtrlParm[H2C_WOWLAN_LEN]= {0};
-	u8 discont_wake = 1, gpionum = 0, gpio_dur = 0, hw_unicast = 0, gpio_pulse_cnt=100;
+	u8 discont_wake = 1, gpionum = 0, gpio_dur = 0, hw_unicast = 0;
 	u8 sdio_wakeup_enable = 0;
 	u8 gpio_high_active = 0; //0: low active, 1: high active
 	u8 magic_pkt = 1;
@@ -2394,7 +2397,7 @@ void rtl8812_download_rsvd_page(PADAPTER padapter, u8 mstatus)
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
-	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
+	//struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
 	BOOLEAN		bcn_valid = _FALSE;
 	u8	DLBcnCount=0;
 	u32 poll = 0;
@@ -2724,7 +2727,9 @@ C2HPacketHandler_8812(
     IN	u8			Length
 )
 {
-	//struct c2h_evt_hdr_88xx *c2h_evt = (struct c2h_evt_hdr_88xx *)Buffer;
+#ifdef CONFIG_BT_COEXIST
+	struct c2h_evt_hdr_88xx *c2h_evt = (struct c2h_evt_hdr_88xx *)Buffer;
+#endif
 	u8	c2hCmdId=0, c2hCmdSeq=0, c2hCmdLen=0;
 	u8	*tmpBuf=NULL;
 
@@ -2831,8 +2836,8 @@ static void SetFwRsvdPagePkt_BTCoex(PADAPTER padapter)
 	struct pwrctrl_priv *pwrctl;
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
 	u32	BeaconLength=0;
-	u32	NullDataLength=0, QosNullLength=0, BTQosNullLength=0;
-	u32	ProbeReqLength=0;
+	u32	BTQosNullLength=0;
+	//u32	ProbeReqLength=0;
 	u8	*ReservedPagePacket;
 	u8	TxDescLen = TXDESC_SIZE, TxDescOffset = TXDESC_OFFSET;
 	u8	TotalPageNum=0, CurtPktPageNum=0, RsvdPageNum=0;
@@ -2953,7 +2958,7 @@ void rtl8812a_download_BTCoex_AP_mode_rsvd_page(PADAPTER padapter)
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
-	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
+	//struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
 	BOOLEAN bRecover = _FALSE;
 	BOOLEAN	bcn_valid = _FALSE;
 	u8	DLBcnCount=0;

@@ -427,7 +427,7 @@ halbtc8812a2ant_MonitorBtCtr(
 {
 	u4Byte 			regHPTxRx, regLPTxRx, u4Tmp;
 	u4Byte			regHPTx=0, regHPRx=0, regLPTx=0, regLPRx=0;
-	u1Byte			u1Tmp;
+	//u1Byte			u1Tmp;
 
 	regHPTxRx = 0x770;
 	regLPTxRx = 0x774;
@@ -513,7 +513,7 @@ halbtc8812a2ant_UpdateBtLinkInfo(
     IN	PBTC_COEXIST		pBtCoexist
 )
 {
-	PBTC_STACK_INFO 	pStackInfo=&pBtCoexist->stackInfo;
+	//PBTC_STACK_INFO 	pStackInfo=&pBtCoexist->stackInfo;
 	PBTC_BT_LINK_INFO	pBtLinkInfo=&pBtCoexist->btLinkInfo;
 	BOOLEAN				bBtHsOn=FALSE;
 
@@ -1266,7 +1266,7 @@ halbtc8812a2ant_LpsRpwm(
     IN	u1Byte			rpwmVal
 )
 {
-	BOOLEAN	bForceExecPwrCmd=FALSE;
+	//BOOLEAN	bForceExecPwrCmd=FALSE;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE_FW, ("[BTCoex], %s set lps/rpwm=0x%x/0x%x \n",
 	          (bForceExec? "force to":""), lpsVal, rpwmVal));
@@ -1367,8 +1367,8 @@ halbtc8812a2ant_PsTdma(
     IN	u1Byte			type
 )
 {
-	BOOLEAN			bTurnOnByCnt=FALSE;
-	u1Byte			psTdmaTypeByCnt=0;
+	//BOOLEAN			bTurnOnByCnt=FALSE;
+	//u1Byte			psTdmaTypeByCnt=0;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE_FW, ("[BTCoex], %s turn %s PS TDMA, type=%d\n",
 	          (bForceExec? "force to":""), (bTurnOn? "ON":"OFF"), type));
@@ -1613,7 +1613,7 @@ halbtc8812a2ant_IsCommonAction(
     IN	PBTC_COEXIST		pBtCoexist
 )
 {
-	u1Byte				wifiRssiState=BTC_RSSI_STATE_HIGH;
+	//u1Byte				wifiRssiState=BTC_RSSI_STATE_HIGH;
 	PBTC_BT_LINK_INFO	pBtLinkInfo=&pBtCoexist->btLinkInfo;
 	BOOLEAN				bCommon=FALSE, bWifiConnected=FALSE, bWifiBusy=FALSE;
 	BOOLEAN				bBtHsOn=FALSE;
@@ -2499,7 +2499,7 @@ halbtc8812a2ant_GetBtRssiThreshold(
     IN	pu1Byte				pThres1
 )
 {
-	u1Byte antType, btThreshold=0;
+	u1Byte antType;
 
 	pBtCoexist->fBtcGet(pBtCoexist, BTC_GET_U1_ANT_TYPE, &antType);
 
@@ -3429,8 +3429,8 @@ halbtc8812a2ant_RunCoexistMechanism(
     IN	PBTC_COEXIST		pBtCoexist
 )
 {
-	BOOLEAN				bWifiUnder5G=FALSE, bBtHsOn=FALSE;
-	u1Byte				btInfoOriginal=0, btRetryCnt=0;
+	BOOLEAN				bWifiUnder5G=FALSE;
+	//u1Byte				btInfoOriginal=0, btRetryCnt=0;
 	u1Byte				algorithm=0;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE, ("[BTCoex], RunCoexistMechanism()===>\n"));
@@ -3539,8 +3539,8 @@ halbtc8812a2ant_InitHwConfig(
     IN	BOOLEAN				bBackUp
 )
 {
-	u4Byte	u4Tmp=0;
-	u2Byte	u2Tmp=0;
+	//u4Byte	u4Tmp=0;
+	//u2Byte	u2Tmp=0;
 	u1Byte	u1Tmp=0;
 
 	BTC_PRINT(BTC_MSG_INTERFACE, INTF_INIT, ("[BTCoex], 2Ant Init HW Config!!\n"));
@@ -3953,11 +3953,11 @@ EXhalbtc8812a2ant_BtInfoNotify(
     IN	u1Byte			length
 )
 {
-	PBTC_BT_LINK_INFO	pBtLinkInfo=&pBtCoexist->btLinkInfo;
+	//PBTC_BT_LINK_INFO	pBtLinkInfo=&pBtCoexist->btLinkInfo;
 	u1Byte			btInfo=0;
 	u1Byte			i, rspSource=0;
 	BOOLEAN			bBtBusy=FALSE, bLimitedDig=FALSE;
-	BOOLEAN			bWifiConnected=FALSE, bBtHsOn=FALSE, bWifiUnder5G=FALSE;
+	BOOLEAN			bWifiConnected=FALSE, bWifiUnder5G=FALSE;
 
 	pCoexSta->bC2hBtInfoReqSent = FALSE;
 	pBtCoexist->fBtcGet(pBtCoexist, BTC_GET_BL_WIFI_UNDER_5G, &bWifiUnder5G);
@@ -4103,7 +4103,7 @@ EXhalbtc8812a2ant_HaltNotify(
     IN	PBTC_COEXIST			pBtCoexist
 )
 {
-	u1Byte u1Tmp=0;
+	//u1Byte u1Tmp=0;
 
 	BTC_PRINT(BTC_MSG_INTERFACE, INTF_NOTIFY, ("[BTCoex], Halt notify\n"));
 
@@ -4125,8 +4125,8 @@ EXhalbtc8812a2ant_Periodical(
 {
 	static u1Byte		disVerInfoCnt=0;
 	u4Byte				fwVer=0, btPatchVer=0;
-	PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
-	PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
+	//PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
+	//PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE, ("[BTCoex], ==========================Periodical===========================\n"));
 

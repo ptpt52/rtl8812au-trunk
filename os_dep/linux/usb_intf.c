@@ -1436,7 +1436,9 @@ exit:
 
 static void rtw_usb_if1_deinit(_adapter *if1)
 {
-	//struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(if1);
+#if defined(CONFIG_BT_COEXIST) || defined(CONFIG_WOWLAN)
+	struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(if1);
+#endif
 	struct net_device *pnetdev = if1->pnetdev;
 	struct mlme_priv *pmlmepriv= &if1->mlmepriv;
 

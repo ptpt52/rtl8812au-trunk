@@ -1180,7 +1180,7 @@ halbtc8723a2ant_MonitorBtCtr(
 {
 	u4Byte 			regHPTxRx, regLPTxRx, u4Tmp;
 	u4Byte			regHPTx=0, regHPRx=0, regLPTx=0, regLPRx=0;
-	u1Byte			u1Tmp;
+	//u1Byte			u1Tmp;
 
 	regHPTxRx = 0x770;
 	regLPTxRx = 0x774;
@@ -2578,7 +2578,7 @@ halbtc8723a2ant_RunCoexistMechanism(
 )
 {
 	PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
-	u1Byte				btInfoOriginal=0, btRetryCnt=0;
+	//u1Byte				btInfoOriginal=0, btRetryCnt=0;
 	u1Byte				algorithm=0;
 
 	if(pBtCoexist->bManualControl) {
@@ -2708,8 +2708,8 @@ EXhalbtc8723a2ant_InitHwConfig(
     IN	BOOLEAN				bWifiOnly
 )
 {
-	u4Byte	u4Tmp=0;
-	u1Byte	u1Tmp=0;
+	//u4Byte	u4Tmp=0;
+	//u1Byte	u1Tmp=0;
 
 	BTC_PRINT(BTC_MSG_INTERFACE, INTF_INIT, ("[BTCoex], 2Ant Init HW Config!!\n"));
 
@@ -2990,8 +2990,9 @@ EXhalbtc8723a2ant_BtInfoNotify(
 {
 	u1Byte			btInfo=0;
 	u1Byte			i, rspSource=0;
-	BOOLEAN			bBtBusy=FALSE, bLimitedDig=FALSE;
-	BOOLEAN			bWifiConnected=FALSE, bBtHsOn=FALSE;
+	//BOOLEAN			bBtBusy=FALSE, bLimitedDig=FALSE;
+	//BOOLEAN			bWifiConnected=FALSE, bBtHsOn=FALSE;
+	BOOLEAN			bBtHsOn=FALSE;
 
 	pCoexSta->bC2hBtInfoReqSent = FALSE;
 

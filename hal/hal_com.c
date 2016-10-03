@@ -1474,11 +1474,12 @@ static void rtw_hal_set_output_gpio(_adapter* padapter, u8 index, u8 outputval)
 
 void rtw_hal_set_FwAoacRsvdPage_cmd(PADAPTER padapter, PRSVDPAGE_LOC rsvdpageloc)
 {
-	//struct	hal_ops *pHalFunc = &padapter->HalFunc;
 	//struct	pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
-	//struct	mlme_priv *pmlmepriv = &padapter->mlmepriv;
 	//u8	res = 0, count = 0, ret = 0;
 #ifdef CONFIG_WOWLAN
+	u8 ret = 0;
+	struct	hal_ops *pHalFunc = &padapter->HalFunc;
+	struct	mlme_priv *pmlmepriv = &padapter->mlmepriv;
 	u8 u1H2CAoacRsvdPageParm[H2C_AOAC_RSVDPAGE_LOC_LEN]= {0};
 
 	DBG_871X("AOACRsvdPageLoc: RWC=%d ArpRsp=%d NbrAdv=%d GtkRsp=%d GtkInfo=%d ProbeReq=%d NetworkList=%d\n",
@@ -1639,9 +1640,9 @@ static u8 rtw_hal_pause_rx_dma(_adapter* adapter)
 {
 	u8 ret = 0;
 	u8 trycnt = 100;
-	u16 len = 0;
-	u32 tmp = 0;
-	int res = 0;
+	//u16 len = 0;
+	//u32 tmp = 0;
+	//int res = 0;
 	//RX DMA stop
 	DBG_871X_LEVEL(_drv_always_, "Pause DMA\n");
 	rtw_write32(adapter, REG_RXPKT_NUM,
@@ -1887,7 +1888,7 @@ static u8 rtw_hal_set_disconnect_decision_cmd(_adapter *adapter, u8 enable)
 	return ret;
 }
 
-static u8 rtw_hal_set_ap_offload_ctrl_cmd(_adapter *adapter, u8 enable)
+static inline u8 rtw_hal_set_ap_offload_ctrl_cmd(_adapter *adapter, u8 enable)
 {
 	struct hal_ops *pHalFunc = &adapter->HalFunc;
 	u8 u1H2CAPOffloadCtrlParm[H2C_WOWLAN_LEN]= {0};
@@ -1909,7 +1910,7 @@ static u8 rtw_hal_set_ap_offload_ctrl_cmd(_adapter *adapter, u8 enable)
 	return ret;
 }
 
-static u8 rtw_hal_set_ap_rsvdpage_loc_cmd(_adapter *adapter,
+static inline u8 rtw_hal_set_ap_rsvdpage_loc_cmd(_adapter *adapter,
         PRSVDPAGE_LOC rsvdpageloc)
 {
 	struct hal_ops *pHalFunc = &adapter->HalFunc;
@@ -2019,7 +2020,7 @@ static u8 rtw_hal_set_remote_wake_ctrl_cmd(_adapter *adapter, u8 enable)
 	struct security_priv* psecuritypriv=&(adapter->securitypriv);
 	struct pwrctrl_priv *ppwrpriv = adapter_to_pwrctl(adapter);
 	u8 u1H2CRemoteWakeCtrlParm[H2C_REMOTE_WAKE_CTRL_LEN]= {0};
-	u8 ret = _FAIL, count = 0;
+	u8 ret = _FAIL;
 
 	DBG_871X("%s(): enable=%d\n", __func__, enable);
 
@@ -2161,11 +2162,11 @@ void rtw_hal_set_fw_wow_related_cmd(_adapter* padapter, u8 enable)
 {
 	struct security_priv *psecpriv = &padapter->securitypriv;
 	struct pwrctrl_priv *ppwrpriv = adapter_to_pwrctl(padapter);
-	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
-	struct sta_info *psta = NULL;
-	u16 media_status_rpt;
+	//struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
+	//struct sta_info *psta = NULL;
+	//u16 media_status_rpt;
 	u8	pkt_type = 0;
-	u8 ret = _SUCCESS;
+	//u8 ret = _SUCCESS;
 
 	DBG_871X_LEVEL(_drv_always_, "+%s()+: enable=%d\n", __func__, enable);
 	_func_enter_;
@@ -3984,9 +3985,9 @@ static void rtw_hal_construct_ARPRsp(
 {
 	struct rtw_ieee80211_hdr	*pwlanhdr;
 	u16	*fctrl;
-	u32	pktlen;
+	//u32	pktlen;
 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
-	struct wlan_network	*cur_network = &pmlmepriv->cur_network;
+	//struct wlan_network	*cur_network = &pmlmepriv->cur_network;
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct security_priv	*psecuritypriv = &padapter->securitypriv;
@@ -4455,6 +4456,9 @@ void rtw_hal_set_fw_rsvd_page(_adapter* adapter, bool finished)
 	struct hal_ops *pHalFunc = &adapter->HalFunc;
 	u32	BeaconLength = 0, PSPollLength = 0;
 	u32	NullDataLength = 0, QosNullLength = 0;
+#ifdef CONFIG_BT_COEXIST
+	u32 BTQosNullLength = 0;
+#endif
 	//u32	ProbeReqLength = 0, NullFunctionDataLength = 0;
 	u8	TxDescLen = TXDESC_SIZE, TxDescOffset = TXDESC_OFFSET;
 	u8	TotalPageNum=0, CurtPktPageNum=0, RsvdPageNum=0;
@@ -4463,9 +4467,10 @@ void rtw_hal_set_fw_rsvd_page(_adapter* adapter, bool finished)
 	u32	TotalPacketLen = 0, MaxRsvdPageBufSize = 0, PageSize = 0;
 	RSVDPAGE_LOC	RsvdPageLoc;
 #ifdef CONFIG_WOWLAN
-	u32	ARPLegnth = 0, GTKLegnth = 0, PNOLength = 0, ScanInfoLength = 0;
-	u32	SSIDLegnth = 0;
-	struct security_priv *psecuritypriv = &adapter->securitypriv; //added by xx
+	//u32	ARPLegnth = 0, GTKLegnth = 0, PNOLength = 0, ScanInfoLength = 0;
+	u32	ARPLegnth = 0;
+	//u32	SSIDLegnth = 0;
+	//struct security_priv *psecuritypriv = &adapter->securitypriv; //added by xx
 	u8 currentip[4];
 	u8 cur_dot11txpn[8];
 #ifdef CONFIG_GTK_OL
@@ -5113,13 +5118,13 @@ void SetHwReg(_adapter *adapter, u8 variable, const u8 *val)
 	case HW_VAR_WOWLAN: {
 		struct wowlan_ioctl_param *poidparam;
 		struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(adapter);
-		struct security_priv *psecuritypriv = &adapter->securitypriv;
+		//struct security_priv *psecuritypriv = &adapter->securitypriv;
 		struct mlme_priv *pmlmepriv = &adapter->mlmepriv;
 		struct hal_ops *pHalFunc = &adapter->HalFunc;
 		struct sta_info *psta = NULL;
 		int res;
 		u16 media_status_rpt;
-		u8 val8;
+		//u8 val8;
 
 		poidparam = (struct wowlan_ioctl_param *)val;
 		switch (poidparam->subcode) {

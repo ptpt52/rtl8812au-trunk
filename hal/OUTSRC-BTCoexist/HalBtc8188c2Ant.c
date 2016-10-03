@@ -1319,7 +1319,7 @@ halbtc8188c2ant_ActionPanA2dpBc4(
 )
 {
 	BOOLEAN		bBtHsOn=FALSE, bWifiBusy=FALSE;
-	u1Byte		wifiRssiState;
+	//u1Byte		wifiRssiState;
 
 	pBtCoexist->fBtcGet(pBtCoexist, BTC_GET_BL_HS_OPERATION, &bBtHsOn);
 
@@ -1475,7 +1475,7 @@ EXhalbtc8188c2ant_DisplayCoexInfo(
 	PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
 	PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
 	pu1Byte				cliBuf=pBtCoexist->cliBuf;
-	u1Byte				u1Tmp[4], i, btInfoExt, psTdmaCase=0;
+	u1Byte				u1Tmp[4];
 	u4Byte				u4Tmp[4];
 
 	CL_SPRINTF(cliBuf, BT_TMP_BUF_SIZE, "\r\n ============[BT Coexist info]============");

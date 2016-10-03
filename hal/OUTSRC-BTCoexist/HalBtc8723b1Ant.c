@@ -367,10 +367,10 @@ halbtc8723b1ant_MonitorBtCtr(
     IN	PBTC_COEXIST		pBtCoexist
 )
 {
-	u4Byte 			regHPTxRx, regLPTxRx, u4Tmp, u4Tmp1;
+	u4Byte 			regHPTxRx, regLPTxRx, u4Tmp;
 	u4Byte			regHPTx=0, regHPRx=0, regLPTx=0, regLPRx=0;
-	u1Byte			u1Tmp, u1Tmp1;
-	s4Byte			wifiRssi;
+	//u1Byte			u1Tmp, u1Tmp1;
+	//s4Byte			wifiRssi;
 	static u1Byte		NumOfBtCounterChk = 0;
 
 	//to avoid 0x76e[3] = 1 (WLAN_Act control by PTA) during IPS
@@ -424,8 +424,8 @@ halbtc8723b1ant_MonitorWiFiCtr(
     IN	PBTC_COEXIST		pBtCoexist
 )
 {
-	u4Byte 	u4Tmp;
-	u2Byte 	u2Tmp[3];
+	//u4Byte 	u4Tmp;
+	//u2Byte 	u2Tmp[3];
 	s4Byte	wifiRssi=0;
 	BOOLEAN bWifiBusy = FALSE, bWifiUnderBMode = FALSE;
 	static u1Byte nCCKLockCounter = 0;
@@ -993,7 +993,7 @@ halbtc8723b1ant_LpsRpwm(
     IN	u1Byte			rpwmVal
 )
 {
-	BOOLEAN	bForceExecPwrCmd=FALSE;
+	//BOOLEAN	bForceExecPwrCmd=FALSE;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE_FW, ("[BTCoex], %s set lps/rpwm=0x%x/0x%x \n",
 	          (bForceExec? "force to":""), lpsVal, rpwmVal));
@@ -1323,10 +1323,11 @@ halbtc8723b1ant_PsTdma(
     IN	u1Byte			type
 )
 {
-	PBTC_BOARD_INFO	pBoardInfo=&pBtCoexist->boardInfo;
+	//PBTC_BOARD_INFO	pBoardInfo=&pBtCoexist->boardInfo;
 	PBTC_BT_LINK_INFO pBtLinkInfo=&pBtCoexist->btLinkInfo;
-	BOOLEAN			bTurnOnByCnt=FALSE, bWifiBusy=FALSE, bWiFiNoisy=FALSE;
-	u1Byte			psTdmaTypeByCnt=0, rssiAdjustVal=0;
+	//BOOLEAN			bTurnOnByCnt=FALSE, bWifiBusy=FALSE, bWiFiNoisy=FALSE;
+	BOOLEAN			bWifiBusy=FALSE;
+	u1Byte			rssiAdjustVal=0;
 	u1Byte			psTdmaByte4Val = 0x50, psTdmaByte0Val = 0x51, psTdmaByte3Val =  0x10;
 	s1Byte			nWiFiDurationAdjust = 0x0;
 	static BOOLEAN	 bPreWifiBusy=FALSE;
@@ -1597,7 +1598,7 @@ halbtc8723b1ant_TdmaDurationAdjustForAcl(
 	static s4Byte		up,dn,m,n,WaitCount;
 	s4Byte			result;   //0: no change, +1: increase WiFi duration, -1: decrease WiFi duration
 	u1Byte			retryCount=0, btInfoExt;
-	static BOOLEAN	bPreWifiBusy=FALSE;
+	//static BOOLEAN	bPreWifiBusy=FALSE;
 	BOOLEAN			bWifiBusy = FALSE;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE_FW, ("[BTCoex], TdmaDurationAdjustForAcl()\n"));
@@ -2076,7 +2077,7 @@ halbtc8723b1ant_ActionBtScoHidOnlyBusy(
 {
 	PBTC_BT_LINK_INFO pBtLinkInfo=&pBtCoexist->btLinkInfo;
 	BOOLEAN	bWifiConnected=FALSE;
-	u1Byte	wifiRssiState=BTC_RSSI_STATE_HIGH;
+	//u1Byte	wifiRssiState=BTC_RSSI_STATE_HIGH;
 
 	pBtCoexist->fBtcGet(pBtCoexist, BTC_GET_BL_WIFI_CONNECTED, &bWifiConnected);
 
@@ -2278,7 +2279,7 @@ halbtc8723b1ant_ActionWifiConnected(
 	BOOLEAN 	bWifiBusy=FALSE;
 	BOOLEAN		bScan=FALSE, bLink=FALSE, bRoam=FALSE;
 	BOOLEAN		bUnder4way=FALSE, bApEnable=FALSE;
-	u4Byte		wifiBw;
+	//u4Byte		wifiBw;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE, ("[BTCoex], CoexForWifiConnect()===>\n"));
 
@@ -2433,7 +2434,7 @@ halbtc8723b1ant_RunCoexistMechanism(
 	BOOLEAN	bBtCtrlAggBufSize=FALSE;
 	BOOLEAN	bMiracastPlusBt=FALSE;
 	u1Byte	aggBufSize=5;
-	u1Byte	wifiRssiState=BTC_RSSI_STATE_HIGH;
+	//u1Byte	wifiRssiState=BTC_RSSI_STATE_HIGH;
 	u4Byte	wifiLinkStatus=0;
 	u4Byte	numOfWifiLink=0, wifiBw;
 
@@ -2568,7 +2569,7 @@ halbtc8723b1ant_Log2Base(
 
 )
 {
-	u1Byte 	i,j;
+	u1Byte 	j;
 	u4Byte	tmp, tmp2, val_integerdB=0, tindex, shiftcount=0;
 	u4Byte 	result,val_fractiondB=0,Table_fraction[21]= {0,432, 332, 274, 232, 200,
 	                                                     174, 151,132,115,100,86,74,62,51,42,
@@ -2636,11 +2637,11 @@ halbtc8723b1ant_InitHwConfig(
     IN	BOOLEAN				bWifiOnly
 )
 {
-	PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
+	//PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
 	u4Byte				u4Tmp=0;//, fwVer;
-	u2Byte				u2Tmp=0;
-	u1Byte				u1Tmp=0, u1Tmpa=0, u1Tmpb=0;
-	u1Byte				H2C_Parameter[2] = {0};
+	//u2Byte				u2Tmp=0;
+	u1Byte				u1Tmpa=0, u1Tmpb=0;
+	//u1Byte				H2C_Parameter[2] = {0};
 
 	BTC_PRINT(BTC_MSG_INTERFACE, INTF_INIT, ("[BTCoex], 1Ant Init HW Config!!\n"));
 
@@ -3083,7 +3084,7 @@ halbtc8723b1ant_AntennaDetection(
     IN	u4Byte					seconds
 )
 {
-	u4Byte realseconds = 0, i=0, i_max=0, val_max=0, j;
+	u4Byte i=0, i_max=0, val_max=0;
 
 	//Stop Coex DM
 	pBtCoexist->bStopCoexDm = TRUE;
@@ -3514,7 +3515,7 @@ EXhalbtc8723b1ant_IpsNotify(
     IN	u1Byte			type
 )
 {
-	u4Byte	u4Tmp=0;
+	//u4Byte	u4Tmp=0;
 
 	if(pBtCoexist->bManualControl ||	pBtCoexist->bStopCoexDm)
 		return;
@@ -3842,7 +3843,7 @@ EXhalbtc8723b1ant_BtInfoNotify(
     IN	u1Byte			length
 )
 {
-	PBTC_BT_LINK_INFO	pBtLinkInfo=&pBtCoexist->btLinkInfo;
+	//PBTC_BT_LINK_INFO	pBtLinkInfo=&pBtCoexist->btLinkInfo;
 	u1Byte				btInfo=0;
 	u1Byte				i, rspSource=0;
 	BOOLEAN				bWifiConnected=FALSE;
@@ -4051,7 +4052,7 @@ EXhalbtc8723b1ant_HaltNotify(
     IN	PBTC_COEXIST			pBtCoexist
 )
 {
-	u4Byte	u4Tmp;
+	//u4Byte	u4Tmp;
 
 	BTC_PRINT(BTC_MSG_INTERFACE, INTF_NOTIFY, ("[BTCoex], Halt notify\n"));
 
@@ -4114,8 +4115,8 @@ EXhalbtc8723b1ant_Periodical(
 {
 	static u1Byte		disVerInfoCnt=0;
 	u4Byte				fwVer=0, btPatchVer=0;
-	PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
-	PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
+	//PBTC_BOARD_INFO		pBoardInfo=&pBtCoexist->boardInfo;
+	//PBTC_STACK_INFO		pStackInfo=&pBtCoexist->stackInfo;
 
 	BTC_PRINT(BTC_MSG_ALGORITHM, ALGO_TRACE, ("[BTCoex], ==========================Periodical===========================\n"));
 

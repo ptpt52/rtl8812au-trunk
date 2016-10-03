@@ -2751,17 +2751,27 @@ static int route_dump(u32 *gw_addr ,int* gw_index)
 	iov.iov_base = &req;
 	iov.iov_len = sizeof(req);
 
+	memset(&msg, 0, sizeof(msg));
 	msg.msg_name = &nladdr;
 	msg.msg_namelen = sizeof(nladdr);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 0)
 	msg.msg_iov = &iov;
 	msg.msg_iovlen = 1;
+#else
+	msg.msg_iter.iov = &iov;
+	msg.msg_iter.count = 1;
+#endif
 	msg.msg_control = NULL;
 	msg.msg_controllen = 0;
 	msg.msg_flags = MSG_DONTWAIT;
 
 	oldfs = get_fs();
 	set_fs(KERNEL_DS);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 0)
 	err = sock_sendmsg(sock, &msg, sizeof(req));
+#else
+	err = sock_sendmsg(sock, &msg);
+#endif
 	set_fs(oldfs);
 
 	if (size < 0)
@@ -2785,7 +2795,8 @@ restart:
 
 		oldfs = get_fs();
 		set_fs(KERNEL_DS);
-		err = sock_recvmsg(sock, &msg, PAGE_SIZE, MSG_DONTWAIT);
+		//err = sock_recvmsg(sock, &msg, PAGE_SIZE, MSG_DONTWAIT);
+		err = sock_recvmsg(sock, &msg, MSG_DONTWAIT);
 		set_fs(oldfs);
 
 		if (err < 0)
@@ -2846,17 +2857,27 @@ done:
 		iov.iov_base = &req;
 		iov.iov_len = sizeof(req);
 
+		memset(&msg, 0, sizeof(msg));
 		msg.msg_name = &nladdr;
 		msg.msg_namelen = sizeof(nladdr);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 0)
 		msg.msg_iov = &iov;
 		msg.msg_iovlen = 1;
+#else
+		msg.msg_iter.iov = &iov;
+		msg.msg_iter.count = 1;
+#endif
 		msg.msg_control = NULL;
 		msg.msg_controllen = 0;
 		msg.msg_flags=MSG_DONTWAIT;
 
 		oldfs = get_fs();
 		set_fs(KERNEL_DS);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 0)
 		err = sock_sendmsg(sock, &msg, sizeof(req));
+#else
+		err = sock_sendmsg(sock, &msg);
+#endif
 		set_fs(oldfs);
 
 		if (err > 0)
@@ -2927,7 +2948,7 @@ int	rtw_gw_addr_query(_adapter *padapter)
 	struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(padapter);
 	u32 gw_addr = 0; // default gw address
 	unsigned char gw_mac[32] = {0}; // default gw mac
-	int i;
+	//int i;
 	int res;
 
 	if (pwrctl->wowlan_from_cmd == _TRUE) {
@@ -3098,11 +3119,11 @@ int rtw_suspend_wow(_adapter *padapter)
 #ifdef CONFIG_CONCURRENT_MODE
 	struct net_device *pbuddy_netdev = padapter->pbuddy_adapter->pnetdev;
 #endif
-	struct dvobj_priv *psdpriv = padapter->dvobj;
-	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
+	//struct dvobj_priv *psdpriv = padapter->dvobj;
+	//struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
 	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
 	struct wowlan_ioctl_param poidparam;
-	u8 ps_mode;
+	//u8 ps_mode;
 	int ret = _SUCCESS;
 
 	DBG_871X("==> "FUNC_ADPT_FMT" entry....\n", FUNC_ADPT_ARG(padapter));
@@ -3530,7 +3551,7 @@ exit:
 #ifdef CONFIG_WOWLAN
 int rtw_resume_process_wow(_adapter *padapter)
 {
-	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+	//struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
 	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct net_device *pnetdev = padapter->pnetdev;

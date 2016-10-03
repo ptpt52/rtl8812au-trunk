@@ -1166,8 +1166,8 @@ SetFwRelatedForWoWLAN8812(
 )
 {
 	int				status=_FAIL;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
-	u8				bRecover = _FALSE;
+	//HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
+	//u8				bRecover = _FALSE;
 	//
 	// 1. Before WoWLAN we need to re-download WoWLAN Fw.
 	//

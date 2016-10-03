@@ -2344,7 +2344,9 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 	u8 baddr[ETH_ALEN] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 #endif //CONFIG_TDLS
 
+#ifdef CONFIG_TRAFFIC_PROTECT
 	RT_LINK_DETECT_T * link_detect = &pmlmepriv->LinkDetectInfo;
+#endif
 
 	collect_traffic_statistics(padapter);
 
