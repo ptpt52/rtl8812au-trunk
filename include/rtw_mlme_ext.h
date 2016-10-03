@@ -115,14 +115,14 @@ MCS rate definitions
 #define MCS_RATE_2R_13TO15_OFF	(0x00001fff)
 
 
-extern unsigned char RTW_WPA_OUI[];
-extern unsigned char WMM_OUI[];
-extern unsigned char WPS_OUI[];
-extern unsigned char WFD_OUI[];
-extern unsigned char P2P_OUI[];
+extern const unsigned char RTW_WPA_OUI[];
+extern const unsigned char WMM_OUI[];
+extern const unsigned char WPS_OUI[];
+extern const unsigned char WFD_OUI[];
+extern const unsigned char P2P_OUI[];
 
-extern unsigned char WMM_INFO_OUI[];
-extern unsigned char WMM_PARA_OUI[];
+extern const unsigned char WMM_INFO_OUI[];
+extern const unsigned char WMM_PARA_OUI[];
 
 
 //
@@ -640,16 +640,16 @@ void read_cam(_adapter *padapter ,u8 entry, u8 *get_key);
 void dump_cam_table(_adapter *padapter);
 
 /* modify HW only */
-void _write_cam(_adapter *padapter, u8 entry, u16 ctrl, u8 *mac, u8 *key);
+void _write_cam(_adapter *padapter, u8 entry, u16 ctrl, const u8 *mac, const u8 *key);
 void _clear_cam_entry(_adapter *padapter, u8 entry);
 void write_cam_from_cache(_adapter *adapter, u8 id);
 
 /* modify both HW and cache */
-void write_cam(_adapter *padapter, u8 id, u16 ctrl, u8 *mac, u8 *key);
+void write_cam(_adapter *padapter, u8 id, u16 ctrl, const u8 *mac, const u8 *key);
 void clear_cam_entry(_adapter *padapter, u8 id);
 
 /* modify cache only */
-void write_cam_cache(_adapter *adapter, u8 id, u16 ctrl, u8 *mac, u8 *key);
+void write_cam_cache(_adapter *adapter, u8 id, u16 ctrl, const u8 *mac, const u8 *key);
 void clear_cam_cache(_adapter *adapter, u8 id);
 
 void invalidate_cam_all(_adapter *padapter);
@@ -721,7 +721,7 @@ unsigned int is_ap_in_wep(_adapter *padapter);
 unsigned int should_forbid_n_rate(_adapter * padapter);
 
 s16 rtw_get_camid(_adapter *adapter, struct sta_info* sta, s16 kid);
-s16 rtw_camid_search(_adapter *adapter, u8 *addr, s16 kid);
+s16 rtw_camid_search(_adapter *adapter, const u8 *addr, s16 kid);
 s16 rtw_camid_alloc(_adapter *adapter, struct sta_info *sta, u8 kid);
 void rtw_camid_free(_adapter *adapter, u8 cam_id);
 bool rtw_camid_is_gk(_adapter *padapter, u8 entry);
@@ -779,9 +779,9 @@ s32 issue_probereq_ex(_adapter *padapter, NDIS_802_11_SSID *pssid, u8* da, u8 ch
 int issue_nulldata(_adapter *padapter, unsigned char *da, unsigned int power_mode, int try_cnt, int wait_ms);
 s32 issue_nulldata_in_interrupt(PADAPTER padapter, u8 *da, unsigned int power_mode);
 int issue_qos_nulldata(_adapter *padapter, unsigned char *da, u16 tid, int try_cnt, int wait_ms);
-int issue_deauth(_adapter *padapter, unsigned char *da, unsigned short reason);
+int issue_deauth(_adapter *padapter, const unsigned char *da, unsigned short reason);
 int issue_deauth_ex(_adapter *padapter, u8 *da, unsigned short reason, int try_cnt, int wait_ms);
-void issue_action_spct_ch_switch(_adapter *padapter, u8 *ra, u8 new_ch, u8 ch_offset);
+void issue_action_spct_ch_switch(_adapter *padapter, const u8 *ra, u8 new_ch, u8 ch_offset);
 void issue_addba_req(_adapter *adapter, unsigned char *ra, u8 tid);
 void issue_addba_rsp(_adapter *adapter, unsigned char *ra, u8 tid, u16 status, u8 size);
 void issue_del_ba(_adapter *adapter, unsigned char *ra, u8 tid, u16 reason, u8 initiator);

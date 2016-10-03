@@ -345,7 +345,7 @@ struct wlan_network *_rtw_find_network(_queue *scanned_queue, u8 *addr)
 	//_irqL irqL;
 	_list	*phead, *plist;
 	struct	wlan_network *pnetwork = NULL;
-	u8 zero_addr[ETH_ALEN] = {0,0,0,0,0,0};
+	const u8 zero_addr[ETH_ALEN] = {0,0,0,0,0,0};
 
 	_func_enter_;
 
@@ -3681,7 +3681,7 @@ void	rtw_ht_use_default_setting(_adapter *padapter)
 
 void rtw_build_wmm_ie_ht(_adapter *padapter, u8 *out_ie, uint *pout_len)
 {
-	unsigned char WMM_IE[] = {0x00, 0x50, 0xf2, 0x02, 0x00, 0x01, 0x00};
+	const unsigned char WMM_IE[] = {0x00, 0x50, 0xf2, 0x02, 0x00, 0x01, 0x00};
 	int out_len;
 	u8 *pframe;
 

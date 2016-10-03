@@ -24,12 +24,6 @@
 
 #ifdef CONFIG_AP_MODE
 
-extern unsigned char	RTW_WPA_OUI[];
-extern unsigned char 	WMM_OUI[];
-extern unsigned char	WPS_OUI[];
-extern unsigned char	P2P_OUI[];
-extern unsigned char	WFD_OUI[];
-
 void init_mlme_ap_info(_adapter *padapter)
 {
 	//struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
@@ -2225,7 +2219,7 @@ static void update_bcn_p2p_ie(_adapter *padapter)
 
 }
 
-static void update_bcn_vendor_spec_ie(_adapter *padapter, u8*oui)
+static void update_bcn_vendor_spec_ie(_adapter *padapter, const u8*oui)
 {
 	DBG_871X("%s\n", __FUNCTION__);
 
@@ -2244,7 +2238,7 @@ static void update_bcn_vendor_spec_ie(_adapter *padapter, u8*oui)
 
 }
 
-void _update_beacon(_adapter *padapter, u8 ie_id, u8 *oui, u8 tx, const char *tag)
+void _update_beacon(_adapter *padapter, u8 ie_id, const u8 *oui, u8 tx, const char *tag)
 {
 	_irqL irqL;
 	struct mlme_priv *pmlmepriv;
@@ -2783,7 +2777,7 @@ int rtw_ap_inform_ch_switch(_adapter *padapter, u8 new_ch, u8 ch_offset)
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
-	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 
 	if((pmlmeinfo->state&0x03) != WIFI_FW_AP_STATE)
 		return ret;
@@ -2819,7 +2813,7 @@ int rtw_sta_flush(_adapter *padapter)
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
-	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 
 	if((pmlmeinfo->state&0x03) != WIFI_FW_AP_STATE)
 		return ret;

@@ -25,25 +25,24 @@
 #include <linux/inetdevice.h>
 #endif
 
-unsigned char ARTHEROS_OUI1[] = {0x00, 0x03, 0x7f};
-unsigned char ARTHEROS_OUI2[] = {0x00, 0x13, 0x74};
+unsigned const char ARTHEROS_OUI1[] = {0x00, 0x03, 0x7f};
+unsigned const char ARTHEROS_OUI2[] = {0x00, 0x13, 0x74};
 
-unsigned char BROADCOM_OUI1[] = {0x00, 0x10, 0x18};
-unsigned char BROADCOM_OUI2[] = {0x00, 0x0a, 0xf7};
-unsigned char BROADCOM_OUI3[] = {0x00, 0x05, 0xb5};
-unsigned char BROADCOM_OUI4[] = {0x00, 0x90, 0x4c};
+unsigned const char BROADCOM_OUI1[] = {0x00, 0x10, 0x18};
+unsigned const char BROADCOM_OUI2[] = {0x00, 0x0a, 0xf7};
+unsigned const char BROADCOM_OUI3[] = {0x00, 0x05, 0xb5};
+unsigned const char BROADCOM_OUI4[] = {0x00, 0x90, 0x4c};
 
-unsigned char CISCO_OUI[] = {0x00, 0x40, 0x96};
-unsigned char MARVELL_OUI[] = {0x00, 0x50, 0x43};
-unsigned char RALINK_OUI[] = {0x00, 0x0c, 0x43};
-unsigned char REALTEK_OUI[] = {0x00, 0xe0, 0x4c};
-unsigned char AIRGOCAP_OUI[] = {0x00, 0x0a, 0xf5};
+unsigned const char CISCO_OUI[] = {0x00, 0x40, 0x96};
+unsigned const char MARVELL_OUI[] = {0x00, 0x50, 0x43};
+unsigned const char RALINK_OUI[] = {0x00, 0x0c, 0x43};
+unsigned const char REALTEK_OUI[] = {0x00, 0xe0, 0x4c};
+unsigned const char AIRGOCAP_OUI[] = {0x00, 0x0a, 0xf5};
 
-unsigned char REALTEK_96B_IE[] = {0x00, 0xe0, 0x4c, 0x02, 0x01, 0x20};
+unsigned const char REALTEK_96B_IE[] = {0x00, 0xe0, 0x4c, 0x02, 0x01, 0x20};
 
-extern unsigned char RTW_WPA_OUI[];
-extern unsigned char WPA_TKIP_CIPHER[4];
-extern unsigned char RSN_TKIP_CIPHER[4];
+extern const unsigned char WPA_TKIP_CIPHER[4];
+extern const unsigned char RSN_TKIP_CIPHER[4];
 
 #define R2T_PHY_DELAY	(0)
 
@@ -873,7 +872,7 @@ void dump_cam_table(_adapter *padapter)
 }
 #endif
 
-void _write_cam(_adapter *padapter, u8 entry, u16 ctrl, u8 *mac, u8 *key)
+void _write_cam(_adapter *padapter, u8 entry, u16 ctrl, const u8 *mac, const u8 *key)
 {
 	unsigned int i, val, addr;
 	int j;
@@ -904,13 +903,13 @@ void _write_cam(_adapter *padapter, u8 entry, u16 ctrl, u8 *mac, u8 *key)
 
 void _clear_cam_entry(_adapter *padapter, u8 entry)
 {
-	unsigned char null_sta[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-	unsigned char null_key[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00};
+	const unsigned char null_sta[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	const unsigned char null_key[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00};
 
 	_write_cam(padapter, entry, 0, null_sta, null_key);
 }
 
-inline void write_cam(_adapter *adapter, u8 id, u16 ctrl, u8 *mac, u8 *key)
+inline void write_cam(_adapter *adapter, u8 id, u16 ctrl, const u8 *mac, const u8 *key)
 {
 #ifdef CONFIG_WRITE_CACHE_ONLY
 	write_cam_cache(adapter, id ,ctrl, mac, key);
@@ -940,7 +939,7 @@ inline void write_cam_from_cache(_adapter *adapter, u8 id)
 	_write_cam(adapter, id, cache.ctrl, cache.mac, cache.key);
 }
 
-void write_cam_cache(_adapter *adapter, u8 id, u16 ctrl, u8 *mac, u8 *key)
+void write_cam_cache(_adapter *adapter, u8 id, u16 ctrl, const u8 *mac, const u8 *key)
 {
 	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
 	struct cam_ctl_t *cam_ctl = &dvobj->cam_ctl;
@@ -1042,7 +1041,7 @@ bool rtw_camid_is_gk(_adapter *adapter, u8 cam_id)
 	return ret;
 }
 
-s16 _rtw_camid_search(_adapter *adapter, u8 *addr, s16 kid)
+s16 _rtw_camid_search(_adapter *adapter, const u8 *addr, s16 kid)
 {
 	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
 	//struct cam_ctl_t *cam_ctl = &dvobj->cam_ctl;
@@ -1071,7 +1070,7 @@ s16 _rtw_camid_search(_adapter *adapter, u8 *addr, s16 kid)
 	return cam_id;
 }
 
-s16 rtw_camid_search(_adapter *adapter, u8 *addr, s16 kid)
+s16 rtw_camid_search(_adapter *adapter, const u8 *addr, s16 kid)
 {
 	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
 	struct cam_ctl_t *cam_ctl = &dvobj->cam_ctl;
@@ -1217,7 +1216,7 @@ void flush_all_cam_entry(_adapter *padapter)
 		} else if(check_fwstate(pmlmepriv, WIFI_AP_STATE) == _TRUE) {
 			/* clear default key */
 			int i, cam_id;
-			u8 null_addr[ETH_ALEN]= {0,0,0,0,0,0};
+			const u8 null_addr[ETH_ALEN]= {0,0,0,0,0,0};
 
 			for (i=0; i<4; i++) {
 				cam_id = rtw_camid_search(padapter, null_addr, i);
@@ -3272,7 +3271,7 @@ void rtw_alloc_macid(_adapter *padapter, struct sta_info *psta)
 {
 	int i;
 	_irqL irqL;
-	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	struct macid_ctl_t *macid_ctl = dvobj_to_macidctl(dvobj);
 	struct macid_bmp *used_map = &macid_ctl->used;
@@ -3349,7 +3348,7 @@ exit:
 void rtw_release_macid(_adapter *padapter, struct sta_info *psta)
 {
 	_irqL irqL;
-	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	struct macid_ctl_t *macid_ctl = dvobj_to_macidctl(dvobj);
 
@@ -3608,8 +3607,8 @@ _adapter *dvobj_get_port0_adapter(struct dvobj_priv *dvobj)
  */
 u8 rtw_check_invalid_mac_address(u8 *mac_addr)
 {
-	u8 null_mac_addr[ETH_ALEN] = {0, 0, 0, 0, 0, 0};
-	u8 multi_mac_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+	const u8 null_mac_addr[ETH_ALEN] = {0, 0, 0, 0, 0, 0};
+	const u8 multi_mac_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 	u8 res = _FALSE;
 
 	if (_rtw_memcmp(mac_addr, null_mac_addr, ETH_ALEN)) {

@@ -3443,7 +3443,7 @@ static sint MPwlanhdr_to_ethhdr ( union recv_frame *precvframe)
 	u16 eth_type, len;
 	u8	bsnaphdr;
 	u8	*psnap_type;
-	u8 mcastheadermac[]= {0x01,0x00,0x5e};
+	const u8 mcastheadermac[]= {0x01,0x00,0x5e};
 
 	struct ieee80211_snap_hdr	*psnap;
 

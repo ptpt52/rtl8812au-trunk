@@ -1455,8 +1455,8 @@ void Rtw_Hal_ReadMACAddrFromFile(PADAPTER padapter)
 	EEPROM_EFUSE_PRIV *pEEPROM = GET_EEPROM_EFUSE_PRIV(padapter);
 	u8 *head, *end;
 
-	u8 null_mac_addr[ETH_ALEN] = {0, 0, 0,0, 0, 0};
-	u8 multi_mac_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+	const u8 null_mac_addr[ETH_ALEN] = {0, 0, 0,0, 0, 0};
+	const u8 multi_mac_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 
 	_rtw_memset(source_addr, 0, 18);
 	_rtw_memset(pEEPROM->mac_addr, 0, ETH_ALEN);

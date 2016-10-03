@@ -792,7 +792,7 @@ struct sta_info* rtw_get_bcmc_stainfo(_adapter* padapter)
 {
 	struct sta_info 	*psta;
 	struct sta_priv 	*pstapriv = &padapter->stapriv;
-	u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
+	const u8 bc_addr[ETH_ALEN] = {0xff,0xff,0xff,0xff,0xff,0xff};
 	_func_enter_;
 	psta = rtw_get_stainfo(pstapriv, bc_addr);
 	_func_exit_;
