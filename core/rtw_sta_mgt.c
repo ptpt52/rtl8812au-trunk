@@ -312,7 +312,7 @@ u32	_rtw_free_sta_priv(struct	sta_priv *pstapriv)
 
 
 //struct	sta_info *rtw_alloc_stainfo(_queue *pfree_sta_queue, unsigned char *hwaddr)
-struct	sta_info *rtw_alloc_stainfo(struct	sta_priv *pstapriv, u8 *hwaddr)
+struct	sta_info *rtw_alloc_stainfo(struct	sta_priv *pstapriv, const u8 *hwaddr)
 {
 	_irqL irqL2;
 	uint tmp_aid;

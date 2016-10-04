@@ -2382,7 +2382,7 @@ static int proc_tdls_display_tdls_sta_info(struct seq_file *m)
 	struct net_device *dev = m->private;
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
 	struct sta_priv *pstapriv = &padapter->stapriv;
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
+	//struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
 	struct sta_info *psta;
 	int i = 0, j = 0;
 	_irqL irqL;
@@ -2549,21 +2549,21 @@ static int proc_tdls_display_tdls_sta_info(struct seq_file *m)
 
 int proc_get_tdls_info(struct seq_file *m, void *v)
 {
-	struct net_device *dev = m->private;
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-	struct wlan_network *cur_network = &(pmlmepriv->cur_network);
-	struct sta_priv *pstapriv = &padapter->stapriv;
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-	struct sta_info *psta;
-	int i = 0, j = 0;
-	_irqL irqL;
-	_list	*plist, *phead;
-	u8 SpaceBtwnItemAndValue = 41;
-	u8 SpaceBtwnItemAndValueTmp = 0;
-	u8 NumOfTdlsStaToShow = 0;
-	BOOLEAN FirstMatchFound = _FALSE;
+	//struct net_device *dev = m->private;
+	//_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
+	//struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+	//struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+	//struct wlan_network *cur_network = &(pmlmepriv->cur_network);
+	//struct sta_priv *pstapriv = &padapter->stapriv;
+	//struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
+	//struct sta_info *psta;
+	//int i = 0, j = 0;
+	//_irqL irqL;
+	//_list	*plist, *phead;
+	//u8 SpaceBtwnItemAndValue = 41;
+	//u8 SpaceBtwnItemAndValueTmp = 0;
+	//u8 NumOfTdlsStaToShow = 0;
+	//BOOLEAN FirstMatchFound = _FALSE;
 
 	proc_tdls_display_tdls_function_info(m);
 	proc_tdls_display_network_info(m);

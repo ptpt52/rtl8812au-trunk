@@ -12275,7 +12275,7 @@ static inline int rtw_tdls_weaksec(struct net_device *dev,
 
 #ifdef CONFIG_TDLS
 
-	u8 i, j;
+	//u8 i, j;
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
 
 	DBG_871X( "[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length -1  );
@@ -12705,7 +12705,7 @@ static inline int rtw_tdls_setip(struct net_device *dev,
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
 	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
 	struct wifi_display_info *pwfd_info = ptdlsinfo->wfd_info;
-	u8 i=0, j=0, k=0, tag=0;
+	u8 i=0, j=0, tag=0;
 
 	DBG_871X("[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length - 1);
 

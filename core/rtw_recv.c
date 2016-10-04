@@ -1021,7 +1021,7 @@ sint OnTDLS(_adapter *adapter, union recv_frame *precv_frame)
 		break;
 	}
 
-exit:
+//exit:
 	return ret;
 
 }
@@ -1104,7 +1104,7 @@ sint sta2sta_data_frame(
 	struct sta_info *ptdls_sta=NULL;
 	u8 *psnap_type=ptr+pattrib->hdrlen + pattrib->iv_len+SNAP_SIZE;
 	//frame body located after [+2]: ether-type, [+1]: payload type
-	u8 *pframe_body = psnap_type+2+1;
+	//u8 *pframe_body = psnap_type+2+1;
 #endif
 
 	_func_enter_;
@@ -4043,10 +4043,10 @@ int recv_func_posthandle(_adapter *padapter, union recv_frame *prframe)
 {
 	int ret = _SUCCESS;
 	union recv_frame *orig_prframe = prframe;
-	//struct rx_pkt_attrib *pattrib = &prframe->u.hdr.attrib;
 	struct recv_priv *precvpriv = &padapter->recvpriv;
 	_queue *pfree_recv_queue = &padapter->recvpriv.free_recv_queue;
 #ifdef CONFIG_TDLS
+	struct rx_pkt_attrib *pattrib = &prframe->u.hdr.attrib;
 	u8 *psnap_type, *pcategory;
 #endif //CONFIG_TDLS
 

@@ -809,7 +809,7 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 #ifdef CONFIG_TDLS
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	_irqL irqL;
-	int i, j;
+	int i;
 	_list	*plist, *phead;
 	struct sta_info *ptdls_sta;
 #endif //CONFIG_TDLS

@@ -908,7 +908,7 @@ s32 update_tdls_attrib(_adapter *padapter, struct pkt_attrib *pattrib)
 
 	struct sta_info *psta = NULL;
 	struct sta_priv		*pstapriv = &padapter->stapriv;
-	struct security_priv	*psecuritypriv = &padapter->securitypriv;
+	//struct security_priv	*psecuritypriv = &padapter->securitypriv;
 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
 	struct qos_priv		*pqospriv= &pmlmepriv->qospriv;
 
@@ -1668,7 +1668,7 @@ s32 rtw_make_tdls_wlanhdr (_adapter *padapter , u8 *hdr, struct pkt_attrib *patt
 	struct qos_priv *pqospriv = &pmlmepriv->qospriv;
 	struct sta_priv 	*pstapriv = &padapter->stapriv;
 	struct sta_info *psta=NULL, *ptdls_sta=NULL;
-	u8 tdls_seq=0, baddr[ETH_ALEN] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+	u8 tdls_seq=0;
 
 	sint res = _SUCCESS;
 	u16 *fctrl = &pwlanhdr->frame_ctl;
@@ -1776,8 +1776,8 @@ s32 rtw_xmit_tdls_coalesce(_adapter * padapter, struct xmit_frame * pxmitframe, 
 	u8 *pframe, *mem_start;
 
 	struct sta_info		*psta;
-	struct sta_priv		*pstapriv = &padapter->stapriv;
-	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
+	//struct sta_priv		*pstapriv = &padapter->stapriv;
+	//struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
 	u8 *pbuf_start;
 	s32 bmcst = IS_MCAST(pattrib->ra);
@@ -3709,8 +3709,8 @@ sint xmitframe_enqueue_for_tdls_sleeping_sta(_adapter *padapter, struct xmit_fra
 	struct sta_info *ptdls_sta=NULL;
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct pkt_attrib *pattrib = &pxmitframe->attrib;
-	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
-	int i;
+	//struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
+	//int i;
 
 	ptdls_sta=rtw_get_stainfo(pstapriv, pattrib->dst);
 	if(ptdls_sta==NULL) {

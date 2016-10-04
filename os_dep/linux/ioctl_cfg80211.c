@@ -5175,13 +5175,23 @@ exit:
 
 #if defined(CONFIG_TDLS) && (LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0))
 static int cfg80211_rtw_tdls_mgmt(struct wiphy *wiphy,
-                                  struct net_device *ndev,
-                                  u8 *peer,
-                                  u8 action_code,
-                                  u8 dialog_token,
-                                  u16 status_code,
-                                  const u8 *buf,
-                                  size_t len)
+		struct net_device *ndev,
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,14,0))
+		u8 *peer,
+#else
+		const u8 *peer,
+#endif
+		u8 action_code,
+		u8 dialog_token,
+		u16 status_code,
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
+		u32 peer_capability,
+#endif
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0))
+		bool initiator,
+#endif
+		const u8 *buf,
+		size_t len)
 {
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(ndev);
 	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
@@ -5251,9 +5261,13 @@ discard:
 }
 
 static int cfg80211_rtw_tdls_oper(struct wiphy *wiphy,
-                                  struct net_device *ndev,
-                                  u8 *peer,
-                                  enum nl80211_tdls_operation oper)
+		struct net_device *ndev,
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,14,0))
+		u8 *peer,
+#else
+		const u8 *peer,
+#endif
+		enum nl80211_tdls_operation oper)
 {
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(ndev);
 	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;

@@ -2234,12 +2234,14 @@ exit:
 	return res;
 }
 
-u8 rtw_tdls_cmd(_adapter *padapter, u8 *addr, u8 option)
+u8 rtw_tdls_cmd(_adapter *padapter, const u8 *addr, u8 option)
 {
-	//struct	cmd_obj*	pcmdobj;
-	//struct	TDLSoption_param	*TDLSoption;
+#ifdef CONFIG_TDLS
+	struct	cmd_obj*	pcmdobj;
+	struct	TDLSoption_param	*TDLSoption;
+	struct	cmd_priv   *pcmdpriv = &padapter->cmdpriv;
+#endif
 	//struct 	mlme_priv *pmlmepriv = &padapter->mlmepriv;
-	//struct	cmd_priv   *pcmdpriv = &padapter->cmdpriv;
 
 	u8	res=_SUCCESS;
 
@@ -2338,10 +2340,10 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 	u8	bHigherBusyTraffic = _FALSE, bHigherBusyRxTraffic = _FALSE, bHigherBusyTxTraffic = _FALSE;
 
 	struct mlme_priv		*pmlmepriv = &(padapter->mlmepriv);
-#ifdef CONFIG_TDLS
+#if defined(CONFIG_TDLS) && defined(CONFIG_TDLS_AUTOSETUP)
 	struct tdls_info *ptdlsinfo = &(padapter->tdlsinfo);
 	struct tdls_txmgmt txmgmt;
-	u8 baddr[ETH_ALEN] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+	const u8 baddr[ETH_ALEN] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 #endif //CONFIG_TDLS
 
 #ifdef CONFIG_TRAFFIC_PROTECT

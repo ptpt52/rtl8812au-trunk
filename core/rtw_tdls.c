@@ -197,8 +197,8 @@ int issue_nulldata_to_TDLS_peer_STA(_adapter *padapter, unsigned char *da, unsig
 	int ret;
 	int i = 0;
 	u32 start = rtw_get_current_time();
-	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
-	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
+	//struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
+	//struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 
 #if 0
 	psta = rtw_get_stainfo(&padapter->stapriv, da);
@@ -342,7 +342,7 @@ u8 *rtw_tdls_set_sup_ch(struct mlme_ext_priv *pmlmeext, u8 *pframe, struct pkt_a
 {
 	u8 sup_ch[ 30 * 2 ] = { 0x00 }, ch_set_idx = 0;	//For supported channel
 	u8 ch_24g = 0, b1 = 0, b4 = 0;
-	u8 bit_table = 0, sup_ch_idx = 0;
+	u8 sup_ch_idx = 0;
 
 	do {
 		if (pmlmeext->channel_set[ch_set_idx].ChannelNum >= 1 &&
@@ -360,11 +360,9 @@ u8 *rtw_tdls_set_sup_ch(struct mlme_ext_priv *pmlmeext, u8 *pframe, struct pkt_a
 		}
 
 		sup_ch_idx = (ch_24g + b1 + b4 - 1) * 2;
-		if (sup_ch_idx >= 0) {
-			if (sup_ch[sup_ch_idx] == 0)
-				sup_ch[sup_ch_idx] = pmlmeext->channel_set[ch_set_idx].ChannelNum;
-			sup_ch[sup_ch_idx+1]++;	//Number of channel
-		}
+		if (sup_ch[sup_ch_idx] == 0)
+			sup_ch[sup_ch_idx] = pmlmeext->channel_set[ch_set_idx].ChannelNum;
+		sup_ch[sup_ch_idx+1]++;	//Number of channel
 
 		ch_set_idx++;
 	} while (pmlmeext->channel_set[ch_set_idx].ChannelNum != 0 && ch_set_idx < MAX_CHANNEL_NUM);
@@ -597,7 +595,7 @@ void rtw_tdls_process_wfd_ie(struct tdls_info *ptdlsinfo, u8 *ptr, u8 length)
 	while (wfd_offset) {
 		u8	attr_content[ 10 ] = { 0x00 };
 		u32	attr_contentlen = 0;
-		int	i;
+		//int	i;
 
 		DBG_871X( "[%s] WFD IE Found!!\n", __FUNCTION__ );
 		rtw_get_wfd_attr_content( wfd_ie, wfd_ielen, WFD_ATTR_DEVICE_INFO, attr_content, &attr_contentlen);
@@ -712,7 +710,7 @@ int issue_tdls_setup_req(_adapter *padapter, struct tdls_txmgmt *ptxmgmt, int wa
 	struct xmit_priv			*pxmitpriv = &(padapter->xmitpriv);
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct sta_info *ptdls_sta= NULL;
-	_irqL irqL;
+	//_irqL irqL;
 	int ret = _FAIL;
 	/* Retry timer should be set at least 301 sec, using TPK_count counting 301 times. */
 	u32 timeout_interval= TPK_RESEND_COUNT;
@@ -790,7 +788,7 @@ int issue_tdls_teardown(_adapter *padapter, struct tdls_txmgmt *ptxmgmt, u8 wait
 	struct xmit_priv			*pxmitpriv = &(padapter->xmitpriv);
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct sta_info	*ptdls_sta=NULL;
-	_irqL irqL;
+	//_irqL irqL;
 	int ret = _FAIL;
 
 	DBG_871X("[TDLS] %s\n", __FUNCTION__);
@@ -923,7 +921,7 @@ exit:
 
 int issue_tdls_setup_cfm(_adapter *padapter, struct tdls_txmgmt *ptxmgmt)
 {
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
+	//struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
 	struct xmit_frame			*pmgntframe;
 	struct pkt_attrib			*pattrib;
 	struct xmit_priv			*pxmitpriv = &(padapter->xmitpriv);
@@ -1210,13 +1208,16 @@ exit:
 
 int On_TDLS_Dis_Rsp(_adapter *padapter, union recv_frame *precv_frame)
 {
-	struct sta_info *ptdls_sta = NULL, *psta = rtw_get_stainfo(&(padapter->stapriv), get_bssid(&(padapter->mlmepriv)));
-	struct recv_priv *precvpriv = &(padapter->recvpriv);
+	struct tdls_info *ptdlsinfo = &(padapter->tdlsinfo);
+#ifdef CONFIG_TDLS_AUTOSETUP
+	//struct sta_info *ptdls_sta = NULL, *psta = rtw_get_stainfo(&(padapter->stapriv), get_bssid(&(padapter->mlmepriv)));
+	struct sta_info *ptdls_sta = NULL;
+	//struct recv_priv *precvpriv = &(padapter->recvpriv);
 	u8 *ptr = precv_frame->u.hdr.rx_data, *psa;
 	struct rx_pkt_attrib *pattrib = &(precv_frame->u.hdr.attrib);
-	struct tdls_info *ptdlsinfo = &(padapter->tdlsinfo);
 	u8 empty_addr[ETH_ALEN] = { 0x00 };
 	int UndecoratedSmoothedPWDB;
+#endif
 	struct tdls_txmgmt txmgmt;
 	int ret = _SUCCESS;
 
@@ -1269,11 +1270,11 @@ int On_TDLS_Dis_Rsp(_adapter *padapter, union recv_frame *precv_frame)
 			issue_tdls_setup_req(padapter, &txmgmt, _FALSE);
 		}
 	}
-#endif /* CONFIG_TDLS_AUTOSETUP */
 
 exit:
-	return ret;
+#endif /* CONFIG_TDLS_AUTOSETUP */
 
+	return ret;
 }
 
 sint On_TDLS_Setup_Req(_adapter *padapter, union recv_frame *precv_frame)
@@ -1284,8 +1285,8 @@ sint On_TDLS_Setup_Req(_adapter *padapter, union recv_frame *precv_frame)
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	u8 *ptr = precv_frame->u.hdr.rx_data;
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-	struct security_priv *psecuritypriv = &padapter->securitypriv;
-	_irqL irqL;
+	//struct security_priv *psecuritypriv = &padapter->securitypriv;
+	//_irqL irqL;
 	struct rx_pkt_attrib	*prx_pkt_attrib = &precv_frame->u.hdr.attrib;
 	u8 *prsnie, *ppairwise_cipher;
 	u8 i, k;
@@ -1486,7 +1487,7 @@ int On_TDLS_Setup_Rsp(_adapter *padapter, union recv_frame *precv_frame)
 	struct sta_info *ptdls_sta= NULL;
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	u8 *ptr = precv_frame->u.hdr.rx_data;
-	_irqL irqL;
+	//_irqL irqL;
 	struct rx_pkt_attrib	*prx_pkt_attrib = &precv_frame->u.hdr.attrib;
 	u8 *psa;
 	u16 status_code=0;
@@ -1494,7 +1495,7 @@ int On_TDLS_Setup_Rsp(_adapter *padapter, union recv_frame *precv_frame)
 	PNDIS_802_11_VARIABLE_IEs	pIE;
 	u8 FIXED_IE =7;
 	u8 ANonce[32];
-	u8  *pftie=NULL, *ptimeout_ie=NULL, *plinkid_ie=NULL, *prsnie=NULL, *pftie_mic=NULL, *ppairwise_cipher=NULL;
+	u8  *pftie=NULL, *ptimeout_ie=NULL, *plinkid_ie=NULL, *prsnie=NULL, *ppairwise_cipher=NULL;
 	u16 pairwise_count, j, k;
 	u8 verify_ccmp=0;
 	unsigned char		supportRate[16];
@@ -1659,15 +1660,15 @@ int On_TDLS_Setup_Cfm(_adapter *padapter, union recv_frame *precv_frame)
 	struct sta_info *ptdls_sta= NULL;
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	u8 *ptr = precv_frame->u.hdr.rx_data;
-	_irqL irqL;
+	//_irqL irqL;
 	struct rx_pkt_attrib	*prx_pkt_attrib = &precv_frame->u.hdr.attrib;
 	u8 *psa;
 	u16 status_code=0;
 	sint parsing_length;
 	PNDIS_802_11_VARIABLE_IEs	pIE;
 	u8 FIXED_IE =5;
-	u8  *pftie=NULL, *ptimeout_ie=NULL, *plinkid_ie=NULL, *prsnie=NULL, *pftie_mic=NULL, *ppairwise_cipher=NULL;
-	u16 j, pairwise_count;
+	u8  *pftie=NULL, *ptimeout_ie=NULL, *plinkid_ie=NULL, *prsnie=NULL;
+	u16 j;
 	int ret = _SUCCESS;
 
 	psa = get_sa(ptr);
@@ -1828,11 +1829,11 @@ int On_TDLS_Teardown(_adapter *padapter, union recv_frame *precv_frame)
 	u8 *psa;
 	u8 *ptr = precv_frame->u.hdr.rx_data;
 	struct rx_pkt_attrib	*prx_pkt_attrib = &precv_frame->u.hdr.attrib;
-	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
-	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
+	//struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
+	//struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct sta_priv 	*pstapriv = &padapter->stapriv;
 	struct sta_info *ptdls_sta= NULL;
-	_irqL irqL;
+	//_irqL irqL;
 	u8 reason;
 
 	reason = *(ptr + prx_pkt_attrib->hdrlen + prx_pkt_attrib->iv_len + LLC_HEADER_SIZE + ETH_TYPE_LEN + PAYLOAD_TYPE_LEN + 2);
@@ -1889,14 +1890,14 @@ int On_TDLS_Peer_Traffic_Indication(_adapter *padapter, union recv_frame *precv_
 /* We process buffered data for 1. U-APSD, 2. ch. switch, 3. U-APSD + ch. switch here */
 int On_TDLS_Peer_Traffic_Rsp(_adapter *padapter, union recv_frame *precv_frame)
 {
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+	//struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
+	//struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 	struct rx_pkt_attrib	*pattrib = & precv_frame->u.hdr.attrib;
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct sta_info *ptdls_sta = rtw_get_stainfo(pstapriv, pattrib->src);
 	u8 wmmps_ac=0;
 	/* u8 state=TDLS_check_ch_state(ptdls_sta->tdls_sta_state); */
-	int i;
+	//int i;
 
 	ptdls_sta->sta_stats.rx_data_pkts++;
 
@@ -2353,14 +2354,14 @@ void rtw_build_tdls_setup_rsp_ies(_adapter * padapter, struct xmit_frame * pxmit
 void rtw_build_tdls_setup_cfm_ies(_adapter * padapter, struct xmit_frame * pxmitframe, u8 *pframe, struct tdls_txmgmt *ptxmgmt)
 {
 
-	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
-	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
+	//struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
+	//struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
 	struct sta_info *ptdls_sta=rtw_get_stainfo( (&padapter->stapriv) , pattrib->dst);
 
-	unsigned int ie_len;
-	unsigned char *p;
-	u8 wmm_param_ele[24] = {0};
+	//unsigned int ie_len;
+	//unsigned char *p;
+	//u8 wmm_param_ele[24] = {0};
 	u8  *pftie=NULL, *ptimeout_ie=NULL, *plinkid_ie=NULL, *prsnie=NULL, *pftie_mic=NULL;
 
 	pframe = rtw_tdls_set_payload_type(pframe, pattrib);

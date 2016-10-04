@@ -13935,7 +13935,7 @@ u8 set_csa_hdl(_adapter *padapter, unsigned char *pbuf)
 u8 tdls_hdl(_adapter *padapter, unsigned char *pbuf)
 {
 #ifdef CONFIG_TDLS
-	_irqL irqL;
+	//_irqL irqL;
 	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
 #ifdef CONFIG_TDLS_CH_SW
 	struct tdls_ch_switch *pchsw_info = &ptdlsinfo->chsw_info;
@@ -13944,7 +13944,7 @@ u8 tdls_hdl(_adapter *padapter, unsigned char *pbuf)
 	struct sta_info *ptdls_sta = NULL;
 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
-	u8 survey_channel, i, min, option;
+	u8 option;
 	struct tdls_txmgmt txmgmt;
 	u32 setchtime, resp_sleep = 0, wait_time;
 	const u8 zaddr[ETH_ALEN] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
