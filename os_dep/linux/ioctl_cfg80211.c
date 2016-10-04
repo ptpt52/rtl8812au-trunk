@@ -3321,7 +3321,9 @@ void rtw_cfg80211_indicate_sta_assoc(_adapter *padapter, u8 *pmgmt_frame, uint f
 			ie_offset = _REASOCREQ_IE_OFFSET_;
 
 		sinfo.filled = 0;
-		//sinfo.filled = STATION_INFO_ASSOC_REQ_IES;
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,0,0))
+		sinfo.filled = STATION_INFO_ASSOC_REQ_IES;
+#endif
 		sinfo.assoc_req_ies = pmgmt_frame + WLAN_HDR_A3_LEN + ie_offset;
 		sinfo.assoc_req_ies_len = frame_len - WLAN_HDR_A3_LEN - ie_offset;
 		cfg80211_new_sta(ndev, GetAddr2Ptr(pmgmt_frame), &sinfo, GFP_ATOMIC);
@@ -3611,7 +3613,11 @@ static const struct net_device_ops rtw_cfg80211_monitor_if_ops = {
 };
 #endif
 
-static int rtw_cfg80211_add_monitor_if(_adapter *padapter, char *name, struct net_device **ndev)
+static int rtw_cfg80211_add_monitor_if(_adapter *padapter, char *name,
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
+		unsigned char name_assign_type,
+#endif
+		struct net_device **ndev)
 {
 	int ret = 0;
 	struct net_device* mon_ndev = NULL;
@@ -3642,6 +3648,9 @@ static int rtw_cfg80211_add_monitor_if(_adapter *padapter, char *name, struct ne
 	mon_ndev->type = ARPHRD_IEEE80211_RADIOTAP;
 	strncpy(mon_ndev->name, name, IFNAMSIZ);
 	mon_ndev->name[IFNAMSIZ - 1] = 0;
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
+	mon_ndev->name_assign_type = name_assign_type;
+#endif
 	mon_ndev->destructor = rtw_ndev_destructor;
 
 #if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,29))
@@ -3726,7 +3735,11 @@ cfg80211_rtw_add_virtual_intf(
 		ret = -ENODEV;
 		break;
 	case NL80211_IFTYPE_MONITOR:
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
+		ret = rtw_cfg80211_add_monitor_if(padapter, (char *)name, name_assign_type, &ndev);
+#else
 		ret = rtw_cfg80211_add_monitor_if(padapter, (char *)name, &ndev);
+#endif
 		break;
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37)) || defined(COMPAT_KERNEL_RELEASE)
