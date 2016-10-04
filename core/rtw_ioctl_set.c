@@ -387,8 +387,7 @@ u8 rtw_set_802_11_ssid(_adapter* padapter, NDIS_802_11_SSID *ssid)
 
 	_func_enter_;
 
-	DBG_871X_LEVEL(_drv_always_, "set ssid [%s] fw_state=0x%08x\n",
-	               ssid->Ssid, get_fwstate(pmlmepriv));
+	//DBG_871X_LEVEL(_drv_always_, "set ssid [%s] fw_state=0x%08x\n", ssid->Ssid, get_fwstate(pmlmepriv));
 
 	if(padapter->hw_init_completed==_FALSE) {
 		RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_err_,

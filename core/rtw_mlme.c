@@ -2658,7 +2658,7 @@ exit:
 
 void rtw_dynamic_check_timer_handlder(_adapter *adapter)
 {
-#ifdef CONFIG_AP_MODE
+#if defined(CONFIG_BR_EXT) || defined(CONFIG_AP_MODE) && !defined(CONFIG_ACTIVE_KEEP_ALIVE_CHECK)
 	struct mlme_priv *pmlmepriv = &adapter->mlmepriv;
 #endif //CONFIG_AP_MODE
 	//struct registry_priv *pregistrypriv = &adapter->registrypriv;
