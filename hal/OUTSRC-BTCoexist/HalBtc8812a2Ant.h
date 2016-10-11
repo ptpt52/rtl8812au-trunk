@@ -216,4 +216,3 @@ EXhalbtc8812a2ant_DbgControl(
     IN	u1Byte				opLen,
     IN	pu1Byte 			pData
 );
-

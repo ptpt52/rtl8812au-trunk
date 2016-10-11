@@ -29,4 +29,3 @@ void rtw_hal_set_sdio_tx_max_length(PADAPTER padapter, u8 numHQ, u8 numNQ, u8 nu
 u32 rtw_hal_get_sdio_tx_max_length(PADAPTER padapter, u8 queue_idx);
 
 #endif //__RTW_LED_H_
-

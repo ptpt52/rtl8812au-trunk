@@ -23,4 +23,3 @@
 void Init_ODM_ComInfo(_adapter *adapter);
 
 #endif /* __HAL_DM_H__ */
-

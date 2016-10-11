@@ -1194,4 +1194,3 @@ void rtw_adapter_proc_replace(struct net_device *dev)
 }
 
 #endif /* CONFIG_PROC_DEBUG */
-

@@ -6131,4 +6131,3 @@ void rtw_wdev_unregister(struct wireless_dev *wdev)
 }
 
 #endif //CONFIG_IOCTL_CFG80211
-

@@ -934,4 +934,3 @@ exit:
 }
 
 #endif //CONFIG_BEAMFORMING
-

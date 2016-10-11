@@ -762,4 +762,3 @@ odm_DynamicTxPower_92D(
 #endif	// #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 
 }
-

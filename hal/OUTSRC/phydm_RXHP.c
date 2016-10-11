@@ -423,7 +423,7 @@ odm_PSD_Monitor(
 				SYN_RF27 = ODM_GetRFReg(Adapter, ODM_RF_PATH_B, 0x27, bMaskDWord);
 				SYN_RF2B = ODM_GetRFReg(Adapter, ODM_RF_PATH_B, 0x2B, bMaskDWord);
 				SYN_RF2C = ODM_GetRFReg(Adapter, ODM_RF_PATH_B, 0x2C, bMaskDWord);
-	       	}
+			}
 			else     // DualMAC_DualPHY 2G
 			{
 				SYN_RF25 = ODM_GetRFReg(Adapter, ODM_RF_PATH_A, 0x25, bMaskDWord);
@@ -1503,6 +1503,3 @@ odm_PSD_RXHPWorkitemCallback(
 }
 
 #endif //#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-
-
-

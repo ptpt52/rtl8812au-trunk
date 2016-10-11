@@ -877,5 +877,3 @@ ODM_GetProgressingTime(
 	return   ((PlatformGetCurrentTime() - Start_Time)>>10);
 #endif
 }
-
-

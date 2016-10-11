@@ -1668,4 +1668,3 @@ odm_UpdatePowerTrainingState(
 	pDM_Odm->PhyDbgInfo.NumQryPhyStatusCCK = 0;
 #endif
 }
-

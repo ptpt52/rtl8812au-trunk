@@ -651,4 +651,3 @@ s32 rtw_hal_fill_h2c_cmd(PADAPTER, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer);
 void rtw_hal_update_hisr_hsisr_ind(_adapter *padapter, u32 flag);
 #endif
 #endif //__HAL_INTF_H__
-

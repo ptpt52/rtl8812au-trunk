@@ -42,4 +42,3 @@ void rtw_odm_get_perpkt_rssi(void *sel, _adapter *adapter);
 void rtw_odm_acquirespinlock(_adapter *adapter,	RT_SPINLOCK_TYPE type);
 void rtw_odm_releasespinlock(_adapter *adapter,	RT_SPINLOCK_TYPE type);
 #endif // __RTW_ODM_H__
-

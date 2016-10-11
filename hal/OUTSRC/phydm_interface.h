@@ -398,4 +398,3 @@ ODM_GetProgressingTime(
 );
 
 #endif	// __ODM_INTERFACE_H__
-

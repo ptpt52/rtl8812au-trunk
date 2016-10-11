@@ -1069,4 +1069,3 @@ exit:
 }
 #endif	// CONFIG_USE_USB_BUFFER_ALLOC_RX
 
-

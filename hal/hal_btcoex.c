@@ -3142,4 +3142,3 @@ hal_btcoex_AntIsolationConfig_ParaFile(
 }
 #endif // CONFIG_LOAD_PHY_PARA_FROM_FILE
 #endif // CONFIG_BT_COEXIST
-

@@ -88,4 +88,3 @@ int hal_btcoex_AntIsolationConfig_ParaFile(IN PADAPTER	Adapter,IN char* pFileNam
 int hal_btcoex_ParseAntIsolationConfigFile(PADAPTER Adapter, char*	buffer);
 #endif // CONFIG_LOAD_PHY_PARA_FROM_FILE
 #endif // !__HAL_BTCOEX_H__
-

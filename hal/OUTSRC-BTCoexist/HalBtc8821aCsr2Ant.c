@@ -2412,7 +2412,7 @@ halbtc8821aCsr2ant_ActionA2dp(
 			if( (wifiRssiState == BTC_RSSI_STATE_HIGH) ||
 				(wifiRssiState == BTC_RSSI_STATE_STAY_HIGH) )
 			{
-	 			 halbtc8821aCsr2ant_SwMechanism1(pBtCoexist,TRUE,FALSE,FALSE,FALSE);
+				 halbtc8821aCsr2ant_SwMechanism1(pBtCoexist,TRUE,FALSE,FALSE,FALSE);
 				 halbtc8821aCsr2ant_SwMechanism2(pBtCoexist,TRUE,FALSE,FALSE,0x18);
 			}
 			else
@@ -3630,4 +3630,3 @@ EXhalbtc8821aCsr2ant_Periodical(
 
 
 #endif
-

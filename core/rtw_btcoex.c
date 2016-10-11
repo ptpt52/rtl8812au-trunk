@@ -1724,4 +1724,3 @@ void rtw_btcoex_SendScanNotify(PADAPTER padapter, u8 scanType)
 }
 #endif //CONFIG_BT_COEXIST_SOCKET_TRX
 #endif // CONFIG_BT_COEXIST
-

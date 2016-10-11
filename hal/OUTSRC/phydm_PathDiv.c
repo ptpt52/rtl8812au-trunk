@@ -1925,4 +1925,3 @@ odm_SwAntDivConstructScanChnl(
 
 
 #endif	// #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-

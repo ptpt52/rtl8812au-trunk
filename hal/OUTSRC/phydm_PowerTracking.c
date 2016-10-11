@@ -662,5 +662,3 @@ odm_TXPowerTrackingThermalMeterCheck(
 #endif
 }
 #endif
-
-

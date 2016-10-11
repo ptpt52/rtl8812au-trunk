@@ -321,5 +321,3 @@ ODM_Get_Rate_Bitmap(
 #endif
 
 #endif //#ifndef	__ODMRAINFO_H__
-
-

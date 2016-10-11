@@ -289,4 +289,3 @@ typedef  void *				RT_TIMER_CALL_BACK;
 #define COND_ENDIF 3
 
 #endif // __ODM_TYPES_H__
-

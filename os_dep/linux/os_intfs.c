@@ -4123,4 +4123,3 @@ int rtw_disable_gpio_interrupt(struct net_device *netdev, int gpio_num)
 EXPORT_SYMBOL(rtw_disable_gpio_interrupt);
 
 #endif //#ifdef CONFIG_GPIO_API
-

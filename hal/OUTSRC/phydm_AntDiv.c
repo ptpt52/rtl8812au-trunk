@@ -3649,5 +3649,3 @@ odm_AntennaDiversity(
 #endif
 	}
 }
-
-

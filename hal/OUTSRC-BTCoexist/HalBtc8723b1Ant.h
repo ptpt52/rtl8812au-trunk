@@ -312,4 +312,3 @@ VOID
 EXhalbtc8723b1ant_DisplayAntIsolation(
     IN	PBTC_COEXIST			pBtCoexist
 );
-

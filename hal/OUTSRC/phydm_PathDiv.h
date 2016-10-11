@@ -313,4 +313,3 @@ odm_SwAntDivConstructScanChnl(
 
 
 #endif		 //#ifndef  __ODMPATHDIV_H__
-

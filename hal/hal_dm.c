@@ -188,4 +188,3 @@ void Init_ODM_ComInfo(_adapter *adapter)
 	//ODM_CmnInfoHook(pDM_Odm, ODM_CMNINFO_BT_OPERATION, _FALSE);
 	//ODM_CmnInfoHook(pDM_Odm, ODM_CMNINFO_BT_DISABLE_EDCA, _FALSE);
 }
-

@@ -1338,4 +1338,3 @@ int rtw_cfgvendor_detach(struct wiphy *wiphy)
 #endif /* (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0)) || defined(RTW_VENDOR_EXT_SUPPORT) */
 
 #endif /* CONFIG_IOCTL_CFG80211 */
-

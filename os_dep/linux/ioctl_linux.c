@@ -14621,4 +14621,3 @@ int rtw_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
 	return ret;
 }
 
-

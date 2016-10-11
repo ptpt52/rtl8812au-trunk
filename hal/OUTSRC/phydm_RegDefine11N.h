@@ -178,4 +178,3 @@
 #define	ODM_BIT_BB_ATC_11N				BIT11
 
 #endif
-

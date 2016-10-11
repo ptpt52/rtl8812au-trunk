@@ -95,4 +95,3 @@ static void __exit rtw_mem_exit(void)
 
 module_init(rtw_mem_init);
 module_exit(rtw_mem_exit);
-

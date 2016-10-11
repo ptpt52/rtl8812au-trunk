@@ -35,4 +35,3 @@ int rtw_free_skb_premem(struct sk_buff *pskb);
 
 
 #endif //__RTW_MEM_H__
-

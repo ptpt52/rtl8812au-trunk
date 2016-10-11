@@ -93,5 +93,3 @@ odm_SwAntDetectInit(
 
 
 #endif
-
-

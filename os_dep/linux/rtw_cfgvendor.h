@@ -243,4 +243,3 @@ extern int wl_cfgvendor_send_hotlist_event(struct wiphy *wiphy,
 #endif /* (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0)) || defined(RTW_VENDOR_EXT_SUPPORT) */
 
 #endif /* _RTW_CFGVENDOR_H_ */
-

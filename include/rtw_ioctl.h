@@ -126,7 +126,7 @@
        if((!dbg))				    			\
       	{					    			\
 	   RT_TRACE(_module_rtl871x_ioctl_c_,_drv_info_,("%s(%d): %s", __FUNCTION__, __LINE__, str));	\
-      	}
+		}
 
 
 enum oid_type {

@@ -324,4 +324,3 @@ void rtw_odm_releasespinlock(_adapter *adapter,	RT_SPINLOCK_TYPE type)
 		break;
 	}
 }
-

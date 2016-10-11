@@ -577,4 +577,3 @@ int rtw_regd_init(_adapter * padapter)
 	return 0;
 }
 #endif //CONFIG_IOCTL_CFG80211
-

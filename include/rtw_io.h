@@ -514,4 +514,3 @@ extern void dev_power_down(_adapter * Adapter, u8 bpwrup);
 		rtw_read32(_a,_b)
 
 #endif	//_RTL8711_IO_H_
-

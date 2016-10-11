@@ -139,4 +139,3 @@ void platform_wifi_power_off(void)
 #endif //defined(CONFIG_PLATFORM_ARM_SUN8I)
 
 }
-
